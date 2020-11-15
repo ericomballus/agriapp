@@ -8,10 +8,13 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
+    "postinstall": "ng build --aot --prod",
     "e2e": "ng e2e",
     "load": "node server.js",
-    "electron:mac": "electron-packager ./electron SimonsApp --overwrite --platform=darwin --arch=x64 --prune=true --out dist/",
-    "electron:win": "electron-packager ./electron AgriApp --overwrite --platform=win32 --arch=ia32 --prune=true --out dist/ --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName='Agri App'"
+    "engine": {
+      "node": "14.15.0",
+      "npm": "6.14.8"
+    }
   },
   "private": true,
   "dependencies": {
