@@ -8,13 +8,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "postinstall": "ng build --aot --prod",
     "e2e": "ng e2e",
-    "load": "node server.js",
-    "engine": {
-      "node": "14.15.0",
-      "npm": "6.14.8"
-    }
+    "load": "node server.js"
   },
   "private": true,
   "dependencies": {
