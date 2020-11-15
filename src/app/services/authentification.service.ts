@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import * as firebsase from "firebase";
+import firebase from "firebase/app";
 import { ToastController } from "@ionic/angular";
 import { Subject } from "rxjs";
 
@@ -7,8 +7,8 @@ import { Subject } from "rxjs";
   providedIn: "root",
 })
 export class AuthentificationService {
-  utilisateur: firebsase.User;
-  utilisateurSubject = new Subject<firebsase.User>();
+  utilisateur: firebase.User;
+  utilisateurSubject = new Subject<firebase.User>();
 
   constructor(public toastController: ToastController) {}
 
@@ -21,9 +21,9 @@ export class AuthentificationService {
     this.emettre();
   }
 
-  connexion(login: string, passe: string): Promise<firebsase.User> {
+  connexion(login: string, passe: string): Promise<firebase.User> {
     return new Promise((resolve, reject) => {
-      firebsase
+      firebase
         .auth()
         .signInWithEmailAndPassword(login, passe)
         .then((credentials) => {
@@ -40,7 +40,7 @@ export class AuthentificationService {
 
   deconnexion(): Promise<any> {
     return new Promise((resolve, reject) => {
-      firebsase
+      firebase
         .auth()
         .signOut()
         .then((data) => {
@@ -52,9 +52,9 @@ export class AuthentificationService {
     });
   }
 
-  inscription(login: string, passe: string): Promise<firebsase.User> {
+  inscription(login: string, passe: string): Promise<firebase.User> {
     return new Promise((resolve, reject) => {
-      firebsase
+      firebase
         .auth()
         .createUserWithEmailAndPassword(login, passe)
         .then((credentials) => {
@@ -66,9 +66,9 @@ export class AuthentificationService {
     });
   }
 
-  deleteUserEmail(login: string, passe: string): Promise<firebsase.User> {
+  deleteUserEmail(login: string, passe: string): Promise<firebase.User> {
     return new Promise((resolve, reject) => {
-      firebsase
+      firebase
         .auth()
         .createUserWithEmailAndPassword(login, passe)
         .then((credentials) => {

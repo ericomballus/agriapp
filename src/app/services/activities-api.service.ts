@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { AngularFireDatabase } from "@angular/fire/database";
 import { AngularFireStorage } from "@angular/fire/storage";
-import * as firebsase from "firebase";
+import firebase from "firebase/app";
 
 @Injectable({
   providedIn: "root",
@@ -10,7 +10,7 @@ import * as firebsase from "firebase";
 export class ActivitiesApiService {
   url = "http://localhost:3000/";
   constructor(private http: HttpClient, private database: AngularFireDatabase) {
-    let ref = firebsase.database().ref("agriActivities");
+    let ref = firebase.database().ref("agriActivities");
     let a = ref
       .onDisconnect()
       .cancel()
