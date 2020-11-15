@@ -1,0 +1,145 @@
+<ion-header>
+  <ion-toolbar color="medium">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div class="ion-text-center ion-text-uppercase">
+          <h3>ajouter un employé</h3>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="12"> </ion-col>
+      <ion-col size-xs="12" size-md="6" size-lg="6" size-sm="12">
+        <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
+          <ion-item lines="full">
+            <ion-label position="floating">Name</ion-label>
+            <ion-input formControlName="name" type="text"></ion-input>
+          </ion-item>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.name.errors?.required"
+          >
+            Name is required.
+          </span>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.name.errors?.minlength"
+          >
+            Name should be min 2 chars long.
+          </span>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.name.errors?.maxLength"
+          >
+            Name not should be max 20 chars long.
+          </span>
+
+          <ion-item lines="full">
+            <ion-label position="floating">Poste</ion-label>
+            <ion-input formControlName="poste" type="text"></ion-input>
+          </ion-item>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.poste.errors?.required"
+          >
+            Name is required.
+          </span>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.poste.errors?.minlength"
+          >
+            Name should be min 2 chars long.
+          </span>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.poste.errors?.maxLength"
+          >
+            Name not should be max 20 chars long.
+          </span>
+
+          <ion-item lines="full">
+            <ion-label position="floating">Email</ion-label>
+            <ion-input formControlName="email" type="email"></ion-input>
+          </ion-item>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.email.errors?.required"
+          >
+            Email is required.
+          </span>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.email.errors?.pattern"
+          >
+            Please provide valid email id.
+          </span>
+
+          <ion-item lines="full">
+            <ion-label position="floating">Mobile</ion-label>
+            <ion-input
+              maxlength="10"
+              formControlName="mobile"
+              type="text"
+              required
+            ></ion-input>
+          </ion-item>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.mobile.errors?.required"
+          >
+            Mobile number is required.
+          </span>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.mobile.errors?.pattern"
+          >
+            Only numerical values allowed.
+          </span>
+
+          <ion-row>
+            <ion-col>
+              <ion-button type="submit" color="danger" expand="block"
+                >Submit</ion-button
+              >
+            </ion-col>
+          </ion-row>
+        </form>
+      </ion-col>
+      <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="12"> </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <div class="ion-text-center ion-text-uppercase">
+          <h3>liste employés</h3>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="12"> </ion-col>
+      <ion-col size-xs="12" size-md="6" size-lg="6" size-sm="12">
+        <ion-list>
+          <ion-item *ngFor="let user of userList">
+            <ion-icon slot="start" name="person-outline"></ion-icon>
+            <ion-label>
+              <h2>{{user.name}}</h2>
+              <p>Email:{{user.email}}, Telephone: {{user.mobile}}</p>
+            </ion-label>
+            <ion-button fill="clear" slot="end" (click)="removeEmploye(user)"
+              >delete
+              <ion-icon slot="end" name="trash-bin-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="12"> </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

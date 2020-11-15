@@ -1,0 +1,293 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title></ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" slot="icon-only" (click)="dismiss()">
+        <ion-icon name="close-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="12" size-lg="12" size-xs="12" size-sm="12" size-xl="12">
+        <div class="cole">
+          <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
+            <div class="first">
+              <div class="divint">
+                <ion-item lines="none">
+                  <ion-label position="floating">Nom</ion-label>
+                  <ion-input
+                    placeholder="Entrer le nom de l'activité ici"
+                    formControlName="name"
+                    type="text"
+                  ></ion-input>
+                </ion-item>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.name.errors?.required"
+                >
+                  Name is required.
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.name.errors?.minlength"
+                >
+                  Name should be min 2 chars long.
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.name.errors?.maxLength"
+                >
+                  Name not should be max 20 chars long.
+                </span>
+              </div>
+              <div>
+                <ion-item lines="none">
+                  <ion-label position="floating">executant</ion-label>
+                  <ion-input
+                    placeholder="Entrer l'information ici"
+                    formControlName="executant"
+                    type="texte"
+                  ></ion-input>
+                </ion-item>
+
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.executant.errors?.minlength"
+                >
+                  Please provide valid executant .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.executant.errors?.maxLength"
+                >
+                  Please provide valid executant .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.executant.errors?.required"
+                >
+                  Entrer le executant.
+                </span>
+              </div>
+
+              <div class="divint">
+                <ion-item lines="none">
+                  <ion-label position="floating">Superficie</ion-label>
+                  <ion-input
+                    placeholder="Entrer la superficie ici"
+                    formControlName="superficie"
+                    type="texte"
+                  ></ion-input>
+                </ion-item>
+
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.superficie.errors?.minlength"
+                >
+                  Please provide valid superficie .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.superficie.errors?.maxLength"
+                >
+                  Please provide valid superficie .
+                </span>
+              </div>
+              <div>
+                <ion-item lines="none">
+                  <ion-label position="floating">Main d'oeuvre</ion-label>
+                  <ion-input
+                    placeholder="Entrer le cout de la main d'oeuvre ici"
+                    formControlName="coutmaindoeuvre"
+                    type="texte"
+                  ></ion-input>
+                </ion-item>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.coutmaindoeuvre.errors?.minlength"
+                >
+                  Please provide valid price .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.coutmaindoeuvre.errors?.maxLength"
+                >
+                  Please provide valid price .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.coutmaindoeuvre.errors?.required"
+                >
+                  Entrer le cout de la main d'oeuvre.
+                </span>
+              </div>
+            </div>
+
+            <div class="second">
+              <div>
+                <ion-item lines="none">
+                  <ion-label position="floating">Fréquence</ion-label>
+                  <ion-input
+                    placeholder="Entrer la fréquence ici"
+                    formControlName="frequence"
+                    type="texte"
+                  ></ion-input>
+                </ion-item>
+
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.frequence.errors?.minlength"
+                >
+                  Please provide valid frequence .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.frequence.errors?.maxLength"
+                >
+                  Please provide valid frequence .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.frequence.errors?.required"
+                >
+                  Entrer le frequence.
+                </span>
+              </div>
+              <div>
+                <ion-item lines="none">
+                  <ion-label position="floating">periode</ion-label>
+                  <ion-input
+                    placeholder="Entrer la période ici"
+                    formControlName="periode"
+                    type="texte"
+                  ></ion-input>
+                </ion-item>
+
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.periode.errors?.minlength"
+                >
+                  Please provide valid periode .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.periode.errors?.maxLength"
+                >
+                  Please provide valid periode .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.periode.errors?.required"
+                >
+                  Entrer la periode.
+                </span>
+              </div>
+              <div>
+                <ion-item lines="none">
+                  <ion-label position="floating">besoin materiel</ion-label>
+                  <ion-input
+                    placeholder="Entrer le besoin ici"
+                    formControlName="besoinMateriel"
+                    type="texte"
+                  ></ion-input>
+                </ion-item>
+
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.besoinMateriel.errors?.minlength"
+                >
+                  Please provide valid materiel .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.besoinMateriel.errors?.maxLength"
+                >
+                  Please provide valid besoin materiel .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.besoinMateriel.errors?.required"
+                >
+                  Entrer le besoin materiel.
+                </span>
+              </div>
+              <div>
+                <ion-item lines="none">
+                  <ion-label position="floating">cout materiel</ion-label>
+                  <ion-input
+                    placeholder="Entrer le cout ici"
+                    formControlName="coutMateriel"
+                    type="texte"
+                  ></ion-input>
+                </ion-item>
+
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.coutMateriel.errors?.minlength"
+                >
+                  Please provide valid cout materiel .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.coutMateriel.errors?.maxLength"
+                >
+                  Please provide valid cout materiel .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.coutMateriel.errors?.required"
+                >
+                  Entrer le cout materiel.
+                </span>
+              </div>
+            </div>
+
+            <div class="third">
+              <div class="divint">
+                <ion-item lines="none">
+                  <ion-label position="floating">Description</ion-label>
+                  <ion-textarea
+                    placeholder="faite une description ici"
+                    formControlName="description"
+                    type="text"
+                  ></ion-textarea>
+                </ion-item>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.description.errors?.required"
+                >
+                  description is required.
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.description.errors?.minlength"
+                >
+                  Name should be min 5 chars long.
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.description.errors?.maxLength"
+                >
+                  Name not should be max 1000 chars long.
+                </span>
+              </div>
+            </div>
+            <ion-row>
+              <ion-col>
+                <div class="ion-text-center">
+                  <ion-button type="submit" color="danger" size="small"
+                    >Submit</ion-button
+                  >
+                </div>
+              </ion-col>
+            </ion-row>
+          </form>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

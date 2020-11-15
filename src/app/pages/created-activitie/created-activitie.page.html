@@ -1,0 +1,82 @@
+<ion-toolbar color="medium">
+  <ion-buttons slot="start">
+    <ion-back-button defaultHref="/home"></ion-back-button>
+  </ion-buttons>
+  <ion-buttons slot="end">
+    <ion-button fill="clear" slot="icon-only" (click)="createActivitie()">
+      <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div class="ion-text-center ion-text-uppercase">
+          <h3>liste des activités</h3>
+        </div>
+        <div>
+          <ion-row class="header-row">
+            <ion-col size="2" class="ion-align-self-center">
+              <div class="ion-text-center ion-text-uppercase">Nom</div>
+            </ion-col>
+
+            <ion-col size="2" class="ion-align-self-center">
+              <div class="ion-text-center ion-text-uppercase">fréquence</div>
+            </ion-col>
+            <ion-col size="2" class="ion-align-self-center">
+              <div class="ion-text-center ion-text-uppercase">période</div>
+            </ion-col>
+            <ion-col size="2" class="ion-align-self-center">
+              <div class="ion-text-center ion-text-uppercase">
+                Besoin matériel
+              </div>
+            </ion-col>
+            <ion-col size="2" class="ion-align-self-center">
+              <div class="ion-text-center ion-text-uppercase">
+                cout matériel
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+
+        <ion-row
+          *ngFor="let row of activitiesTab; let i= index"
+          class="data-row data-update"
+          [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+        >
+          <ion-col
+            size="2"
+            class="ion-align-self-center"
+            [ngStyle]="{'height': '30px' }"
+          >
+            <div class="ion-text-center inte">{{row.name}}</div>
+          </ion-col>
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center inte">{{row.coutmaindoeuvre}}</div>
+          </ion-col>
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center inte">{{row.frequence}}</div>
+          </ion-col>
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center inte">{{row.periode}}</div>
+          </ion-col>
+
+          <ion-col size="2">
+            <div class="ion-text-center">{{row.coutMateriel}}</div>
+          </ion-col>
+
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center">
+              <ion-item button (click)="presentModal(row)">
+                <ion-label>
+                  {{row.firebaseAdd? 'approuvé': 'non confirmé'}}
+                </ion-label>
+              </ion-item>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

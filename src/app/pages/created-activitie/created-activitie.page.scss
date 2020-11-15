@@ -1,0 +1,102 @@
+.cole {
+  border-right: 1px solid #f1f1f1;
+}
+
+.center {
+  text-align: center;
+  // border: 3px solid #f1f1f1;
+  text-transform: uppercase;
+  padding: 20px 0;
+  font-size: 20px;
+  background-color: #f1f1f1;
+}
+
+ion-label {
+  text-transform: uppercase;
+  font-size: 5px;
+  // text-align: center;
+}
+
+span {
+  text-align: center;
+  background-color: rgb(245, 98, 118);
+  text-transform: uppercase;
+  font-size: 10px;
+  display: block;
+}
+ion-item {
+  font-size: 12px;
+}
+ion-col {
+  div {
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+  // text-align: center;
+}
+
+ion-col {
+  .inte {
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+  // text-align: center;
+}
+
+.data-lastrow {
+  background-color: #f1f1f1;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.header-row {
+  background-color: #263bf5;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  ion-col {
+    div {
+      // font-size: 9px;
+    }
+  }
+}
+.first {
+  display: block;
+  // background-color: brown;
+}
+.first {
+  display: flex;
+  //flex-wrap: nowrap;
+  //justify-content: space-between;
+}
+.first div {
+  // width: 25%;
+  flex-grow: 1;
+  border: 1px solid #f1f1f1;
+  margin: 15px;
+}
+
+.second {
+  display: flex;
+  // flex-wrap: wrap;
+  // justify-content: space-between;
+}
+.second div {
+  // width: 25%;
+  flex-grow: 1;
+  border: 1px solid #f1f1f1;
+  margin: 15px;
+}
+.third {
+  display: flex;
+}
+.third div {
+  // width: 25%;
+  flex-grow: 1;
+  border: 1px solid #f1f1f1;
+  margin-top: 15px;
+  height: 200px;
+}
+form,
+.fields {
+  // display: flex;
+  // flex-wrap: wrap;
+}

@@ -1,0 +1,48 @@
+<ion-content>
+  <div class="image-arriere"></div>
+  <div class="page">
+    <div class="contenu">
+      <div>
+        <h1>Ekang</h1>
+      </div>
+
+      <p style="text-align: center">
+        Veuillez remplir les informations
+        <br />
+        ci-dessous !
+      </p>
+      <form
+        [formGroup]="inscriptionForm"
+        (ngSubmit)="onInscriptionFormSubmit()"
+      >
+        <input formControlName="login" type="text" placeholder="Email" />
+        <input
+          formControlName="passe"
+          type="password"
+          placeholder="Mot de passe"
+        />
+        <input
+          formControlName="confirmation"
+          type="password"
+          placeholder="Confirmation"
+        />
+
+        <div class="connexion">
+          <button [disabled]="inscriptionForm.invalid" class="bg-primaire">
+            Je m'inscris
+          </button>
+        </div>
+      </form>
+      <div class="infos-oubliees">Conditions d'utilisation</div>
+
+      <div class="vague">
+        <img src="../../../assets/splash.png" style="width: 100%" />
+      </div>
+      <div (click)="inscriptionGoogle()" class="inscription">
+        Inscrivez-vous grâce à votre compte
+        <br />
+        GOOGLE
+      </div>
+    </div>
+  </div>
+</ion-content>
