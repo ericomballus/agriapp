@@ -11,7 +11,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "load": "node server.js",
-    "starts": "node server.js",
+    "starts": "node server2.js",
     "electron:mac": "electron-packager ./electron SimonsApp --overwrite --platform=darwin --arch=x64 --prune=true --out dist/",
     "electron:win": "electron-packager ./electron AgriApp --overwrite --platform=win32 --arch=ia32 --prune=true --out dist/ --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName='Agri App'"
   },
