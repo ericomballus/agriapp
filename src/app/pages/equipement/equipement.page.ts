@@ -15,7 +15,7 @@ export class EquipementPage implements OnInit {
   ionicForm: FormGroup;
   // defaultDate = "1987-06-30";
   isSubmitted = false;
-
+  errorControl: any;
   materielListTab: Array<Materiel>;
   constructor(
     public formBuilder: FormBuilder,
@@ -64,6 +64,7 @@ export class EquipementPage implements OnInit {
     } else {
       console.log(this.ionicForm.value);
       let emp = this.ionicForm.value;
+      emp["created"] = Date.now();
       this.materielService.postMateriel(this.ionicForm.value).subscribe(
         (result: Materiel) => {
           console.log(result);
@@ -90,6 +91,14 @@ export class EquipementPage implements OnInit {
         },
         (err) => {
           console.log(err);
+          this.materielService
+            .postMaterielToFirebase(emp)
+            .then((res) => {
+              this.ionicForm.reset();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         }
       );
     }
@@ -100,10 +109,10 @@ export class EquipementPage implements OnInit {
         console.log(data);
 
         this.materielListTab = data;
-        this.getEquipementFromFirebase();
+        // this.getEquipementFromFirebase();
       },
       (err) => {
-        this.getEquipementFromFirebase();
+        // this.getEquipementFromFirebase();
       }
     );
   }
@@ -131,42 +140,99 @@ export class EquipementPage implements OnInit {
   }
   delete(row: Materiel) {
     console.log(row);
-
-    this.materielService.deleteMateriel(row).subscribe((res) => {
+    this.database
+      //.list("agriActivities")
+      .list("/agriMatriels")
+      .remove(row["key"]);
+    /* this.materielService.deleteMateriel(row).subscribe((res) => {
       console.log(res);
 
       this.materielListTab = this.materielListTab.filter((elt) => {
         return elt._id !== row._id;
       });
-    });
+    }); */
   }
 
   getEquipementFromFirebase() {
+    let storage = JSON.parse(localStorage.getItem("equipement"));
+    // this.materielListTab= storage
+    if (Array.isArray(storage)) {
+      this.materielListTab = storage;
+    }
     this.database
       //.list("agriActivities")
       .list("/agriMatriels", (ref) =>
         ref.orderByChild("agriMatriels").limitToLast(20)
       )
       .snapshotChanges()
-      .subscribe((actions) => {
-        console.log(actions);
+      .subscribe(
+        (actions) => {
+          let tab = [];
+          actions.forEach((action) => {
+            let a = action.payload.val();
+            a["key"] = action.key;
+            console.log(a);
+            tab.push(a);
+          });
+          this.materielListTab = tab;
+          localStorage.setItem("equipement", JSON.stringify(tab));
+        },
+        (err) => {
+          console.log("error");
+        }
+      );
+  }
 
+  handleInput(ev) {
+    // console.log("debouce time");
+    const val = ev.target.value;
+
+    this.database
+      .list("/agriMatriels", (ref) =>
+        ref
+          .orderByChild("name")
+          .startAt(val)
+          .endAt(val + "\uf8ff")
+      )
+      .snapshotChanges()
+      .subscribe((actions) => {
+        // console.log(actions);
         let tab = [];
         actions.forEach((action) => {
           let a = action.payload.val();
           a["key"] = action.key;
-          console.log(a);
           tab.push(a);
         });
-        /* if (this.activitiesTab.length) {
-          tab.forEach((act) => {
-            this.activitiesTab.forEach((elt) => {
-              if (elt._id == act._id) {
-                this.remplaceActivitie(act);
-              }
-            });
-          });
-        } */
+        console.log(tab);
       });
+
+    //firebase find
+
+    if (val && val.trim() != "") {
+      // this.isItemAvailable = true;
+      /*  this.custumers = this.custumerTab2.filter((item) => {
+        return item.toLowerCase().indexOf(val.toLowerCase()) > -1;
+      });
+     */
+    } else {
+      // this.isItemAvailable = false;
+      //this.custumersList = [];
+    }
+  }
+  Search(prod) {
+    // this.isItemAvailable = false;
+
+    let client;
+    /* client = this.custumerTab.filter((item) => {
+      return item["nomclient"] == prod;
+    }); */
+    //console.log(client);
+    if (client.length) {
+    }
+  }
+
+  handleCancel(ev) {
+    console.log(ev.target.value);
+    // this.custumer["name"] = ev.target.value;
   }
 }

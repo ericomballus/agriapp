@@ -15,6 +15,7 @@ import { AngularFireDatabase } from "@angular/fire/database";
 export class LoginPage implements OnInit {
   admin: any;
   email: string;
+  userNumber: any;
   constructor(
     public router: Router,
     public auth: AuthentificationService,

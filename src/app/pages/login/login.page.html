@@ -3,7 +3,7 @@
     <div class="dark-overlay">
       <div class="landing-inner">
         <h1 class="x-large">MAERI</h1>
-        <p class="lead">point of sale</p>
+        <p class="lead">FARM MANAGEMENT</p>
         <form #formadmin="ngForm" (ngSubmit)="login(formadmin)" class="form">
           <div class="form-group">
             <ion-input
@@ -36,12 +36,6 @@
               (click)="login(formadmin)"
               [disabled]="formadmin.invalid"
               >Login</ion-button
-            >
-          </div>
-
-          <div class="btnhome" *ngIf="!maeriAdmin">
-            <ion-button size="small" clear expand="block" color="success"
-              >forgot password ?</ion-button
             >
           </div>
         </form>

@@ -1,0 +1,172 @@
+<ion-header>
+  <ion-toolbar color="medium">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
+      <ion-row>
+        <ion-col
+          size-md="4"
+          size-lg="4"
+          size-xs="12"
+          size-sm="12"
+          size-xl="4"
+        ></ion-col>
+        <ion-col size-md="4" size-lg="4" size-xs="12" size-sm="12" size-xl="4">
+          <div class="divint">
+            <ion-item lines="none">
+              <ion-label position="floating">Nom Activité</ion-label>
+              <ion-input
+                placeholder="Entrer le nom ici"
+                formControlName="name"
+                type="text"
+              ></ion-input>
+            </ion-item>
+          </div>
+        </ion-col>
+        <ion-col
+          size-md="4"
+          size-lg="4"
+          size-xs="12"
+          size-sm="12"
+          size-xl="4"
+        ></ion-col>
+        <!--
+          <ion-col size-md="4" size-lg="4" size-xs="12" size-sm="12" size-xl="12">
+          <div>
+            <ion-item lines="none">
+              <ion-label position="floating">prix unitaire</ion-label>
+              <ion-input
+                placeholder="Entrer le prix unitaire ici"
+                formControlName="price"
+                type="number"
+              ></ion-input>
+            </ion-item>
+            <span
+              class="error ion-padding"
+              *ngIf="isSubmitted && errorControl.price.errors?.minlength"
+            >
+              Please provide valid price .
+            </span>
+            <span
+              class="error ion-padding"
+              *ngIf="isSubmitted && errorControl.price.errors?.maxLength"
+            >
+              Please provide valid price .
+            </span>
+            <span
+              class="error ion-padding"
+              *ngIf="isSubmitted && errorControl.price.errors?.required"
+            >
+              Entrer le prix d'achat.
+            </span>
+          </div>
+        </ion-col>
+        <ion-col size-md="4" size-lg="4" size-xs="12" size-sm="12" size-xl="12">
+          <div>
+            <ion-item lines="none">
+              <ion-label position="floating">quantité disponible</ion-label>
+              <ion-input
+                placeholder="Entrer la quantité disponible ici"
+                formControlName="quantity"
+                type="number"
+              ></ion-input>
+            </ion-item>
+
+            <span
+              class="error ion-padding"
+              *ngIf="isSubmitted && errorControl.quantity.errors?.minlength"
+            >
+              Please provide valid quantity .
+            </span>
+            <span
+              class="error ion-padding"
+              *ngIf="isSubmitted && errorControl.quantity.errors?.maxLength"
+            >
+              Please provide valid quantity .
+            </span>
+            <span
+              class="error ion-padding"
+              *ngIf="isSubmitted && errorControl.quantity.errors?.required"
+            >
+              Entrer la quantité.
+            </span>
+          </div>
+        </ion-col>
+        -->
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div class="ion-text-center">
+            <ion-button type="submit" color="danger" size="small"
+              >Enregistrer</ion-button
+            >
+          </div>
+        </ion-col>
+      </ion-row>
+    </form>
+    <ion-row>
+      <ion-col size-md="12" size-lg="12" size-xs="12" size-sm="12" size-xl="12">
+      </ion-col>
+      <ion-col>
+        <div class="ion-text-center ion-text-uppercase">
+          <h3>liste nom activités</h3>
+        </div>
+        <div>
+          <ion-row class="header-row">
+            <ion-col size="3" class="ion-align-self-center">
+              <div class="ion-text-center ion-text-uppercase">Nom</div>
+            </ion-col>
+            <ion-col size="3" class="ion-align-self-center">
+              <div class="ion-text-center ion-text-uppercase"></div>
+            </ion-col>
+            <ion-col size="3" class="ion-align-self-center">
+              <div class="ion-text-center ion-text-uppercase"></div>
+            </ion-col>
+            <ion-col size="3" class="ion-align-self-center"> </ion-col>
+          </ion-row>
+        </div>
+
+        <ion-row
+          *ngFor="let row of materielListTab; let i= index"
+          class="data-row data-update"
+          [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+        >
+          <ion-col
+            size="3"
+            class="ion-align-self-center"
+            [ngStyle]="{'height': '30px' }"
+          >
+            <div class="ion-text-center inte">{{row.name}}</div>
+          </ion-col>
+
+          <ion-col size="3" class="ion-align-self-center">
+            <div class="ion-text-center inte"></div>
+          </ion-col>
+
+          <ion-col size="3" class="ion-align-self-center">
+            <div class="ion-text-center inte"></div>
+          </ion-col>
+
+          <ion-col size="3" class="ion-align-self-center">
+            <div class="ion-text-left">
+              <ion-button
+                color="danger"
+                size="small"
+                fill="clear"
+                (click)="delete(row)"
+              >
+                <ion-icon slot="end" name="trash"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

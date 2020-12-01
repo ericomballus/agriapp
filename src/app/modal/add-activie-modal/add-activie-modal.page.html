@@ -1,10 +1,8 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="medium">
     <ion-title></ion-title>
-    <ion-buttons slot="end">
-      <ion-button fill="clear" slot="icon-only" (click)="dismiss()">
-        <ion-icon name="close-circle-outline"></ion-icon>
-      </ion-button>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/created-activitie"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -17,6 +15,23 @@
           <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
             <div class="first">
               <div class="divint">
+                <ion-item lines="none">
+                  <ion-select
+                    placeholder="Nom activité"
+                    cancelText="Annuler"
+                    okText="Ok"
+                    (ionChange)="selectNameEvent($event)"
+                  >
+                    <ion-select-option
+                      *ngFor="let mat of nameList; let i= index"
+                      [value]="mat"
+                      >{{mat.name}}</ion-select-option
+                    >
+                  </ion-select>
+                </ion-item>
+              </div>
+              <!--
+                <div class="divint">
                 <ion-item lines="none">
                   <ion-label position="floating">Nom</ion-label>
                   <ion-input
@@ -44,6 +59,7 @@
                   Name not should be max 20 chars long.
                 </span>
               </div>
+             -->
               <div>
                 <ion-item lines="none">
                   <ion-label position="floating">executant</ion-label>
@@ -188,33 +204,33 @@
               </div>
               <div>
                 <ion-item lines="none">
-                  <ion-label position="floating">besoin materiel</ion-label>
-                  <ion-input
-                    placeholder="Entrer le besoin ici"
-                    formControlName="besoinMateriel"
-                    type="texte"
-                  ></ion-input>
+                  <ion-label position="floating">Description</ion-label>
+                  <ion-textarea
+                    placeholder="faite une description ici"
+                    formControlName="description"
+                    type="text"
+                  ></ion-textarea>
                 </ion-item>
-
                 <span
                   class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.besoinMateriel.errors?.minlength"
+                  *ngIf="isSubmitted && errorControl.description.errors?.required"
                 >
-                  Please provide valid materiel .
+                  description is required.
                 </span>
                 <span
                   class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.besoinMateriel.errors?.maxLength"
+                  *ngIf="isSubmitted && errorControl.description.errors?.minlength"
                 >
-                  Please provide valid besoin materiel .
+                  Name should be min 5 chars long.
                 </span>
                 <span
                   class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.besoinMateriel.errors?.required"
+                  *ngIf="isSubmitted && errorControl.description.errors?.maxLength"
                 >
-                  Entrer le besoin materiel.
+                  Name not should be max 1000 chars long.
                 </span>
               </div>
+
               <div>
                 <ion-item lines="none">
                   <ion-label position="floating">cout materiel</ion-label>
@@ -246,35 +262,77 @@
               </div>
             </div>
 
-            <div class="third">
-              <div class="divint">
-                <ion-item lines="none">
-                  <ion-label position="floating">Description</ion-label>
-                  <ion-textarea
-                    placeholder="faite une description ici"
-                    formControlName="description"
-                    type="text"
-                  ></ion-textarea>
+            <div class="second three">
+              <div>
+                <ion-item>
+                  <ion-label>besoin materiel</ion-label>
+                  <ion-select
+                    placeholder="materiel"
+                    cancelText="Annuler"
+                    okText="Ok"
+                    (ionChange)="selectEvent($event)"
+                  >
+                    <ion-select-option
+                      *ngFor="let mat of materieList; let i= index"
+                      [value]="mat"
+                      >{{mat.name}}</ion-select-option
+                    >
+                  </ion-select>
                 </ion-item>
-                <span
-                  class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.description.errors?.required"
-                >
-                  description is required.
-                </span>
-                <span
-                  class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.description.errors?.minlength"
-                >
-                  Name should be min 5 chars long.
-                </span>
-                <span
-                  class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.description.errors?.maxLength"
-                >
-                  Name not should be max 1000 chars long.
-                </span>
               </div>
+              <div>
+                <ion-item>
+                  <ion-input
+                    disabled="{{isDisabled}}"
+                    placeholder="entrer quantité"
+                    debounce="500"
+                    (ionChange)="addQuantity($event)"
+                    type="number"
+                  ></ion-input>
+                </ion-item>
+              </div>
+              <div>
+                <ion-button
+                  [disabled]="(!disabled)"
+                  (click)="addMateriel()"
+                  size="small"
+                  >valider</ion-button
+                >
+              </div>
+            </div>
+            <div *ngIf="tab.length">
+              <ion-row
+                *ngFor="let mat of tab; let i= index"
+                style="width: 100%; max-height: 600px; overflow-y: scroll"
+                class="data-row data-update"
+                [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+              >
+                <ion-col
+                  size="3"
+                  class="ion-align-self-center"
+                  [ngStyle]="{'height': '30px' }"
+                >
+                  <div class="ion-text-center inte">{{mat.name}}</div>
+                </ion-col>
+                <ion-col
+                  size="3"
+                  class="ion-align-self-center"
+                  [ngStyle]="{'height': '30px' }"
+                >
+                  <div class="ion-text-center inte">{{mat.qty}}</div>
+                </ion-col>
+                <ion-col size="3" class="ion-align-self-center">
+                  <div class="ion-text-center inte">
+                    {{mat.price | currency: "FCFA":"symbol":"3.0-0":"fr"}}
+                  </div>
+                </ion-col>
+                <ion-col size="3" class="ion-align-self-center">
+                  <div class="ion-text-center inte">
+                    {{mat.price * mat.qty | currency:
+                    "FCFA":"symbol":"3.0-0":"fr"}}
+                  </div>
+                </ion-col>
+              </ion-row>
             </div>
             <ion-row>
               <ion-col>

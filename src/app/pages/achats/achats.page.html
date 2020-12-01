@@ -1,0 +1,210 @@
+<ion-header>
+  <ion-toolbar color="medium">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-searchbar
+      class="search"
+      type="text"
+      (ionChange)="handleInput($event)"
+      (ionCancel)="handleCancel($event)"
+      debounce="1000"
+    ></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div></div>
+  <input
+    class="uploadBtn"
+    type="file"
+    class="upload"
+    (change)="uploadFile($event)"
+    class="filebtn"
+    #fileButton
+  />
+  <div class="search"></div>
+
+  <div class="item-content" *ngIf="tabList.length">
+    <ion-item color="dark" *ngFor="let elt of tabList">
+      <ion-thumbnail slot="start" class="thumbnailM">
+        <ion-img *ngIf="elt.url" [src]="elt.url"></ion-img>
+      </ion-thumbnail>
+      <ion-row>
+        <ion-col size="4" class="ion-align-self-center">
+          <div class="ion-text-center ion-text-uppercase">
+            <p>{{elt.quantity}} {{ elt.name}}</p>
+          </div>
+        </ion-col>
+        <ion-col size="4" class="ion-align-self-center">
+          <div class="ion-text-center ion-text-uppercase">
+            <p>{{ elt.price | currency: "FCFA":"symbol":"3.0-0":"fr"}}</p>
+          </div>
+        </ion-col>
+        <ion-col size="4" class="ion-align-self-center">
+          <div class="ion-text-center ion-text-uppercase">
+            <p>{{ elt.created | date:'medium'}}</p>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-button (click)="Search(elt)" fill="outline" slot="end"
+        >View</ion-button
+      >
+    </ion-item>
+  </div>
+
+  <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
+    <ion-row>
+      <ion-col size-md="3" size-lg="3" size-xs="12" size-sm="12" size-xl="12">
+        <ion-item>
+          <ion-label>besoin materiel</ion-label>
+          <ion-select
+            placeholder="materiel"
+            cancelText="Annuler"
+            okText="Ok"
+            (ionChange)="selectEvent($event)"
+          >
+            <ion-select-option
+              *ngFor="let mat of materieList; let i= index"
+              [value]="mat"
+              >{{mat.name}}</ion-select-option
+            >
+          </ion-select>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size-md="3" size-lg="3" size-xs="12" size-sm="12" size-xl="12">
+        <ion-item lines="none">
+          <ion-label position="floating">prix unitaire</ion-label>
+          <ion-input
+            placeholder="Entrer le prix unitaire ici"
+            formControlName="price"
+            type="number"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size-md="3" size-lg="3" size-xs="12" size-sm="12" size-xl="12">
+        <ion-item lines="none">
+          <ion-label position="floating">quantité acheté</ion-label>
+          <ion-input
+            placeholder="Entrer la quantité acheté ici"
+            formControlName="quantity"
+            type="number"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size-md="3" size-lg="3" size-xs="12" size-sm="12" size-xl="12">
+        <ion-item lines="none">
+          <ion-button size="small" fill="clear" slot="end" (click)="galerie()">
+            image
+            <ion-icon slot="end" name="image-outline"></ion-icon>
+          </ion-button>
+          <ion-thumbnail
+            (click)="zoomImage()"
+            *ngIf="photoURL"
+            class="thumbnailM"
+          >
+            <ion-img [src]="photoURL"></ion-img>
+          </ion-thumbnail>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <div class="ion-text-center">
+          <ion-button
+            [disabled]="(!choixMateriel)"
+            type="submit"
+            color="danger"
+            size="small"
+            >Enregistrer</ion-button
+          >
+        </div>
+      </ion-col>
+    </ion-row>
+  </form>
+
+  <ion-row>
+    <ion-col>
+      <div class="ion-text-center ion-text-uppercase">
+        <h3>liste des achats</h3>
+      </div>
+      <div>
+        <ion-row class="header-row">
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">Nom</div>
+          </ion-col>
+
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">prix unitaire</div>
+          </ion-col>
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">quantité</div>
+          </ion-col>
+
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">cout matériel</div>
+          </ion-col>
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">image</div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <ion-row
+        *ngFor="let row of materielListTab; let i= index"
+        class="data-row data-update"
+        [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+      >
+        <ion-col
+          size="2"
+          class="ion-align-self-center"
+          [ngStyle]="{'height': '30px' }"
+        >
+          <div class="ion-text-center inte">{{row.name}}</div>
+        </ion-col>
+        <ion-col size="2" class="ion-align-self-center">
+          <div class="ion-text-center inte">
+            {{row.price | currency: "FCFA":"symbol":"3.0-0":"fr"}}
+          </div>
+        </ion-col>
+        <ion-col size="2" class="ion-align-self-center">
+          <div class="ion-text-center inte">{{row.quantity}}</div>
+        </ion-col>
+        <ion-col size="2" class="ion-align-self-center">
+          <div class="ion-text-center inte">
+            {{row.quantity * row.price | currency:
+            "FCFA":"symbol":"3.0-0":"fr"}}
+          </div>
+        </ion-col>
+        <ion-col size="2" class="ion-align-self-center">
+          <div class="ion-text-center inte imgthumbnail">
+            <ion-thumbnail (click)="zoomImage2(row.url)" class="thumbnailM">
+              <ion-img *ngIf="row.url" [src]="row.url"></ion-img>
+            </ion-thumbnail>
+          </div>
+        </ion-col>
+
+        <ion-col size="2">
+          <div class="ion-text-center allIcone">
+            <div>
+              <ion-button size="small" fill="clear" (click)="removeOne(row)">
+                <ion-icon name="remove-circle-outline"></ion-icon>
+              </ion-button>
+            </div>
+            <div>
+              <ion-button size="small" fill="clear" (click)="addOne(row)">
+                <ion-icon name="add-circle-outline"></ion-icon>
+              </ion-button>
+            </div>
+            <div>
+              <ion-button size="small" fill="clear" (click)="delete(row)">
+                <ion-icon name="trash"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>

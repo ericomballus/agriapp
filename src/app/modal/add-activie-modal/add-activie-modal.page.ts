@@ -7,6 +7,8 @@ import { AngularFireStorage } from "@angular/fire/storage";
 import { ModalController } from "@ionic/angular";
 import { InstructionPage } from "../../modal/instruction/instruction.page";
 import * as firebsase from "firebase";
+import { MaterielService } from "src/app/services/materiel.service";
+import { NotificationService } from "src/app/services/notification.service";
 const { Network } = Plugins;
 @Component({
   selector: "app-add-activie-modal",
@@ -20,26 +22,39 @@ export class AddActivieModalPage implements OnInit {
   networkStatus: NetworkStatus;
   networkListener: PluginListenerHandle;
   activitiesTab: any;
+  materieList: any[] = [];
+  nameList: any[] = [];
+  name: any;
+  nameKey: any;
+  tab: any[] = [];
+  besoinMateriel = "";
+  quantity = 0;
+  choixMateriel: any;
+  isDisabled: boolean = true;
+  public disabled = false;
   constructor(
     public formBuilder: FormBuilder,
     public activitiService: ActivitiesApiService,
     private database: AngularFireDatabase,
-    public modalController: ModalController
+    public modalController: ModalController,
+    public materielService: MaterielService,
+    public notif: NotificationService
   ) {
     this.getStatus();
-    this.getActivities();
+    this.getActivitieName();
+    this.getMateriel();
   }
 
   async ngOnInit() {
     this.ionicForm = this.formBuilder.group({
-      name: [
+      /* name: [
         "",
         [
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(20),
         ],
-      ],
+      ],*/
       description: [
         "",
         [
@@ -84,14 +99,14 @@ export class AddActivieModalPage implements OnInit {
           Validators.maxLength(1000),
         ],
       ],
-      besoinMateriel: [
+      /*  besoinMateriel: [
         "",
         [
           Validators.required,
           Validators.minLength(1),
           Validators.maxLength(1000),
         ],
-      ],
+      ],*/
       coutMateriel: [
         "",
         [
@@ -112,7 +127,7 @@ export class AddActivieModalPage implements OnInit {
   }
   async getStatus() {
     console.log(status);
-    console.log("hello status");
+
     this.networkListener = Network.addListener(
       "networkStatusChange",
       (status) => {
@@ -144,6 +159,18 @@ export class AddActivieModalPage implements OnInit {
     } else {
       console.log(this.ionicForm.value);
       let emp = this.ionicForm.value;
+      emp["created"] = Date.now();
+      if (this.tab.length) {
+        emp["materielList"] = this.tab;
+        emp["name"] = this.name;
+        emp["nameKey"] = this.nameKey;
+        this.tab.forEach((materiel) => {
+          this.besoinMateriel =
+            this.besoinMateriel + "," + materiel.qty + "" + materiel.name;
+        });
+      }
+      emp["besoinMateriel"] = this.besoinMateriel;
+
       this.activitiService.postActivitie(this.ionicForm.value).subscribe(
         (result) => {
           console.log(result["activitie"]);
@@ -169,6 +196,16 @@ export class AddActivieModalPage implements OnInit {
         },
         (err) => {
           console.log(err);
+          this.activitiService
+            .postActivitieToFirebase(emp)
+            .then((res) => {
+              console.log(res);
+              this.notif.presentMessage("l'activité a été enregistré!!!");
+              this.ionicForm.reset();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         }
       );
     }
@@ -176,9 +213,7 @@ export class AddActivieModalPage implements OnInit {
   getActivities() {
     this.activitiService.getLastTenActivitie().subscribe((data) => {
       console.log(data);
-
       this.activitiesTab = data;
-      // this.activitiesTab = this.activitiesTab.reverse();
     });
   }
   updateActivitiesStatus(data) {
@@ -189,10 +224,89 @@ export class AddActivieModalPage implements OnInit {
       });
   }
   dismiss() {
-    // using the injected ModalController this page
-    // can "dismiss" itself and optionally pass back data
     this.modalController.dismiss({
       dismissed: true,
     });
+  }
+  selectEvent(ev) {
+    console.log(ev.detail.value);
+    let tab = ev.detail.value;
+    this.choixMateriel = ev.detail.value;
+    this.isDisabled = false;
+    /* tab.forEach((materiel) => {
+      this.besoinMateriel = this.besoinMateriel + "," + materiel.name;
+    }); */
+  }
+
+  selectNameEvent(ev) {
+    console.log(ev.detail.value);
+    this.name = ev.detail.value.name;
+    this.nameKey = ev.detail.value.key;
+    this.isDisabled = false;
+    /* tab.forEach((materiel) => {
+      this.besoinMateriel = this.besoinMateriel + "," + materiel.name;
+    }); */
+  }
+
+  getMateriel() {
+    this.materielService.getMateriel().subscribe(
+      (data: Array<any>) => {
+        console.log(data);
+
+        this.materieList = data;
+        // this.getEquipementFromFirebase();
+      },
+      (err) => {
+        // this.getEquipementFromFirebase();
+      }
+    );
+  }
+
+  getActivitieName() {
+    this.materielService.getActivieNames().subscribe(
+      (data: Array<any>) => {
+        console.log(data);
+
+        this.nameList = data;
+        // this.getEquipementFromFirebase();
+      },
+      (err) => {
+        // this.getEquipementFromFirebase();
+      }
+    );
+  }
+
+  getEquipementFromFirebase() {
+    let storage = JSON.parse(localStorage.getItem("equipement"));
+    if (Array.isArray(storage)) {
+      this.materieList = storage;
+    }
+    /* this.database
+      .list("/agriMatriels", (ref) =>
+        ref.orderByChild("agriMatriels").limitToLast(20)
+      )
+      .snapshotChanges()
+      .subscribe((actions) => {
+        let tab = [];
+        actions.forEach((action) => {
+          let a = action.payload.val();
+          a["key"] = action.key;
+          console.log(a);
+          tab.push(a);
+        });
+        this.materieList = tab;
+      }); */
+  }
+
+  addQuantity(ev) {
+    this.quantity = parseInt(ev.detail.value);
+    this.disabled = true;
+    this.choixMateriel["qty"] = this.quantity;
+  }
+  addMateriel() {
+    this.tab.push(this.choixMateriel);
+    this.disabled = false;
+    this.choixMateriel = null;
+    this.isDisabled = true;
   }
 }

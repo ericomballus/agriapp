@@ -105,7 +105,11 @@ form,
 .allIcone {
   display: flex;
 }
-.allIcone div {
-  // width: 25%;
-  flex-grow: 1;
+.allIcone div ion-button {
+}
+.search {
+  padding-left: 20%;
+  padding-right: 20%;
+  // margin: auto;
+  // flex-basis: 200px;
 }

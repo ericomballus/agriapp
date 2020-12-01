@@ -7,8 +7,14 @@ import { StatusBar } from "@ionic-native/status-bar/ngx";
 import { ElectronService } from "ngx-electron";
 import { Plugins } from "@capacitor/core";
 import { ScreensizeService } from "./services/screensize.service";
-
+import { ConnectionService } from "ngx-connection-service";
+import { MaterielService } from "./services/materiel.service";
+import { ActivitiesApiService } from "./services/activities-api.service";
+import { AchatService } from "./services/achat.service";
 const { LocalNotifications, Clipboard, Modals } = Plugins;
+import { NotificationService } from "./services/notification.service";
+import { UserService } from "./services/user.service";
+import { NetworkService } from "./services/network.service";
 @Component({
   selector: "app-root",
   templateUrl: "app.component.html",
@@ -17,55 +23,58 @@ const { LocalNotifications, Clipboard, Modals } = Plugins;
 export class AppComponent implements OnInit, OnDestroy {
   public onlineEvent: Observable<Event>;
   public offlineEvent: Observable<Event>;
-  public subscriptions: Subscription[] = [];
-  public connectionStatusMessage: string;
-  public connectionStatus: string;
+
   isDesktop: boolean;
+  hasNetworkConnection: boolean;
+  hasInternetAccess: boolean;
+  status: string;
+  count = 0;
+  count2 = 0;
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private electronService: ElectronService,
-    private screensizeService: ScreensizeService
+    // private electronService: ElectronService,
+    private screensizeService: ScreensizeService,
+    private connectionService: ConnectionService,
+    private materialService: MaterielService,
+    public activitiService: ActivitiesApiService,
+    public achatService: AchatService,
+    private notif: NotificationService,
+    private userService: UserService,
+    private networkService: NetworkService
   ) {
     this.initializeApp();
-    if (this.electronService.isElectronApp) {
-      console.log("I AM ELECTRON");
-      // this.electronService.ipcRenderer.on("online", this.showElectronAlert);
-      // this.electronService.ipcRenderer.on("offline", this.showModal);
-    }
-    /*  this.screensizeService.isDesktopView().subscribe((isDesktop) => {
-      if (this.isDesktop && !isDesktop) {
-        // Reload because our routing is out of place
-        window.location.reload();
+    this.connectionService.monitor().subscribe((currentState) => {
+      this.hasNetworkConnection = currentState.hasNetworkConnection;
+      this.hasInternetAccess = currentState.hasInternetAccess;
+      if (this.hasNetworkConnection && this.hasInternetAccess) {
+        this.status = "ONLINE";
+        this.networkService.setStatus(true);
+        this.count = this.count + 1;
+        this.count2 = 0;
+        if (this.count == 1) {
+          this.notif.onlineAlert();
+          this.materialService.getMateriel().subscribe((res) => {});
+          this.activitiService.getLastTenActivitie().subscribe(
+            (data) => {},
+            (err) => {}
+          );
+          this.achatService.getAchat().subscribe((res) => {});
+          this.userService.getAllUser().subscribe((res) => {});
+        }
+      } else {
+        this.count2 = this.count2 + 1;
+        this.status = "OFFLINE";
+        this.count = 0;
+        if (this.count2 == 1) {
+          this.notif.offlineAlert();
+        }
       }
-
-      this.isDesktop = isDesktop;
-    }); */
+    });
   }
-  ngOnInit(): void {
-    console.log("hello connection");
-
-    this.onlineEvent = fromEvent(window, "online");
-    this.offlineEvent = fromEvent(window, "offline");
-    this.subscriptions.push(
-      this.onlineEvent.subscribe((event) => {
-        console.log("Connected to internet! You are online");
-
-        this.connectionStatusMessage = "Connected to internet! You are online";
-        this.connectionStatus = "online";
-      })
-    );
-    this.subscriptions.push(
-      this.offlineEvent.subscribe((e) => {
-        this.connectionStatusMessage = "Connection lost! You are offline";
-        this.connectionStatus = "offline";
-      })
-    );
-  }
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-  }
+  ngOnInit(): void {}
+  ngOnDestroy(): void {}
 
   initializeApp() {
     this.platform.ready().then(() => {

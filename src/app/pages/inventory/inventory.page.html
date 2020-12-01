@@ -3,7 +3,423 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button
+        [disabled]="(disabled)"
+        fill="outline"
+        color="light"
+        size="small"
+        (click)="toggle()"
+        >Activités</ion-button
+      >
+      <ion-button
+        [disabled]="(!disabled)"
+        fill="outline"
+        color="light"
+        size="small"
+        (click)="toggle()"
+        >achats</ion-button
+      >
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content> </ion-content>
+<ion-content *ngIf="!disabled">
+  <div class="date">
+    <div class="input-group firstDiviCustum">.</div>
+
+    <div class="input-group">
+      <input
+        style="display: none"
+        class="form-control"
+        placeholder="yyyy-mm-dd"
+        name="dp"
+        ngbDatepicker
+        #d="ngbDatepicker"
+        [(ngModel)]="model"
+      />
+      <div class="input-group-append">
+        <ion-button
+          fill="clear"
+          color="primary"
+          size="small"
+          class="btn btn-outline-secondary calendar"
+          (click)="d.toggle()"
+          type="button"
+          >Debut <ion-icon name="calendar"></ion-icon
+        ></ion-button>
+      </div>
+    </div>
+    <div class="input-group">
+      <pre>{{model.day}}/{{model.month}}/{{model.year}}</pre>
+    </div>
+    <div class="input-group">
+      <pre>{{model2.day}}/{{model2.month}}/{{model2.year}}</pre>
+    </div>
+    <div class="input-group">
+      <input
+        style="display: none"
+        class="form-control"
+        placeholder="yyyy-mm-dd"
+        name="dp2"
+        ngbDatepicker
+        #d2="ngbDatepicker"
+        [(ngModel)]="model2"
+      />
+      <div class="input-group-append">
+        <ion-button
+          fill="clear"
+          color="warning"
+          size="small"
+          class="btn btn-outline-secondary calendar"
+          (click)="d2.toggle()"
+          type="button"
+          >Fin <ion-icon name="calendar"></ion-icon
+        ></ion-button>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <ion-select
+        placeholder="materiel"
+        cancelText="Annuler"
+        okText="Ok"
+        (ionChange)="selectNameEvent($event)"
+      >
+        <ion-select-option
+          *ngFor="let mat of materielList; let i= index"
+          [value]="mat"
+          >{{mat.name}}</ion-select-option
+        >
+      </ion-select>
+    </div>
+  </div>
+
+  <ion-row>
+    <ion-col
+      size-md="2"
+      size-lg="2"
+      size-xs="12"
+      size-sm="12"
+      size-xl="12"
+      class="ion-padding ion-align-self-center"
+    >
+      <div class="ion-text-center ion-text-uppercase">
+        <ion-button
+          fill="outline"
+          size="small"
+          color="success"
+          (click)=" selectByday()"
+          >valider
+        </ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row> </ion-row>
+  <ion-row class="header-row">
+    <ion-col size="3" class="ion-align-self-center">
+      <div class="ion-text-center ion-text-uppercase taille2">nom</div>
+    </ion-col>
+    <ion-col size="2" class="ion-align-self-center">
+      <div class="ion-text-center ion-text-uppercase taille2">prix</div>
+    </ion-col>
+    <ion-col size="3" class="ion-align-self-center">
+      <div class="ion-text-center ion-text-uppercase taille2">date</div>
+    </ion-col>
+    <ion-col size="2" class="ion-align-self-center">
+      <div class="ion-text-center ion-text-uppercase taille2">activité</div>
+    </ion-col>
+    <ion-col size="2" class="ion-align-self-center">
+      <div class="ion-text-center ion-text-uppercase taille2">image</div>
+    </ion-col>
+  </ion-row>
+  <div class="item-content" *ngIf="tabList.length">
+    <ion-row
+      *ngFor="let elt of tabList; let i= index"
+      [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+    >
+      <ion-col size="3" class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase taille">
+          <p>{{elt.quantity}} {{ elt.name}}</p>
+        </div>
+      </ion-col>
+      <ion-col size="2" class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase taille">
+          <p>
+            {{ elt.price * elt.quantity | currency:
+            "FCFA":"symbol":"2.0-0":"fr"}}
+          </p>
+        </div>
+      </ion-col>
+      <ion-col size="3" class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase taille">
+          <p>{{ elt.created | date:'medium'}}</p>
+        </div>
+      </ion-col>
+      <ion-col size="2" class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase taille">
+          <p>{{ elt.activityName}}</p>
+        </div>
+      </ion-col>
+      <ion-col size="2" class="ion-align-self-center">
+        <ion-item color="light">
+          <ion-thumbnail (click)="zoomImage(elt)" slot="end" class="thumbnailM">
+            <ion-img *ngIf="elt.url" [src]="elt.url"></ion-img>
+          </ion-thumbnail>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </div>
+  <!--
+    <ion-row class="rowInventaire">
+    <ion-col size="3" class="ion-align-self-center">
+      <div class="ion-text-center ion-text-uppercase taille3">Depense</div>
+    </ion-col>
+    <ion-col size="3">
+      <div class="ion-text-center ion-text-uppercase"></div>
+    </ion-col>
+    <ion-col size="3">
+      <div class="ion-text-center ion-text-uppercase"></div>
+    </ion-col>
+    <ion-col size="3" class="ion-align-self-center">
+      <div class="ion-text-center ion-text-uppercase taille3">quantité</div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col
+      [ngStyle]="{'background-color': '#f1f1f1' }"
+      size="3"
+      class="ion-align-self-center"
+    >
+      <div class="ion-text-center ion-text-uppercase taille3">
+        {{total_amount | currency:'CFA':'symbol':'3.0-0'}}
+      </div>
+    </ion-col>
+    <ion-col size="3">
+      <div class="ion-text-center ion-text-uppercase taille3"></div>
+    </ion-col>
+    <ion-col size="3">
+      <div class="ion-text-center ion-text-uppercase taille3"></div>
+    </ion-col>
+
+    <ion-col
+      [ngStyle]="{'background-color': '#f1f1f1' }"
+      size="3"
+      class="ion-align-self-center"
+    >
+      <div class="ion-text-center ion-text-uppercase taille3">
+        {{totalQty }}
+      </div>
+    </ion-col>
+  </ion-row>
+  -->
+</ion-content>
+
+<ion-content *ngIf="disabled">
+  <div class="date">
+    <div class="input-group firstDiviCustum">.</div>
+
+    <div class="input-group">
+      <input
+        style="display: none"
+        class="form-control"
+        placeholder="yyyy-mm-dd"
+        name="dp"
+        ngbDatepicker
+        #d="ngbDatepicker"
+        [(ngModel)]="model"
+      />
+      <div class="input-group-append">
+        <ion-button
+          fill="clear"
+          color="primary"
+          size="small"
+          class="btn btn-outline-secondary calendar"
+          (click)="d.toggle()"
+          type="button"
+          >Debut <ion-icon name="calendar"></ion-icon
+        ></ion-button>
+      </div>
+    </div>
+    <div class="input-group">
+      <pre>{{model.day}}/{{model.month}}/{{model.year}}</pre>
+    </div>
+    <div class="input-group">
+      <pre>{{model2.day}}/{{model2.month}}/{{model2.year}}</pre>
+    </div>
+    <div class="input-group">
+      <input
+        style="display: none"
+        class="form-control"
+        placeholder="yyyy-mm-dd"
+        name="dp2"
+        ngbDatepicker
+        #d2="ngbDatepicker"
+        [(ngModel)]="model2"
+      />
+      <div class="input-group-append">
+        <ion-button
+          fill="clear"
+          color="warning"
+          size="small"
+          class="btn btn-outline-secondary calendar"
+          (click)="d2.toggle()"
+          type="button"
+          >Fin <ion-icon name="calendar"></ion-icon
+        ></ion-button>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <ion-select
+        placeholder="activité"
+        cancelText="Annuler"
+        okText="Ok"
+        (ionChange)="selectActivitiNameEvent($event)"
+      >
+        <ion-select-option
+          *ngFor="let mat of activitieName; let i= index"
+          [value]="mat"
+          >{{mat.name}}</ion-select-option
+        >
+      </ion-select>
+    </div>
+  </div>
+
+  <ion-row>
+    <ion-col
+      size-md="2"
+      size-lg="2"
+      size-xs="12"
+      size-sm="12"
+      size-xl="12"
+      class="ion-padding ion-align-self-center"
+    >
+      <div class="ion-text-center ion-text-uppercase">
+        <ion-button
+          fill="outline"
+          size="small"
+          color="success"
+          (click)="selectBydayActivitie()"
+          >valider
+        </ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col>
+      <div class="ion-text-center ion-text-uppercase">
+        <h3></h3>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="header-row">
+    <ion-col size="3" class="ion-align-self-center">
+      <div class="ion-text-center ion-text-uppercase taille2">Nom</div>
+    </ion-col>
+
+    <ion-col size="2" class="ion-align-self-center">
+      <div class="ion-text-center ion-text-uppercase taille2">fréq.</div>
+    </ion-col>
+    <ion-col size="2" class="ion-align-self-center">
+      <div class="ion-text-center ion-text-uppercase taille2">période</div>
+    </ion-col>
+    <ion-col size="3" class="ion-align-self-center">
+      <div class="ion-text-center ion-text-uppercase taille2">
+        Besoin matériel
+      </div>
+    </ion-col>
+    <ion-col size="2" class="ion-align-self-center">
+      <div class="ion-text-center ion-text-uppercase taille2">cout</div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row
+    *ngFor="let row of tabListActivitie; let i= index"
+    class="data-row data-update"
+    [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+  >
+    <ion-col
+      size="3"
+      class="ion-align-self-center"
+      [ngStyle]="{'height': '30px' }"
+    >
+      <div class="ion-text-center inte">{{row.name}}</div>
+    </ion-col>
+    <ion-col size="2" class="ion-align-self-center">
+      <div class="ion-text-center inte">{{row.frequence}}</div>
+    </ion-col>
+    <ion-col size="2" class="ion-align-self-center">
+      <div class="ion-text-center inte">{{row.periode}}</div>
+    </ion-col>
+    <ion-col size="3" class="ion-align-self-center">
+      <div class="ion-text-center inte">{{row.besoinMateriel}}</div>
+    </ion-col>
+
+    <ion-col size="2" class="ion-align-self-center">
+      <div class="ion-text-center">{{row.coutMateriel}}</div>
+    </ion-col>
+
+    <ion-col size="2">
+      <div class="ion-text-center">
+        <ion-button
+          size="small"
+          (click)="presentModal(row)"
+          *ngIf="!row.confirm && !row.cancel"
+        >
+          voir
+        </ion-button>
+        <ion-button
+          (click)="presentModal(row)"
+          size="small"
+          fill="clear"
+          color="success"
+          *ngIf="row.confirm"
+        >
+          <ion-icon slot="icon-only" name="checkmark-circle-outline"></ion-icon>
+        </ion-button>
+        <ion-button
+          (click)="presentModal(row)"
+          size="small"
+          fill="clear"
+          color="success"
+          *ngIf="row.cancel"
+        >
+          <ion-icon
+            slot="icon-only"
+            color="danger"
+            name="close-outline"
+          ></ion-icon>
+        </ion-button>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col
+      [ngStyle]="{'background-color': '#f1f1f1' }"
+      size="3"
+      class="ion-align-self-center"
+    >
+      <div class="ion-text-center ion-text-uppercase taille3"></div>
+    </ion-col>
+    <ion-col size="3">
+      <div class="ion-text-center ion-text-uppercase taille3"></div>
+    </ion-col>
+    <ion-col size="3">
+      <div class="ion-text-center ion-text-uppercase taille3"></div>
+    </ion-col>
+
+    <ion-col
+      [ngStyle]="{'background-color': '#f1f1f1' }"
+      size="3"
+      class="ion-align-self-center"
+    >
+      <div class="ion-text-center ion-text-uppercase taille3"></div>
+    </ion-col>
+  </ion-row>
+</ion-content>

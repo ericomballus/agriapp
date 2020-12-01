@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar color="medium">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col size-xs="12" size-md="12" size-lg="12" size-sm="12">
+      <div class="ion-text-center ion-text-uppercase">
+        <h3>salariés</h3>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size-xs="12" size-md="1" size-lg="1" size-sm="12"> </ion-col>
+    <ion-col size-xs="12" size-md="10" size-lg="10" size-sm="12">
+      <ion-list>
+        <ion-item *ngFor="let user of userList">
+          <ion-icon slot="start" name="person-outline"></ion-icon>
+          <ion-label>
+            <h2>{{user.name}}</h2>
+            <p>Email:{{user.email}}, Telephone: {{user.mobile}}</p>
+          </ion-label>
+          <ion-button fill="clear" slot="end" (click)="displayEmploye(user)"
+            >affiche
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+    <ion-col size-xs="12" size-md="1" size-lg="1" size-sm="12"> </ion-col>
+  </ion-row>
+</ion-content>

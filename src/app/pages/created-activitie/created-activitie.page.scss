@@ -100,3 +100,16 @@ form,
   // display: flex;
   // flex-wrap: wrap;
 }
+@media screen and (max-width: 950px) {
+  ion-col div {
+    font-size: 7px;
+  }
+  ion-label {
+    font-size: 8px;
+    text-transform: uppercase;
+  }
+  .inte {
+    font-size: 2px;
+    // text-transform: lowercase;
+  }
+}

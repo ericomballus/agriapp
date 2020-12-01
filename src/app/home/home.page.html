@@ -14,7 +14,6 @@
               routerLinkActive="active-link"
               class="link"
             >
-              Tab 1
             </ion-button>
             <ion-button
               fill="clear"
@@ -23,7 +22,6 @@
               routerLinkActive="active-link"
               class="link"
             >
-              Tab 2
             </ion-button>
             <ion-button
               fill="clear"
@@ -32,7 +30,6 @@
               routerLinkActive="active-link"
               class="link"
             >
-              Tab 3
             </ion-button>
           </div>
         </ion-col>
@@ -52,7 +49,7 @@
   <div class="dive">
     <ion-grid class="grid">
       <ion-row>
-        <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="6">
+        <ion-col size-xs="4" size-md="3" size-lg="3" size-sm="4">
           <div class="ion-text-center ion-text-uppercase">
             <h3>employés</h3>
             <ion-button
@@ -66,7 +63,7 @@
             </ion-button>
           </div>
         </ion-col>
-        <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="6">
+        <ion-col size-xs="4" size-md="3" size-lg="3" size-sm="4">
           <div class="ion-text-center ion-text-uppercase">
             <h3>équipements</h3>
             <ion-button
@@ -80,9 +77,9 @@
             </ion-button>
           </div>
         </ion-col>
-        <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="6">
+        <ion-col size-xs="4" size-md="3" size-lg="3" size-sm="4">
           <div class="ion-text-center ion-text-uppercase">
-            <h3>Inventaire</h3>
+            <h3>statistique</h3>
             <ion-button
               class="round"
               fill="outline"
@@ -94,7 +91,7 @@
             </ion-button>
           </div>
         </ion-col>
-        <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="6">
+        <ion-col size-xs="4" size-md="3" size-lg="3" size-sm="4">
           <div class="ion-text-center ion-text-uppercase">
             <h3>activités</h3>
 
@@ -110,42 +107,65 @@
             </ion-button>
           </div>
         </ion-col>
-      </ion-row>
-
-      <ion-row>
-        <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="6">
+        <ion-col size-xs="4" size-md="3" size-lg="3" size-sm="4">
           <div class="ion-text-center ion-text-uppercase">
             <h3>salaire</h3>
-            <ion-button class="round" fill="outline" size="large">
+            <ion-button
+              routerLink="/salaire"
+              routerDirection="forward"
+              class="round"
+              fill="outline"
+              size="large"
+            >
               <ion-icon name="save-outline"></ion-icon>
             </ion-button>
           </div>
         </ion-col>
-        <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="6">
+        <ion-col size-xs="4" size-md="3" size-lg="3" size-sm="4">
           <div class="ion-text-center ion-text-uppercase">
-            <h3>statistiques</h3>
-            <ion-button class="round" fill="outline" size="large">
+            <h3>inventaire</h3>
+            <ion-button
+              routerLink="/manager-inventory"
+              routerDirection="forward"
+              class="round"
+              class="round"
+              fill="outline"
+              size="large"
+            >
               <ion-icon name="image-outline"></ion-icon>
             </ion-button>
           </div>
         </ion-col>
-        <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="6">
+        <ion-col size-xs="4" size-md="3" size-lg="3" size-sm="4">
           <div class="ion-text-center ion-text-uppercase">
-            <h3>récoltes</h3>
-            <ion-button class="round" fill="outline" size="large">
+            <h3>nom activité</h3>
+            <ion-button
+              routerLink="/add-activitie-name"
+              routerDirection="forward"
+              class="round"
+              fill="outline"
+              size="large"
+            >
               <ion-icon name="trail-sign-outline"></ion-icon>
             </ion-button>
           </div>
         </ion-col>
-        <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="6">
+        <ion-col size-xs="4" size-md="3" size-lg="3" size-sm="4">
           <div class="ion-text-center ion-text-uppercase">
-            <h3>a venir</h3>
-            <ion-button class="round" fill="outline" size="large">
-              <ion-icon name="trail-sign-outline"></ion-icon>
+            <h3>Achats</h3>
+            <ion-button
+              routerLink="/achats"
+              class="round"
+              fill="outline"
+              size="large"
+            >
+              <ion-icon name="cart-outline"></ion-icon>
             </ion-button>
           </div>
         </ion-col>
       </ion-row>
+
+      <ion-row> </ion-row>
     </ion-grid>
   </div>
 </ion-content>

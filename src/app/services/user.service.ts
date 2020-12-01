@@ -2,18 +2,21 @@ import { Injectable } from "@angular/core";
 import { AngularFireDatabase } from "@angular/fire/database";
 import { AngularFireStorage } from "@angular/fire/storage";
 import * as firebsase from "firebase";
+import { BehaviorSubject } from "rxjs";
+import { isNullOrUndefined } from "util";
 @Injectable({
   providedIn: "root",
 })
 export class UserService {
   userList = [];
+  users = new BehaviorSubject([]);
+  employe: null;
+  url: null;
   constructor(private database: AngularFireDatabase) {}
 
   getProfil(utilisateur) {}
 
   addUserToFirebase(user) {
-    // ... sometime later
-
     return new Promise((resolve, reject) => {
       let database = this.database.list("agriUser");
       database
@@ -27,8 +30,25 @@ export class UserService {
     });
   }
 
+  addUserSalaire(user) {
+    return new Promise((resolve, reject) => {
+      let database = this.database.list("agriUser");
+      database
+        .update(user.key, user)
+        .then((b) => {
+          resolve(b);
+        })
+        .catch((error) => {
+          reject(JSON.stringify(error));
+        });
+    });
+  }
+
   getAllUser() {
-    let database = this.database.list("agriUser");
+    let storage = JSON.parse(localStorage.getItem("users"));
+    if (Array.isArray(storage) && storage.length) {
+      this.users.next(storage);
+    }
     this.database
       .list("agriUser")
       .snapshotChanges(["child_added"])
@@ -36,7 +56,7 @@ export class UserService {
         actions.forEach((action) => {
           let a = action.payload.val();
           a["key"] = action.key;
-          console.log(a);
+          // console.log(a);
 
           let index = this.userList.findIndex((elt) => {
             return elt.key === a["key"];
@@ -47,18 +67,31 @@ export class UserService {
             this.userList.push(a);
           }
         });
-        return this.userList;
+        this.users.next(this.userList);
+        localStorage.setItem("users", JSON.stringify(this.userList));
       });
+    return this.users;
   }
-  /* deleteUser(user) {
-    console.log(user);
-    let database = this.database.list("userSci");
-    // to get a key, check the Example app below
-    database.remove(user.key).then((res) => {
-      this.userList = this.userList.filter((elt) => {
-        return elt.key != user.key;
-      });
-      this.notifier("user remove");
-    });
-  }*/
+  setEmploye(data) {
+    this.employe = data;
+  }
+
+  getEmploye() {
+    if (isNullOrUndefined(this.employe)) {
+      return 0;
+    } else {
+      return this.employe;
+    }
+  }
+  setImage(url) {
+    this.url = url;
+  }
+
+  getImage() {
+    if (isNullOrUndefined(this.url)) {
+      return 0;
+    } else {
+      return this.url;
+    }
+  }
 }

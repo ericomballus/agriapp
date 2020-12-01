@@ -16,12 +16,16 @@ import { NgxElectronModule } from "ngx-electron";
 import { AngularFireModule } from "@angular/fire";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { AngularFirestoreModule } from "@angular/fire/firestore";
+//import { AngularFireOfflineModule } from 'angularfire2-offline';
 import { FIREBASE_CONFIG } from "./app.firebase.config";
-
+//import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { HttpClientModule } from "@angular/common/http";
 //import{NgxElectronModule} from "ngx-electron"
 import { from } from "rxjs";
-
+import { ServiceWorkerModule } from "@angular/service-worker";
+import { environment } from "../environments/environment";
+import { ConnectionServiceModule } from "ngx-connection-service";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -33,7 +37,13 @@ import { from } from "rxjs";
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     AngularFirestoreModule,
     AngularFireDatabaseModule,
+    ConnectionServiceModule,
+    NgbModule,
     HttpClientModule,
+    ServiceWorkerModule.register("ngsw-worker.js", {
+      enabled: environment.production,
+    }),
+    NgbModule,
   ],
   providers: [
     StatusBar,

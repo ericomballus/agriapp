@@ -9,6 +9,7 @@ import { ModalController } from "@ionic/angular";
 import { InstructionPage } from "../../modal/instruction/instruction.page";
 import * as firebsase from "firebase";
 import { AddActivieModalPage } from "src/app/modal/add-activie-modal/add-activie-modal.page";
+import { Router } from "@angular/router";
 const { Network } = Plugins;
 @Component({
   selector: "app-created-activitie",
@@ -21,12 +22,13 @@ export class CreatedActivitiePage implements OnInit, OnDestroy {
   isSubmitted = false;
   networkStatus: NetworkStatus;
   networkListener: PluginListenerHandle;
-  activitiesTab: any;
+  activitiesTab = [];
   constructor(
     public formBuilder: FormBuilder,
     public activitiService: ActivitiesApiService,
     private database: AngularFireDatabase,
-    public modalController: ModalController
+    public modalController: ModalController,
+    public router: Router
   ) {
     this.getStatus();
     this.getActivities();
@@ -185,7 +187,7 @@ export class CreatedActivitiePage implements OnInit, OnDestroy {
   }
   getActivities() {
     this.activitiService.getLastTenActivitie().subscribe(
-      (data) => {
+      (data: Array<any>) => {
         console.log(data);
 
         this.activitiesTab = data;
@@ -207,8 +209,9 @@ export class CreatedActivitiePage implements OnInit, OnDestroy {
 
   async presentModal(row) {
     console.log(row);
-
-    const modal = await this.modalController.create({
+    this.activitiService.setData(row)
+    this.router.navigateByUrl("instruction")
+   /* const modal = await this.modalController.create({
       component: InstructionPage,
       cssClass: "my-custom-class",
       componentProps: {
@@ -217,36 +220,25 @@ export class CreatedActivitiePage implements OnInit, OnDestroy {
         middleInitial: "N",
       },
     });
-    return await modal.present();
+    return await modal.present();*/
   }
 
   async createActivitie() {
-    const modal = await this.modalController.create({
-      component: AddActivieModalPage,
-      cssClass: "my-custom-class",
-    });
-    modal.present();
-
-    const { data } = await modal.onWillDismiss();
-    console.log(data);
-    this.getActivities();
+    this.router.navigateByUrl("add-activie-modal");
+  
   }
 
   getActivityFromFirebase() {
-    this.database
-      //.list("agriActivities")
+  /*  this.database
       .list("/agriActivities", (ref) =>
         ref.orderByChild("agriActivities").limitToLast(20)
       )
       .snapshotChanges()
       .subscribe((actions) => {
-        console.log(actions);
-
         let tab = [];
         actions.forEach((action) => {
           let a = action.payload.val();
           a["key"] = action.key;
-          console.log(a);
           tab.push(a);
         });
         if (this.activitiesTab.length) {
@@ -257,8 +249,10 @@ export class CreatedActivitiePage implements OnInit, OnDestroy {
               }
             });
           });
+        } else {
+          this.activitiesTab = tab;
         }
-      });
+      });*/
   }
   remplaceActivitie(act) {
     let index = this.activitiesTab.findIndex((elt) => {

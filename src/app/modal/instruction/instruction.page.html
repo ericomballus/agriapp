@@ -1,9 +1,318 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>instruction</ion-title>
+  <ion-toolbar color="medium">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/created-activitie"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <input
+    class="uploadBtn"
+    type="file"
+    class="upload"
+    (change)="uploadFile($event)"
+    class="filebtn"
+    #fileButton
+  />
+  <input
+    class="uploadBtn"
+    type="file"
+    class="upload"
+    (change)="uploadFile2($event)"
+    class="filebtn"
+    #fileButton2
+  />
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase">
+          <h3>titre: {{activitie.name}}</h3>
+          <h6>montant: {{montant | currency: "FCFA":"symbol":"3.0-0":"fr"}}</h6>
+        </div>
+      </ion-col>
+      <ion-col size-md="12" size-lg="12" size-xs="12" size-sm="12" size-xl="12">
+        <div class="cole">
+          <div class="first">
+            <div>
+              <ion-item lines="none">
+                <ion-label position="floating">executant</ion-label>
+                <ion-input
+                  placeholder="Entrer l'information ici"
+                  [(ngModel)]="activitie.executant"
+                  type="texte"
+                ></ion-input>
+              </ion-item>
+            </div>
 
+            <div class="divint">
+              <ion-item lines="none">
+                <ion-label position="floating">Superficie</ion-label>
+                <ion-input
+                  placeholder="Entrer la superficie ici"
+                  [(ngModel)]="activitie.superficie"
+                  type="texte"
+                ></ion-input>
+              </ion-item>
+            </div>
+            <div>
+              <ion-item lines="none">
+                <ion-label position="floating">Main d'oeuvre</ion-label>
+                <ion-input
+                  placeholder="Entrer le cout de la main d'oeuvre ici"
+                  [(ngModel)]="activitie.coutmaindoeuvre"
+                  type="texte"
+                ></ion-input>
+              </ion-item>
+            </div>
+          </div>
+
+          <div class="second">
+            <div>
+              <ion-item lines="none">
+                <ion-label position="floating">Fréquence</ion-label>
+                <ion-input
+                  placeholder="Entrer la fréquence ici"
+                  [(ngModel)]="activitie.frequence"
+                  type="texte"
+                ></ion-input>
+              </ion-item>
+            </div>
+            <div>
+              <ion-item lines="none">
+                <ion-label position="floating">periode</ion-label>
+                <ion-input
+                  placeholder="Entrer la période ici"
+                  [(ngModel)]="activitie.periode"
+                  type="texte"
+                ></ion-input>
+              </ion-item>
+            </div>
+            <div>
+              <ion-item lines="none">
+                <ion-label position="floating">cout materiel</ion-label>
+                <ion-input
+                  [(ngModel)]="activitie.coutMateriel"
+                  placeholder="Entrer le cout ici"
+                  type="texte"
+                ></ion-input>
+              </ion-item>
+            </div>
+          </div>
+          <div>
+            <ion-row class="header-row">
+              <ion-col
+                size-md="6"
+                size-lg="6"
+                size-xs="12"
+                size-sm="12"
+                size-xl="12"
+              >
+                <div>
+                  <div class="ion-text-center ion-text-uppercase">
+                    <h6>description</h6>
+                    <p>{{activitie.description}}</p>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col
+                size-md="6"
+                size-lg="6"
+                size-xs="12"
+                size-sm="12"
+                size-xl="12"
+              >
+                <div
+                  class="recommandation"
+                  [ngStyle]="{'background-color': '#f1f1f1' }"
+                >
+                  <div class="ion-text-uppercase with-border">
+                    <h6>recommandation</h6>
+                    <ion-textarea
+                      [(ngModel)]="activitie.recommandation"
+                      placeholder="instruction ?"
+                      type="text"
+                    ></ion-textarea>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+            <ion-row class="header-row">
+              <ion-col size="12" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">
+                  <h3>Besoin materiél</h3>
+                </div>
+              </ion-col>
+              <ion-col size="2" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">Nom</div>
+              </ion-col>
+
+              <ion-col size="1" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">quantité</div>
+              </ion-col>
+              <ion-col size="1" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">avaible</div>
+              </ion-col>
+              <ion-col size="2" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">prix.u</div>
+              </ion-col>
+              <ion-col size="2" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">Prix.T</div>
+              </ion-col>
+              <ion-col size="2" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">facture</div>
+              </ion-col>
+              <ion-col size="2" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">photo</div>
+              </ion-col>
+            </ion-row>
+          </div>
+          <div>
+            <ion-row
+              *ngFor="let mat of activitie.materielList; let i= index"
+              style="width: 100%; max-height: 600px"
+              class="data-row data-update"
+              [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+            >
+              <ion-col size="2" class="ion-align-self-center">
+                <div class="ion-text-center inte">{{mat.name}}</div>
+              </ion-col>
+              <ion-col size="1" class="ion-align-self-center">
+                <div class="ion-text-center inte">
+                  <ion-input
+                    [value]="mat.qty"
+                    type="texte"
+                    debounce="500"
+                    (ionChange)="addQuantity($event, mat)"
+                  ></ion-input>
+                </div>
+              </ion-col>
+              <ion-col size="1" class="ion-align-self-center">
+                <div class="ion-text-center inte">
+                  <ion-input [value]="mat.quantity" type="texte"></ion-input>
+                </div>
+              </ion-col>
+              <ion-col size="2" class="ion-align-self-center">
+                <div class="ion-text-center inte">
+                  {{mat.price | currency: "FCFA":"symbol":"3.0-0":"fr"}}
+                </div>
+              </ion-col>
+              <ion-col size="2" class="ion-align-self-center">
+                <div class="ion-text-center inte">
+                  {{mat.price * mat.qty | currency:
+                  "FCFA":"symbol":"3.0-0":"fr"}}
+                </div>
+              </ion-col>
+              <ion-col size="2" class="ion-align-self-center">
+                <div ion-text-center>
+                  <ion-button
+                    *ngIf="!mat.photoURL2"
+                    size="small"
+                    fill="clear"
+                    class="buttonPick"
+                    (click)="galerie2(i)"
+                  >
+                    photo facture
+                    <ion-icon slot="end" name="image-outline"></ion-icon>
+                  </ion-button>
+                  <ion-thumbnail *ngIf="mat.photoURL2" class="thumbnailM">
+                    <ion-img
+                      (click)="galerie2(i)"
+                      *ngIf="mat.photoURL2"
+                      [src]="mat.photoURL2"
+                    ></ion-img>
+                  </ion-thumbnail>
+                  <ion-thumbnail
+                    *ngIf="mat.urlFacture && !mat.photoURL2"
+                    class="thumbnailM"
+                  >
+                    <ion-img
+                      *ngIf="mat.urlFacture"
+                      [src]="mat.urlFacture"
+                      (click)="zoomImage(mat.urlFacture)"
+                    ></ion-img>
+                  </ion-thumbnail>
+                </div>
+              </ion-col>
+              <ion-col size="2" class="ion-align-self-center">
+                <ion-button
+                  *ngIf="!mat.photoURL"
+                  size="small"
+                  fill="clear"
+                  class="buttonPick"
+                  (click)="galerie(i)"
+                >
+                  photo materiel
+                  <ion-icon slot="end" name="image-outline"></ion-icon>
+                </ion-button>
+
+                <ion-thumbnail
+                  (click)="galerie(i)"
+                  *ngIf="mat.photoURL"
+                  class="thumbnailM"
+                >
+                  <ion-img *ngIf="mat.photoURL" [src]="mat.photoURL"></ion-img>
+                </ion-thumbnail>
+                <ion-thumbnail
+                  *ngIf="mat.urlMateriel && !mat.photoURL"
+                  class="thumbnailM"
+                >
+                  <ion-img
+                    (click)="zoomImage(mat.urlMateriel)"
+                    *ngIf="mat.urlMateriel"
+                    [src]="mat.urlMateriel"
+                  ></ion-img>
+                </ion-thumbnail>
+              </ion-col>
+            </ion-row>
+          </div>
+          <ion-row *ngIf="activitie.confirm">
+            <ion-col
+              size-xs="12"
+              size-md="3"
+              size-lg="3"
+              size-sm="12"
+              class="ion-align-self-center"
+            >
+            </ion-col>
+            <ion-col
+              size-xs="12"
+              size-md="3"
+              size-lg="3"
+              size-sm="12"
+              class="ion-align-self-center"
+            >
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div class="ion-text-center">
+                <ion-button
+                  *ngIf="!activitie.confirm"
+                  (click)="Update()"
+                  color="danger"
+                  size="small"
+                  >Valider</ion-button
+                >
+                <ion-button
+                  *ngIf="activitie.confirm"
+                  (click)="UpdateWithFile()"
+                  color="danger"
+                  size="small"
+                  >Update</ion-button
+                >
+              </div>
+            </ion-col>
+            <ion-col>
+              <div class="ion-text-center">
+                <ion-button (click)="Cancel()" color="warning" size="small"
+                  >Annuler</ion-button
+                >
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

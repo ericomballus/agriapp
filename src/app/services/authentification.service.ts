@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { AngularFireAuth } from "@angular/fire/auth";
 import firebase from "firebase/app";
 import { ToastController } from "@ionic/angular";
 import { Subject } from "rxjs";
@@ -10,7 +11,10 @@ export class AuthentificationService {
   utilisateur: firebase.User;
   utilisateurSubject = new Subject<firebase.User>();
 
-  constructor(public toastController: ToastController) {}
+  constructor(
+    public toastController: ToastController,
+    public auth: AngularFireAuth
+  ) {}
 
   emettre() {
     this.utilisateurSubject.next(this.utilisateur);
@@ -54,13 +58,13 @@ export class AuthentificationService {
 
   inscription(login: string, passe: string): Promise<firebase.User> {
     return new Promise((resolve, reject) => {
-      firebase
-        .auth()
+      //  firebase
+      this.auth
         .createUserWithEmailAndPassword(login, passe)
         .then((credentials) => {
           const utilisateur = credentials.user;
           this.utilisateur = utilisateur;
-          this.emettre();
+          //  this.emettre();
           resolve(utilisateur);
         });
     });

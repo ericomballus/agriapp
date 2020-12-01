@@ -1,0 +1,222 @@
+<ion-header>
+  <ion-toolbar color="medium">
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button
+        *ngIf="!inventaireFlag"
+        defaultHref="/manager-inventory"
+      ></ion-back-button>
+      <ion-back-button
+        *ngIf="inventaireFlag"
+        (click)="displayInventaire()"
+      ></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button
+        *ngIf="!inventaireFlag"
+        fill="outline"
+        color="light"
+        size="small"
+        (click)="displayInventaire()"
+        >Inventaire</ion-button
+      >
+      <ion-button
+        *ngIf="inventaireFlag"
+        fill="outline"
+        color="light"
+        size="small"
+        (click)="displayInventaire()"
+        >retour</ion-button
+      >
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row class="header-row2" *ngIf="!inventaireFlag">
+    <ion-col
+      size-sm="1"
+      size-md="1"
+      size-xm="1"
+      size-lg="1"
+      class="ion-align-self-center"
+    >
+      <div class="ion-text-center ion-text-uppercase">name</div>
+    </ion-col>
+
+    <ion-col
+      size-sm="2"
+      size-md="2"
+      size-xm="2"
+      size-lg="2"
+      class="ion-align-self-center"
+    >
+      <div class="ion-text-center ion-text-uppercase">entrer</div>
+    </ion-col>
+    <ion-col
+      size-sm="3"
+      size-md="3"
+      size-xm="3"
+      size-lg="3"
+      class="ion-align-self-center"
+    >
+      <div class="ion-text-center ion-text-uppercase">motif</div>
+    </ion-col>
+    <ion-col
+      size-sm="2"
+      size-md="2"
+      size-xm="2"
+      size-lg="2"
+      class="ion-align-self-center"
+    >
+      <div class="ion-text-center ion-text-uppercase">sortie</div>
+    </ion-col>
+    <ion-col
+      size-sm="3"
+      size-md="3"
+      size-xm="3"
+      size-lg="3"
+      class="ion-align-self-center"
+    >
+      <div class="ion-text-center ion-text-uppercase">motif</div>
+    </ion-col>
+    <ion-col
+      size-sm="1"
+      size-md="1"
+      size-xm="1"
+      size-lg="1"
+      class="ion-align-self-center"
+    >
+      <div class="ion-text-center ion-text-uppercase">save</div>
+    </ion-col>
+  </ion-row>
+
+  <div *ngIf="!inventaireFlag">
+    <ion-row
+      *ngFor="let prod of materielListTab let i= index"
+      [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : '#f1f1f1' }"
+    >
+      <ion-col
+        size-sm="1"
+        size-md="1"
+        size-xm="1"
+        size-lg="1"
+        class="ion-align-self-center"
+      >
+        <div class="ion-text-start ion-text-uppercase">{{prod.name}}</div>
+      </ion-col>
+
+      <ion-col
+        size-sm="2"
+        size-md="2"
+        size-xm="2"
+        size-lg="2"
+        class="ion-align-self-center"
+      >
+        <div class="ion-text-center ion-text-uppercase colPrimary">
+          <ion-input
+            [ngStyle]="{'background-color': prod.alert ? 'red' : 'white'}"
+            slot="end"
+            placeholder="Enter quantity"
+            type="number"
+            debounce="500"
+            (ionChange)="addIncrement($event, prod, i)"
+          ></ion-input>
+        </div>
+      </ion-col>
+      <ion-col
+        size-sm="3"
+        size-md="3"
+        size-xm="3"
+        size-lg="3"
+        class="ion-align-self-center"
+      >
+        <div class="ion-text-center ion-text-uppercase colPrimary">
+          <ion-textarea
+            [ngStyle]="{'background-color': prod.alert ? 'red' : 'white'}"
+            debounce="500"
+            type="text"
+            (ionChange)="addMotif($event, prod, i)"
+            rows="1"
+            cols="12"
+            placeholder="motif entrer"
+          ></ion-textarea>
+        </div>
+      </ion-col>
+      <ion-col
+        size-sm="2"
+        size-md="2"
+        size-xm="2"
+        size-lg="2"
+        class="ion-align-self-center"
+      >
+        <div class="ion-text-center ion-text-uppercase colRed">
+          <ion-input
+            [ngStyle]="{'background-color': prod.alert ? 'red' : 'white'}"
+            slot="end"
+            placeholder="enter sorti"
+            type="number"
+            debounce="500"
+            (ionChange)="outIncrement($event, prod, i)"
+          ></ion-input>
+        </div>
+      </ion-col>
+      <ion-col
+        size-sm="3"
+        size-md="3"
+        size-xm="3"
+        size-lg="3"
+        class="ion-align-self-center"
+      >
+        <div class="ion-text-center ion-text-uppercase colRed">
+          <ion-textarea
+            [ngStyle]="{'background-color': prod.alert ? 'red' : 'white'}"
+            debounce="500"
+            type="text"
+            (ionChange)="outMotif($event, prod, i)"
+            rows="1"
+            cols="20"
+            placeholder="motif sortie"
+          ></ion-textarea>
+        </div>
+      </ion-col>
+      <ion-col
+        size-sm="1"
+        size-md="1"
+        size-xm="1"
+        size-lg="1"
+        class="ion-align-self-center"
+      >
+        <div class="ion-text-center ion-text-uppercase">
+          <ion-button
+            color="warning"
+            size="small"
+            (click)="saveInventaire(prod)"
+            >save</ion-button
+          >
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+  <!--display inventaires-->
+
+  <div *ngIf="inventaireFlag">
+    <ion-row>
+      <ion-col class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase">
+          <h5>select product</h5>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-list>
+      <ion-item
+        *ngFor="let prod of materielListTab let i= index"
+        button
+        (click)="openProdInventaire(prod)"
+        detail
+      >
+        <ion-label>{{prod.name}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

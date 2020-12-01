@@ -72,6 +72,42 @@ const routes: Routes = [
     path: 'inscription',
     loadChildren: () => import('./pages/inscription/inscription.module').then( m => m.InscriptionPageModule)
   },
+  {
+    path: 'admin-valide-activities',
+    loadChildren: () => import('./pages/admin-valide-activities/admin-valide-activities.module').then( m => m.AdminValideActivitiesPageModule)
+  },
+  {
+    path: 'achats',
+    loadChildren: () => import('./pages/achats/achats.module').then( m => m.AchatsPageModule)
+  },
+  {
+    path: 'salaire',
+    loadChildren: () => import('./pages/salaire/salaire.module').then( m => m.SalairePageModule)
+  },
+  {
+    path: 'display-user',
+    loadChildren: () => import('./pages/display-user/display-user.module').then( m => m.DisplayUserPageModule)
+  },
+  {
+    path: 'paie-user',
+    loadChildren: () => import('./pages/paie-user/paie-user.module').then( m => m.PaieUserPageModule)
+  },
+  {
+    path: 'display-image',
+    loadChildren: () => import('./pages/display-image/display-image.module').then( m => m.DisplayImagePageModule)
+  },
+  {
+    path: 'add-activitie-name',
+    loadChildren: () => import('./pages/add-activitie-name/add-activitie-name.module').then( m => m.AddActivitieNamePageModule)
+  },
+  {
+    path: 'manager-inventory',
+    loadChildren: () => import('./pages/manager-inventory/manager-inventory.module').then( m => m.ManagerInventoryPageModule)
+  },
+  {
+    path: 'view-inventaire',
+    loadChildren: () => import('./modal/view-inventaire/view-inventaire.module').then( m => m.ViewInventairePageModule)
+  },
 ];
 
 @NgModule({

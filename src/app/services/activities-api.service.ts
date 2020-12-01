@@ -3,12 +3,16 @@ import { HttpClient } from "@angular/common/http";
 import { AngularFireDatabase } from "@angular/fire/database";
 import { AngularFireStorage } from "@angular/fire/storage";
 import firebase from "firebase/app";
+import { BehaviorSubject } from 'rxjs';
+import { isNullOrUndefined } from 'util';
 
 @Injectable({
   providedIn: "root",
 })
 export class ActivitiesApiService {
   url = "http://localhost:3000/";
+  activite = new BehaviorSubject([]);
+  selectAtivitie: any;
   constructor(private http: HttpClient, private database: AngularFireDatabase) {
     let ref = firebase.database().ref("agriActivities");
     let a = ref
@@ -19,12 +23,29 @@ export class ActivitiesApiService {
       });
   }
 
+  setData(data) {
+    this.selectAtivitie = data;
+  }
+
+  getData() {
+    if (isNullOrUndefined(this.selectAtivitie)) {
+      return 0;
+    } else {
+      return this.selectAtivitie;
+    }
+  }
+
+  updateData(data) {
+    let database = this.database.list("agriActivities");
+   return database.update(data.key, data)
+  }
+
   postActivitie(data) {
     data["firebaseAdd"] = false;
     return this.http.post(this.url + `activities`, data);
   }
   upadteActivitieFirebaseStatus(data) {
-    // data["firebaseAdd"] = false;
+   
     return this.http.patch(this.url + `activities/firebaseAdd`, data);
   }
 
@@ -44,6 +65,27 @@ export class ActivitiesApiService {
   }
 
   getLastTenActivitie() {
-    return this.http.get(this.url + `activities`);
+    let storage= JSON.parse(localStorage.getItem("activite"))
+         if (Array.isArray(storage) && storage.length) {
+          this.activite.next(storage);
+         }
+    this.database
+    .list("/agriActivities", (ref) =>
+      ref.orderByChild("agriActivities").limitToLast(20)
+    )
+    .snapshotChanges()
+    .subscribe((actions) => {
+      let tab = [];
+      actions.forEach((action) => {
+        let a = action.payload.val();
+        a["key"] = action.key;
+        tab.push(a);
+      });
+      this.activite.next(tab)
+      localStorage.setItem("activite", JSON.stringify(tab))
+    });
+    return this.activite
+  
   }
+  
 }

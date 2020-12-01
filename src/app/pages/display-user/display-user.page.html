@@ -1,0 +1,93 @@
+<ion-header>
+  <ion-toolbar color="medium">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/salaire"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col size-xs="12" size-md="12" size-lg="12" size-sm="12">
+      <div class="ion-text-center ion-text-uppercase">
+        <h3>fiche employé</h3>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col size-xs="1" size-md="1" size-lg="1" size-sm="1"></ion-col>
+    <ion-col size-xs="10" size-md="10" size-lg="10" size-sm="10">
+      <ion-list>
+        <ion-item>
+          <ion-thumbnail *ngIf="!user.photoUser" slot="start">
+            <ion-img src="../../../assets/person.jpg"></ion-img>
+          </ion-thumbnail>
+          <ion-thumbnail
+            *ngIf="user.photoUser"
+            class="imgthumbnail"
+            slot="start"
+          >
+            <ion-img [src]="user.photoUser"></ion-img>
+          </ion-thumbnail>
+          <ion-label>
+            <h2>NOM: {{user.name}}</h2>
+            <h3>POSTE: {{user.poste}}</h3>
+            <p>TEL: {{user.mobile}} EMAIL: {{user.email}}</p>
+          </ion-label>
+          <ion-button (click)="presentModal()" fill="outline" slot="end"
+            >View</ion-button
+          >
+        </ion-item>
+      </ion-list>
+    </ion-col>
+    <ion-col size-xs="1" size-md="1" size-lg="1" size-sm="1"></ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <div class="ion-text-center ion-text-uppercase">
+        <h3>paiment</h3>
+      </div>
+      <div>
+        <ion-row class="header-row">
+          <ion-col size="4" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">Montant</div>
+          </ion-col>
+
+          <ion-col size="4" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">date</div>
+          </ion-col>
+          <ion-col size="4" class="ion-align-self-center">
+            <div class="ion-text-right ion-text-uppercase">signature</div>
+          </ion-col>
+        </ion-row>
+      </div>
+      <ion-row
+        *ngFor="let row of user.salaireList; let i= index"
+        class="data-row data-update"
+        [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+      >
+        <ion-col size="4" class="ion-align-self-center">
+          <div class="ion-text-center inte">
+            {{row.salaire | currency: "FCFA":"symbol":"3.0-0":"fr"}}
+          </div>
+        </ion-col>
+
+        <ion-col size="4" class="ion-align-self-center">
+          <div class="ion-text-center inte">
+            {{row.created | date:'medium'}}
+          </div>
+        </ion-col>
+        <ion-col size="4" class="ion-align-self-center">
+          <div class="ion-text-right" (click)="zoomImage(row.signature)">
+            <ion-item color="ligth" lines="none">
+              <ion-thumbnail slot="end" class="thumbnailM">
+                <ion-img [src]="row.signature"></ion-img>
+              </ion-thumbnail>
+            </ion-item>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>

@@ -1,10 +1,13 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { Employe } from "../../models/employe.model";
 import { UserService } from "src/app/services/user.service";
 import { ToastController } from "@ionic/angular";
 import { AngularFireDatabase } from "@angular/fire/database";
 import { AuthentificationService } from "src/app/services/authentification.service";
+import firebase from "firebase/app";
+import "firebase/storage";
+import { NotificationService } from "src/app/services/notification.service";
 @Component({
   selector: "app-employee",
   templateUrl: "./employee.page.html",
@@ -15,12 +18,21 @@ export class EmployeePage implements OnInit {
   defaultDate = "1987-06-30";
   isSubmitted = false;
   userList = [];
+  @ViewChild("fileButton", { static: false }) fileButton;
+  @ViewChild("fileButton2", { static: false }) fileButton2;
+  file: any;
+  photoURL: string;
+  file2: any;
+  photoURL2: string;
+  videoURL: string;
+  imageUrl: string;
   constructor(
     public formBuilder: FormBuilder,
     public userService: UserService,
     public toastController: ToastController,
     private database: AngularFireDatabase,
-    public auth: AuthentificationService //
+    public auth: AuthentificationService,
+    public notif: NotificationService
   ) {
     this.getEmployees();
   }
@@ -66,24 +78,35 @@ export class EmployeePage implements OnInit {
     return this.ionicForm.controls;
   }
 
-  submitForm() {
+  async submitForm() {
+    this.notif.presentLoading();
     this.isSubmitted = true;
     if (!this.ionicForm.valid) {
       console.log("Please provide all the required values!");
       return false;
     } else {
       console.log(this.ionicForm.value);
+      let photoUser = await this.enregistrerImageFirebase(this.file);
+      let cniUser = await this.enregistrerImageFirebase(this.file);
       let emp = this.ionicForm.value;
-      let employe = new Employe(emp.name, emp.poste, emp.email, emp.mobile);
+      emp["photoUser"] = photoUser;
+      emp["cniUser"] = cniUser;
+      let employe = new Employe(
+        emp.name,
+        emp.poste,
+        emp.email,
+        emp.mobile,
+        emp.photoUser,
+        emp.cniUser
+      );
       console.log(employe);
       this.auth.inscription(employe.email, "hellohello123").then((res) => {
         console.log(res);
         this.userService.addUserToFirebase(employe).then((data) => {
           this.notifier("employé ajouté");
+          this.ionicForm.reset();
         });
       });
-
-      this.ionicForm.value.name = "";
     }
   }
   getEmployees() {
@@ -96,18 +119,24 @@ export class EmployeePage implements OnInit {
           let a = action.payload.val();
           a["key"] = action.key;
           console.log(a);
-
-          let index = this.userList.findIndex((elt) => {
+          tab.push(a);
+          /* let index = this.userList.findIndex((elt) => {
             return elt.key === a["key"];
           });
           if (index >= 0) {
             console.log("existe");
+            if (this.userList.length) {
+              // this.userList.push(a);
+            }
           } else {
-            tab.push(a);
-          }
+            if (this.userList.length) {
+              this.userList.push(a);
+            }
+           
+          } */
         });
-        this.userList = tab;
         console.log(this.userList);
+        this.userList = tab;
       });
   }
   async notifier(texte: string) {
@@ -131,5 +160,81 @@ export class EmployeePage implements OnInit {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  galerie() {
+    this.fileButton.nativeElement.click();
+  }
+  galerie2() {
+    this.fileButton2.nativeElement.click();
+  }
+  uploadFile(event: any) {
+    this.file = event.target.files.item(0);
+    let theType = this.file.type.split("/");
+    if (theType[0] == "image") {
+      if (event.target.files && event.target.files[0]) {
+        var reader = new FileReader();
+        reader.onload = (event: any) => {
+          this.photoURL = event.target.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }
+    }
+
+    if (theType[0] == "video") {
+      if (event.target.files && event.target.files[0]) {
+        var reader = new FileReader();
+        reader.onload = (event: any) => {
+          this.videoURL = event.target.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }
+    }
+  }
+  uploadFile2(event: any) {
+    this.file2 = event.target.files.item(0);
+    let theType = this.file2.type.split("/");
+    if (theType[0] == "image") {
+      if (event.target.files && event.target.files[0]) {
+        var reader = new FileReader();
+        reader.onload = (event: any) => {
+          this.photoURL2 = event.target.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }
+    }
+
+    if (theType[0] == "video") {
+      if (event.target.files && event.target.files[0]) {
+        var reader = new FileReader();
+        reader.onload = (event: any) => {
+          this.videoURL = event.target.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+      }
+    }
+  }
+
+  enregistrerImageFirebase(file): Promise<string> {
+    return new Promise((resolve, reject) => {
+      var storageRef = firebase.storage().ref("/agriApp/" + file.name);
+      var task = storageRef.put(file);
+      task
+        .then((data) => {
+          console.log("data");
+
+          storageRef
+            .getDownloadURL()
+            .then((url) => {
+              resolve(url);
+            })
+            .catch((e) => {
+              reject(e);
+            });
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    });
   }
 }

@@ -77,3 +77,15 @@
   position: fixed;
   bottom: 0px;
 }
+@media screen and (max-width: 513px) {
+  .dive {
+    position: absolute;
+    top: 15%;
+    left: 13%;
+    margin: -25px 0 0 -25px;
+    // left: 50%;
+    width: 80%;
+    height: 50%;
+    // background-color: red;
+  }
+}

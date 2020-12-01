@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <input
+    class="uploadBtn"
+    type="file"
+    class="upload"
+    (change)="uploadFile($event)"
+    class="filebtn"
+    #fileButton
+  />
+
+  <ion-row>
+    <ion-col size-md="6" size-lg="6" size-xs="12" size-sm="12" size-xl="12">
+      <ion-item>
+        <ion-label position="floating">Salaire</ion-label>
+        <ion-input
+          placeholder="montant salaire"
+          type="number"
+          [(ngModel)]="salaire"
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+
+    <ion-col size-md="6" size-lg="6" size-xs="12" size-sm="12" size-xl="12">
+      <ion-item>
+        <ion-label position="floating">photo signature</ion-label>
+        <ion-button size="small" fill="clear" slot="end" (click)="galerie()">
+          photo signature
+          <ion-icon slot="end" name="image-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-col>
+    <ion-col size-md="12" size-lg="12" size-xs="12" size-sm="12" size-xl="12">
+      <div *ngIf="photoURL" class="photo" style="height: 50vh">
+        <div style="height: 50vh">
+          <img [src]="photoURL" style="width: 100%" />
+        </div>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <div class="ion-text-center">
+        <ion-button
+          [disabled]="(!photoURL && !salaire)"
+          (click)=" enregistrerImageFirebase()"
+          color="danger"
+          size="small"
+          >valider</ion-button
+        >
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-content>
