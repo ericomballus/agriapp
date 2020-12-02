@@ -66,6 +66,7 @@ export class AppComponent implements OnInit, OnDestroy {
       } else {
         this.count2 = this.count2 + 1;
         this.status = "OFFLINE";
+        this.networkService.setStatus(false);
         this.count = 0;
         if (this.count2 == 1) {
           this.notif.offlineAlert();

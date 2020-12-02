@@ -6,6 +6,7 @@ import { AuthentificationService } from "src/app/services/authentification.servi
 import { UserService } from "src/app/services/user.service";
 import { Employe } from "src/app/models/employe.model";
 import { AngularFireDatabase } from "@angular/fire/database";
+import { NetworkService } from "src/app/services/network.service";
 
 @Component({
   selector: "app-login",
@@ -15,23 +16,26 @@ import { AngularFireDatabase } from "@angular/fire/database";
 export class LoginPage implements OnInit {
   admin: any;
   email: string;
-  userNumber: any;
+  userEmail: any;
   constructor(
     public router: Router,
     public auth: AuthentificationService,
     private database: AngularFireDatabase,
     public toastController: ToastController,
-    public userservice: UserService
+    public userservice: UserService,
+    private networkService: NetworkService
   ) {}
 
   ngOnInit() {}
   login(formadmin: NgForm) {
     console.log(formadmin.value);
-    let name: String = formadmin.value.password;
+    let name: string = formadmin.value.password;
+    let pass: string = formadmin.value.password;
     if (name.split("@")[0] === "admin") {
       this.router.navigateByUrl("admin");
     } else {
-      this.router.navigateByUrl("home");
+      // this.router.navigateByUrl("home");
+      this.connexion(this.userEmail, pass);
     }
   }
 
@@ -40,22 +44,35 @@ export class LoginPage implements OnInit {
   }
 
   connexion(login: string, passe: string) {
-    this.auth
-      .connexion(login, passe)
-      .then((utilisateur) => {
-        //console.log(utilisateur);
-        this.email = login;
-        this.chercherUtilisateur();
-        if (utilisateur) {
-          // this.chercherUtilisateur(utilisateur);
-        } else {
-          console.log("Login ou mot de passe incorrect");
-        }
-      })
-      .catch((e) => {
-        console.log("Login ou mot de passe incorrect");
+    console.log(this.networkService.actualStatus());
+
+    if (!this.networkService.actualStatus()) {
+      let user = JSON.parse(localStorage.getItem("userAuth"));
+      if (user.email === login) {
+        this.router.navigateByUrl("home");
+      } else {
         this.notifier("Login ou mot de passe incorrect");
-      });
+      }
+    } else {
+      console.log("hello==");
+
+      this.auth
+        .connexion(login, passe)
+        .then((utilisateur) => {
+          //console.log(utilisateur);
+          this.email = login;
+          this.chercherUtilisateur();
+          if (utilisateur) {
+            // this.chercherUtilisateur(utilisateur);
+          } else {
+            console.log("Login ou mot de passe incorrect");
+          }
+        })
+        .catch((e) => {
+          console.log("Login ou mot de passe incorrect");
+          this.notifier("Login ou mot de passe incorrect");
+        });
+    }
   }
 
   async notifier(texte: string) {
@@ -71,13 +88,18 @@ export class LoginPage implements OnInit {
   chercherUtilisateur() {
     // let database = this.database.list("agriUser");
     this.database
-      .list("agriUser")
-      .snapshotChanges(["child_added"])
+      .list("agriUser", (ref) =>
+        ref.orderByChild("email").equalTo(this.userEmail)
+      )
+      .snapshotChanges()
       .subscribe((actions) => {
         actions.forEach((action) => {
           let a = action.payload.val();
-          a["key"] = action.key;
           console.log(a);
+
+          a["key"] = action.key;
+          localStorage.setItem("userAuth", JSON.stringify(a));
+          this.router.navigateByUrl("home");
         });
       });
   }

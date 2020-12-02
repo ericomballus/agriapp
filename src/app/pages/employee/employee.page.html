@@ -189,7 +189,38 @@
           </span>
         </ion-col>
       </ion-row>
-
+      <ion-row>
+        <ion-col
+          size-xs="12"
+          size-md="3"
+          size-lg="3"
+          size-sm="12"
+          class="ion-align-self-center"
+        >
+          <ion-item lines="full">
+            <ion-label position="floating">Password</ion-label>
+            <ion-input formControlName="password" type="text"></ion-input>
+          </ion-item>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.password.errors?.required"
+          >
+            password is required.
+          </span>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.password.errors?.minlength"
+          >
+            password should be min 2 chars long.
+          </span>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.password.errors?.maxLength"
+          >
+            password not should be max 20 chars long.
+          </span>
+        </ion-col>
+      </ion-row>
       <ion-row>
         <ion-col>
           <ion-button type="submit" color="danger" expand="block"

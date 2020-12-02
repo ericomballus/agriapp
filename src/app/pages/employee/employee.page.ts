@@ -47,6 +47,14 @@ export class EmployeePage implements OnInit {
           Validators.maxLength(20),
         ],
       ],
+      password: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(20),
+        ],
+      ],
       poste: [
         "",
         [
@@ -97,11 +105,14 @@ export class EmployeePage implements OnInit {
         emp.email,
         emp.mobile,
         emp.photoUser,
-        emp.cniUser
+        emp.cniUser,
+        emp.password
       );
       console.log(employe);
-      this.auth.inscription(employe.email, "hellohello123").then((res) => {
+      this.auth.inscription(employe.email, employe.password).then((res) => {
         console.log(res);
+        delete employe.password;
+        employe.status = 2;
         this.userService.addUserToFirebase(employe).then((data) => {
           this.notifier("employé ajouté");
           this.ionicForm.reset();
@@ -109,6 +120,7 @@ export class EmployeePage implements OnInit {
       });
     }
   }
+  //hellohello123
   getEmployees() {
     this.database
       .list("agriUser")
