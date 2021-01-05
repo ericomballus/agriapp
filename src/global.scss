@@ -69,3 +69,23 @@
     border: none;
   } */
 }
+
+.my-custom-class .alert-wrapper {
+  // background: #ec0c96;
+  // background-color: greenyellow;
+  overflow: scroll;
+}
+.my-custom-class {
+  // background: #ec0c96;
+}
+ion-select-option {
+  // overflow: scroll;
+}
+.alert-radio-group.sc-ion-alert-md,
+.alert-checkbox-group.sc-ion-alert-md {
+  position: relative;
+  max-height: 240px;
+  border-top: 1px solid var(--ion-color-step-150, #d9d9d9);
+  border-bottom: 1px solid var(--ion-color-step-150, #d9d9d9);
+  overflow: visible;
+}

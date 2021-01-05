@@ -10,6 +10,7 @@ import { Materiel } from "../../models/materiel.model";
 import { DisplayImagePage } from "../display-image/display-image.page";
 import firebase from "firebase/app";
 import "firebase/storage";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-achats",
@@ -31,6 +32,7 @@ export class AchatsPage implements OnInit {
   public disabled = false;
   materieList: any[] = [];
   tabList: any[] = [];
+  tabRole = [];
   constructor(
     public formBuilder: FormBuilder,
     public achatService: AchatService,
@@ -38,10 +40,23 @@ export class AchatsPage implements OnInit {
     private notif: NotificationService,
     private userService: UserService,
     public modalController: ModalController,
-    public materielService: MaterielService
+    public materielService: MaterielService,
+    private router: Router
   ) {
     this.getMateriel();
     this.getAllMateriel();
+  }
+  ionViewWillEnter() {
+    console.log(JSON.parse(localStorage.getItem("tabRole")));
+    this.tabRole = JSON.parse(localStorage.getItem("tabRole"));
+    if (this.tabRole.includes(2) || this.tabRole.includes(3)) {
+      this.router.navigateByUrl("home");
+      this.notif.presentError(
+        "vous n'avez pas les autorisations necéssaires pour cette page",
+        "danger"
+      );
+    } else {
+    }
   }
 
   ngOnInit() {
@@ -119,11 +134,18 @@ export class AchatsPage implements OnInit {
   }
 
   delete(row: Materiel) {
-    console.log(row);
-    this.database
-      //.list("agriActivities")
-      .list("/agriAchats")
-      .remove(row["key"]);
+    let tabRole = JSON.parse(localStorage.getItem("tabRole"));
+    if (tabRole.includes(1) || tabRole.includes(2) || tabRole.includes(3)) {
+      this.notif.presentError(
+        "vous n'avez pas les autorisations necéssaires pour cette action",
+        "danger"
+      );
+    } else {
+      this.database
+        //.list("agriActivities")
+        .list("/agriAchats")
+        .remove(row["key"]);
+    }
   }
 
   handleInput(ev) {

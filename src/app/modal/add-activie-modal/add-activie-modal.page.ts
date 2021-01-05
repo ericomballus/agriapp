@@ -9,6 +9,11 @@ import { InstructionPage } from "../../modal/instruction/instruction.page";
 import * as firebsase from "firebase";
 import { MaterielService } from "src/app/services/materiel.service";
 import { NotificationService } from "src/app/services/notification.service";
+import {
+  NgbCalendar,
+  NgbDate,
+  NgbDateStruct,
+} from "@ng-bootstrap/ng-bootstrap";
 const { Network } = Plugins;
 @Component({
   selector: "app-add-activie-modal",
@@ -32,13 +37,21 @@ export class AddActivieModalPage implements OnInit {
   choixMateriel: any;
   isDisabled: boolean = true;
   public disabled = false;
+  customAlertOptions: any = {
+    cssClass: "my-custom-class",
+  };
+  model: NgbDateStruct;
+  date: { year: number; month: number };
+  model2: NgbDateStruct;
+  date2: { year: number; month: number };
   constructor(
     public formBuilder: FormBuilder,
     public activitiService: ActivitiesApiService,
     private database: AngularFireDatabase,
     public modalController: ModalController,
     public materielService: MaterielService,
-    public notif: NotificationService
+    public notif: NotificationService,
+    private calendar: NgbCalendar
   ) {
     this.getStatus();
     this.getActivitieName();
@@ -46,6 +59,8 @@ export class AddActivieModalPage implements OnInit {
   }
 
   async ngOnInit() {
+    this.model = this.calendar.getToday();
+    this.model2 = this.calendar.getToday();
     this.ionicForm = this.formBuilder.group({
       /* name: [
         "",
@@ -152,6 +167,17 @@ export class AddActivieModalPage implements OnInit {
   }
 
   submitForm() {
+    let day2 = this.model2.day + 1;
+    let day1 = this.model.day;
+    let debut = new Date(
+      this.model.year + "-" + this.model.month + "-" + day1
+    ).getTime();
+    let fin = new Date(
+      this.model2.year + "-" + this.model2.month + "-" + day2
+    ).getTime();
+    console.log(new Date(Date.now()).getTime());
+    //  let today = new Date(Date.now()).getTime();
+
     this.isSubmitted = true;
     if (!this.ionicForm.valid) {
       console.log("Please provide all the required values!");
@@ -170,6 +196,8 @@ export class AddActivieModalPage implements OnInit {
         });
       }
       emp["besoinMateriel"] = this.besoinMateriel;
+      emp["startAt"] = debut;
+      emp["endAt"] = fin;
 
       this.activitiService.postActivitie(this.ionicForm.value).subscribe(
         (result) => {
@@ -268,6 +296,8 @@ export class AddActivieModalPage implements OnInit {
         console.log(data);
 
         this.nameList = data;
+        console.log(this.nameList);
+
         // this.getEquipementFromFirebase();
       },
       (err) => {
@@ -308,5 +338,16 @@ export class AddActivieModalPage implements OnInit {
     this.disabled = false;
     this.choixMateriel = null;
     this.isDisabled = true;
+  }
+
+  selectByday() {
+    let day2 = this.model2.day + 1;
+    let day1 = this.model.day;
+    let debut = new Date(
+      this.model.year + "-" + this.model.month + "-" + day1
+    ).getTime();
+    let fin = new Date(
+      this.model2.year + "-" + this.model2.month + "-" + day2
+    ).getTime();
   }
 }

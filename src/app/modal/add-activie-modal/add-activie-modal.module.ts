@@ -7,6 +7,7 @@ import { IonicModule } from "@ionic/angular";
 import { AddActivieModalPageRoutingModule } from "./add-activie-modal-routing.module";
 
 import { AddActivieModalPage } from "./add-activie-modal.page";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { AddActivieModalPage } from "./add-activie-modal.page";
     IonicModule,
     AddActivieModalPageRoutingModule,
     ReactiveFormsModule,
+    NgbModule,
   ],
   declarations: [AddActivieModalPage],
 })

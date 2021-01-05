@@ -8,6 +8,7 @@ export class Employe {
   photoUser: string;
   cniUser: string;
   status: number;
+  tabRole = [];
   constructor(name, poste, email, mobile, photoUser, cniUser, password) {
     this.name = name;
     this.email = email;

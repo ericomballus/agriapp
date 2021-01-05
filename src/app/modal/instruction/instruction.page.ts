@@ -26,6 +26,7 @@ export class InstructionPage implements OnInit {
   videoURL: string;
   imageUrl: string;
   index: number;
+  tabRole = [];
   constructor(
     public activitiService: ActivitiesApiService,
     public notif: NotificationService,
@@ -46,6 +47,19 @@ export class InstructionPage implements OnInit {
   }
 
   ngOnInit() {}
+
+  ionViewWillEnter() {
+    console.log(JSON.parse(localStorage.getItem("tabRole")));
+    this.tabRole = JSON.parse(localStorage.getItem("tabRole"));
+    if (this.tabRole.includes(2) || this.tabRole.includes(3)) {
+      this.router.navigateByUrl("home");
+      this.notif.presentError(
+        "vous n'avez pas les autorisations necéssaires pour cette page",
+        "danger"
+      );
+    } else {
+    }
+  }
 
   addQuantity(ev, elt) {
     if (parseInt(ev.detail.value) >= 0) {

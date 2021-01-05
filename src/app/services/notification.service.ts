@@ -32,6 +32,17 @@ export class NotificationService {
     toast.present();
   }
 
+  async presentError(msg, color) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 6000,
+      position: "top",
+      color: color,
+      animated: true,
+    });
+    toast.present();
+  }
+
   async onlineAlert() {
     const toast = await this.toastController.create({
       message: "Your are online.",

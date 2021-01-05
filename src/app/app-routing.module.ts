@@ -108,6 +108,10 @@ const routes: Routes = [
     path: 'view-inventaire',
     loadChildren: () => import('./modal/view-inventaire/view-inventaire.module').then( m => m.ViewInventairePageModule)
   },
+  {
+    path: 'update-employe',
+    loadChildren: () => import('./pages/update-employe/update-employe.module').then( m => m.UpdateEmployePageModule)
+  },
 ];
 
 @NgModule({

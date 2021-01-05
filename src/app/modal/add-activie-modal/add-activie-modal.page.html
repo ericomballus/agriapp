@@ -8,15 +8,95 @@
 </ion-header>
 
 <ion-content>
+  <div>
+    <div>
+      <ion-row>
+        <ion-col>
+          <div class="ion-text-uppercase ion-text-center">
+            <h6>planifier l'éxcution</h6>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+  <div class="date">
+    <div class="input-group">.</div>
+
+    <div class="input-group">
+      <input
+        style="display: none"
+        class="form-control"
+        placeholder="yyyy-mm-dd"
+        name="dp"
+        ngbDatepicker
+        #d="ngbDatepicker"
+        [(ngModel)]="model"
+      />
+      <div class="input-group-append">
+        <ion-button
+          fill="clear"
+          color="primary"
+          size="small"
+          class="btn btn-outline-secondary calendar"
+          (click)="d.toggle()"
+          type="button"
+          >Debut <ion-icon name="calendar"></ion-icon
+        ></ion-button>
+      </div>
+    </div>
+    <div class="input-group">
+      <pre>{{model.day}}/{{model.month}}/{{model.year}}</pre>
+    </div>
+    <div class="input-group">
+      <pre>{{model2.day}}/{{model2.month}}/{{model2.year}}</pre>
+    </div>
+    <div class="input-group">
+      <input
+        style="display: none"
+        class="form-control"
+        placeholder="yyyy-mm-dd"
+        name="dp2"
+        ngbDatepicker
+        #d2="ngbDatepicker"
+        [(ngModel)]="model2"
+      />
+      <div class="input-group-append">
+        <ion-button
+          fill="clear"
+          color="warning"
+          size="small"
+          class="btn btn-outline-secondary calendar"
+          (click)="d2.toggle()"
+          type="button"
+          >Fin <ion-icon name="calendar"></ion-icon
+        ></ion-button>
+      </div>
+    </div>
+
+    <div class="input-group">.</div>
+  </div>
   <ion-grid>
     <ion-row>
       <ion-col size-md="12" size-lg="12" size-xs="12" size-sm="12" size-xl="12">
         <div class="cole">
           <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
+            <div>
+              <div>
+                <ion-row>
+                  <ion-col>
+                    <div class="ion-text-uppercase ion-text-center">
+                      <h6>details :</h6>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </div>
             <div class="first">
               <div class="divint">
-                <ion-item lines="none">
+                <ion-item lines="none" class="itemcustum">
                   <ion-select
+                    [interfaceOptions]="customAlertOptions"
+                    interface="alert"
                     placeholder="Nom activité"
                     cancelText="Annuler"
                     okText="Ok"
@@ -262,6 +342,17 @@
               </div>
             </div>
 
+            <div>
+              <div>
+                <ion-row>
+                  <ion-col>
+                    <div class="ion-text-uppercase ion-text-center">
+                      <h6>liste matériels</h6>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </div>
             <div class="second three">
               <div>
                 <ion-item>

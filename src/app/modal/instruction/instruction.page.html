@@ -31,6 +31,18 @@
           <h6>montant: {{montant | currency: "FCFA":"symbol":"3.0-0":"fr"}}</h6>
         </div>
       </ion-col>
+      <ion-col
+        size="12"
+        class="ion-align-self-center"
+        *ngIf="activitie.startAt"
+      >
+        <div class="ion-text-center ion-text-uppercase">
+          <h3>
+            Début éxécution: {{activitie.startAt | date}} FIN éxécution:
+            {{activitie.endAt | date}}
+          </h3>
+        </div>
+      </ion-col>
       <ion-col size-md="12" size-lg="12" size-xs="12" size-sm="12" size-xl="12">
         <div class="cole">
           <div class="first">
@@ -41,6 +53,7 @@
                   placeholder="Entrer l'information ici"
                   [(ngModel)]="activitie.executant"
                   type="texte"
+                  [disabled]="activitie.confirm"
                 ></ion-input>
               </ion-item>
             </div>
@@ -52,6 +65,7 @@
                   placeholder="Entrer la superficie ici"
                   [(ngModel)]="activitie.superficie"
                   type="texte"
+                  [disabled]="activitie.confirm"
                 ></ion-input>
               </ion-item>
             </div>
@@ -62,6 +76,7 @@
                   placeholder="Entrer le cout de la main d'oeuvre ici"
                   [(ngModel)]="activitie.coutmaindoeuvre"
                   type="texte"
+                  [disabled]="activitie.confirm"
                 ></ion-input>
               </ion-item>
             </div>
@@ -75,6 +90,7 @@
                   placeholder="Entrer la fréquence ici"
                   [(ngModel)]="activitie.frequence"
                   type="texte"
+                  [disabled]="activitie.confirm"
                 ></ion-input>
               </ion-item>
             </div>
@@ -85,6 +101,7 @@
                   placeholder="Entrer la période ici"
                   [(ngModel)]="activitie.periode"
                   type="texte"
+                  [disabled]="activitie.confirm"
                 ></ion-input>
               </ion-item>
             </div>
@@ -95,6 +112,7 @@
                   [(ngModel)]="activitie.coutMateriel"
                   placeholder="Entrer le cout ici"
                   type="texte"
+                  [disabled]="activitie.confirm"
                 ></ion-input>
               </ion-item>
             </div>
@@ -132,6 +150,7 @@
                       [(ngModel)]="activitie.recommandation"
                       placeholder="instruction ?"
                       type="text"
+                      [disabled]="activitie.confirm"
                     ></ion-textarea>
                   </div>
                 </div>
@@ -181,6 +200,7 @@
                 <div class="ion-text-center inte">
                   <ion-input
                     [value]="mat.qty"
+                    [disabled]="activitie.confirm"
                     type="texte"
                     debounce="500"
                     (ionChange)="addQuantity($event, mat)"
@@ -189,7 +209,11 @@
               </ion-col>
               <ion-col size="1" class="ion-align-self-center">
                 <div class="ion-text-center inte">
-                  <ion-input [value]="mat.quantity" type="texte"></ion-input>
+                  <ion-input
+                    [disabled]="activitie.confirm"
+                    [value]="mat.quantity"
+                    type="texte"
+                  ></ion-input>
                 </div>
               </ion-col>
               <ion-col size="2" class="ion-align-self-center">

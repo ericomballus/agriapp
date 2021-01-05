@@ -10,6 +10,7 @@ import { InstructionPage } from "../../modal/instruction/instruction.page";
 import * as firebsase from "firebase";
 import { AddActivieModalPage } from "src/app/modal/add-activie-modal/add-activie-modal.page";
 import { Router } from "@angular/router";
+import { NotificationService } from "src/app/services/notification.service";
 const { Network } = Plugins;
 @Component({
   selector: "app-created-activitie",
@@ -23,17 +24,30 @@ export class CreatedActivitiePage implements OnInit, OnDestroy {
   networkStatus: NetworkStatus;
   networkListener: PluginListenerHandle;
   activitiesTab = [];
+  tabRole = [];
   constructor(
     public formBuilder: FormBuilder,
     public activitiService: ActivitiesApiService,
     private database: AngularFireDatabase,
     public modalController: ModalController,
+    private notif: NotificationService,
     public router: Router
   ) {
     this.getStatus();
     this.getActivities();
   }
-
+  ionViewWillEnter() {
+    console.log(JSON.parse(localStorage.getItem("tabRole")));
+    this.tabRole = JSON.parse(localStorage.getItem("tabRole"));
+    if (this.tabRole.includes(2) || this.tabRole.includes(3)) {
+      this.router.navigateByUrl("home");
+      this.notif.presentError(
+        "vous n'avez pas les autorisations necéssaires pour cette page",
+        "danger"
+      );
+    } else {
+    }
+  }
   async ngOnInit() {
     this.ionicForm = this.formBuilder.group({
       name: [
@@ -209,9 +223,9 @@ export class CreatedActivitiePage implements OnInit, OnDestroy {
 
   async presentModal(row) {
     console.log(row);
-    this.activitiService.setData(row)
-    this.router.navigateByUrl("instruction")
-   /* const modal = await this.modalController.create({
+    this.activitiService.setData(row);
+    this.router.navigateByUrl("instruction");
+    /* const modal = await this.modalController.create({
       component: InstructionPage,
       cssClass: "my-custom-class",
       componentProps: {
@@ -225,11 +239,10 @@ export class CreatedActivitiePage implements OnInit, OnDestroy {
 
   async createActivitie() {
     this.router.navigateByUrl("add-activie-modal");
-  
   }
 
   getActivityFromFirebase() {
-  /*  this.database
+    /*  this.database
       .list("/agriActivities", (ref) =>
         ref.orderByChild("agriActivities").limitToLast(20)
       )

@@ -32,7 +32,8 @@ export class LoginPage implements OnInit {
     let name: string = formadmin.value.password;
     let pass: string = formadmin.value.password;
     if (name.split("@")[0] === "admin") {
-      this.router.navigateByUrl("admin");
+      localStorage.setItem("tabRole", JSON.stringify([0]));
+      this.router.navigateByUrl("home");
     } else {
       // this.router.navigateByUrl("home");
       this.connexion(this.userEmail, pass);
@@ -98,7 +99,9 @@ export class LoginPage implements OnInit {
           console.log(a);
 
           a["key"] = action.key;
+          let tabRole = a["tabRole"];
           localStorage.setItem("userAuth", JSON.stringify(a));
+          localStorage.setItem("tabRole", JSON.stringify(tabRole));
           this.router.navigateByUrl("home");
         });
       });

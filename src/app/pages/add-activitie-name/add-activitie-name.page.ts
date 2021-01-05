@@ -5,6 +5,8 @@ import { MaterielService } from "src/app/services/materiel.service";
 import { AngularFireDatabase } from "@angular/fire/database";
 import { AngularFireStorage } from "@angular/fire/storage";
 import * as firebsase from "firebase";
+import { NotificationService } from "src/app/services/notification.service";
+import { Router } from "@angular/router";
 @Component({
   selector: "app-add-activitie-name",
   templateUrl: "./add-activitie-name.page.html",
@@ -16,12 +18,32 @@ export class AddActivitieNamePage implements OnInit {
   isSubmitted = false;
   errorControl: any;
   materielListTab: Array<Materiel>;
+  tabRole = [];
   constructor(
     public formBuilder: FormBuilder,
     public materielService: MaterielService,
-    private database: AngularFireDatabase
+    private database: AngularFireDatabase,
+    private notif: NotificationService,
+    public router: Router
   ) {
     this.getActivitieName();
+  }
+
+  ionViewWillEnter() {
+    console.log(JSON.parse(localStorage.getItem("tabRole")));
+    this.tabRole = JSON.parse(localStorage.getItem("tabRole"));
+    if (
+      this.tabRole.includes(1) ||
+      this.tabRole.includes(2) ||
+      this.tabRole.includes(3)
+    ) {
+      this.router.navigateByUrl("home");
+      this.notif.presentError(
+        "vous n'avez pas les autorisations necéssaires pour cette page",
+        "danger"
+      );
+    } else {
+    }
   }
 
   ngOnInit() {
@@ -91,6 +113,14 @@ export class AddActivitieNamePage implements OnInit {
   }
 
   delete(row) {
-    this.database.list("/agriActivitiName").remove(row["key"]);
+    let tabRole = JSON.parse(localStorage.getItem("tabRole"));
+    if (tabRole.includes(1) || tabRole.includes(2) || tabRole.includes(3)) {
+      this.notif.presentError(
+        "vous n'avez pas les autorisations necéssaires pour cette action",
+        "danger"
+      );
+    } else {
+      this.database.list("/agriActivitiName").remove(row["key"]);
+    }
   }
 }

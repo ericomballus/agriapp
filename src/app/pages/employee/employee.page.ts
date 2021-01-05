@@ -8,6 +8,8 @@ import { AuthentificationService } from "src/app/services/authentification.servi
 import firebase from "firebase/app";
 import "firebase/storage";
 import { NotificationService } from "src/app/services/notification.service";
+import { Router } from "@angular/router";
+import { ManagerInventoryPage } from "../manager-inventory/manager-inventory.page";
 @Component({
   selector: "app-employee",
   templateUrl: "./employee.page.html",
@@ -26,17 +28,40 @@ export class EmployeePage implements OnInit {
   photoURL2: string;
   videoURL: string;
   imageUrl: string;
+  userRole: number;
+  tabRole = [];
+  roles = [
+    { name: "Admin", id: 0 },
+    { name: "Manager", id: 1 },
+    { name: "Warehouseman", id: 2 },
+    { name: "Other", id: 3 },
+  ];
   constructor(
     public formBuilder: FormBuilder,
     public userService: UserService,
     public toastController: ToastController,
     private database: AngularFireDatabase,
     public auth: AuthentificationService,
-    public notif: NotificationService
-  ) {
-    this.getEmployees();
+    public notif: NotificationService,
+    public router: Router
+  ) {}
+  ionViewWillEnter() {
+    console.log(JSON.parse(localStorage.getItem("tabRole")));
+    this.tabRole = JSON.parse(localStorage.getItem("tabRole"));
+    if (
+      this.tabRole.includes(1) ||
+      this.tabRole.includes(2) ||
+      this.tabRole.includes(3)
+    ) {
+      this.router.navigateByUrl("home");
+      this.notif.presentError(
+        "vous n'avez pas les autorisations necéssaires pour cette page",
+        "danger"
+      );
+    } else {
+      this.getEmployees();
+    }
   }
-
   ngOnInit() {
     this.ionicForm = this.formBuilder.group({
       name: [
@@ -109,6 +134,9 @@ export class EmployeePage implements OnInit {
         emp.password
       );
       console.log(employe);
+      if (this.userRole) {
+        employe.tabRole.push(this.userRole);
+      }
       this.auth.inscription(employe.email, employe.password).then((res) => {
         console.log(res);
         delete employe.password;
@@ -172,6 +200,10 @@ export class EmployeePage implements OnInit {
       .catch((err) => {
         console.log(err);
       });
+  }
+  updateEmploye(user) {
+    this.userService.setEmploye(user);
+    this.router.navigateByUrl("update-employe");
   }
 
   galerie() {
@@ -248,5 +280,14 @@ export class EmployeePage implements OnInit {
           reject(e);
         });
     });
+  }
+
+  selectEvent(ev) {
+    console.log(ev.detail.value);
+    this.userRole = ev.detail.value.id;
+
+    /* tab.forEach((materiel) => {
+      this.besoinMateriel = this.besoinMateriel + "," + materiel.name;
+    }); */
   }
 }

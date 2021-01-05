@@ -34,6 +34,7 @@ export class ManagerInventoryPage implements OnInit {
   materielListTab: Array<any>;
   randomObj = {};
   inventaireFlag: Boolean = false;
+  tabRole = [];
   constructor(
     private materialService: MaterielService,
     public activitiService: ActivitiesApiService,
@@ -45,6 +46,19 @@ export class ManagerInventoryPage implements OnInit {
     private router: Router,
     private inventaireService: InventaireService
   ) {}
+
+  ionViewWillEnter() {
+    console.log(JSON.parse(localStorage.getItem("tabRole")));
+    this.tabRole = JSON.parse(localStorage.getItem("tabRole"));
+    if (this.tabRole.includes(2) || this.tabRole.includes(3)) {
+      this.router.navigateByUrl("home");
+      this.notif.presentError(
+        "vous n'avez pas les autorisations necéssaires pour cette page",
+        "danger"
+      );
+    } else {
+    }
+  }
 
   ngOnInit() {
     this.model = this.calendar.getToday();
@@ -67,7 +81,11 @@ export class ManagerInventoryPage implements OnInit {
     this.inventaireService.getInventaireFromFirebase().subscribe(
       (data: Array<any>) => {
         console.log(data);
-        if (data[0]["inventaire"] && data[0]["inventaire"].length) {
+        if (
+          data.length &&
+          data[0]["inventaire"] &&
+          data[0]["inventaire"].length
+        ) {
           // this.materielListTab = data[0]["inventaire"];
         }
       },

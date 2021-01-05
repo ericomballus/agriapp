@@ -4,13 +4,14 @@ import { AngularFireStorage } from "@angular/fire/storage";
 import * as firebsase from "firebase";
 import { BehaviorSubject } from "rxjs";
 import { isNullOrUndefined } from "util";
+import { Employe } from "../models/employe.model";
 @Injectable({
   providedIn: "root",
 })
 export class UserService {
   userList = [];
   users = new BehaviorSubject([]);
-  employe: null;
+  employe: Employe;
   url: null;
   constructor(private database: AngularFireDatabase) {}
 
@@ -44,6 +45,20 @@ export class UserService {
     });
   }
 
+  updateUser(user) {
+    return new Promise((resolve, reject) => {
+      let database = this.database.list("agriUser");
+      database
+        .update(user.key, user)
+        .then((b) => {
+          resolve(b);
+        })
+        .catch((error) => {
+          reject(JSON.stringify(error));
+        });
+    });
+  }
+
   getAllUser() {
     let storage = JSON.parse(localStorage.getItem("users"));
     if (Array.isArray(storage) && storage.length) {
@@ -64,6 +79,8 @@ export class UserService {
           if (index >= 0) {
             console.log("existe");
           } else {
+            console.log(a);
+
             this.userList.push(a);
           }
         });
@@ -72,13 +89,13 @@ export class UserService {
       });
     return this.users;
   }
-  setEmploye(data) {
+  setEmploye(data: Employe) {
     this.employe = data;
   }
 
-  getEmploye() {
+  getEmploye(): Employe {
     if (isNullOrUndefined(this.employe)) {
-      return 0;
+      return null;
     } else {
       return this.employe;
     }

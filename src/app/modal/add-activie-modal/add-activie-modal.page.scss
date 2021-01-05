@@ -89,3 +89,12 @@
     text-transform: uppercase;
   }
 }
+
+.date {
+  display: flex;
+  justify-content: space-between;
+}
+.input-group {
+  text-align: center;
+  flex-grow: 1;
+}

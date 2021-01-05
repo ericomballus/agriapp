@@ -13,6 +13,9 @@ import { AngularFireDatabase } from "@angular/fire/database";
   styleUrls: ["./view-inventaire.page.scss"],
 })
 export class ViewInventairePage implements OnInit {
+  avaible = 0;
+  add = 0;
+  out = 0;
   constructor(
     private inventaireService: InventaireService,
     private calendar: NgbCalendar,
@@ -30,6 +33,12 @@ export class ViewInventairePage implements OnInit {
     this.prod = this.inventaireService.getData();
     console.log(this.prod);
     this.inventaireRandom = this.prod.tabInventaire;
+    let tab = this.prod.tabInventaire;
+    tab.forEach((prod) => {
+      this.add = parseInt(prod.add) + this.add;
+      this.out = parseInt(prod.out) + this.out;
+    });
+    this.avaible = this.add - this.out;
   }
 
   selectByday() {
