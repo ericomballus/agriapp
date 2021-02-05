@@ -15,15 +15,16 @@ import {
   NgbDateStruct,
 } from "@ng-bootstrap/ng-bootstrap";
 import { ListActivitiesPage } from "../list-activities/list-activities.page";
+import { ListCreatedTravauxPage } from "../list-created-travaux/list-created-travaux.page";
+import { ProjetApiService } from "src/app/services/projet-api.service";
 const { Network } = Plugins;
+
 @Component({
-  selector: "app-add-activie-modal",
-  templateUrl: "./add-activie-modal.page.html",
-  styleUrls: ["./add-activie-modal.page.scss"],
+  selector: "app-add-projet",
+  templateUrl: "./add-projet.page.html",
+  styleUrls: ["./add-projet.page.scss"],
 })
-export class AddActivieModalPage implements OnInit {
-  ionicForm: FormGroup;
-  // defaultDate = "1987-06-30";
+export class AddProjetPage implements OnInit {
   isSubmitted = false;
   networkStatus: NetworkStatus;
   networkListener: PluginListenerHandle;
@@ -46,6 +47,14 @@ export class AddActivieModalPage implements OnInit {
   model2: NgbDateStruct;
   date2: { year: number; month: number };
   activitieName = "";
+  ionicForm: FormGroup;
+  travauxList = [];
+  activitiesList = [];
+  open = false;
+  typeProduction: any;
+  openAnimale = false;
+  openVegetale = false;
+  iLikeIt: any;
   constructor(
     public formBuilder: FormBuilder,
     public activitiService: ActivitiesApiService,
@@ -54,82 +63,33 @@ export class AddActivieModalPage implements OnInit {
     public materielService: MaterielService,
     public notif: NotificationService,
     private calendar: NgbCalendar,
-    private activitiList: ActivitiesApiService
+    private activitiList: ActivitiesApiService,
+    private projetService: ProjetApiService
   ) {
     this.getStatus();
-    this.getActivitieName();
-    this.getMateriel();
+    // this.getActivitieName();
+    // this.getMateriel();
   }
 
   async ngOnInit() {
     this.model = this.calendar.getToday();
     this.model2 = this.calendar.getToday();
+    this.model = this.calendar.getToday();
+    this.model2 = this.calendar.getToday();
     this.ionicForm = this.formBuilder.group({
-      /* name: [
+      name: [
         "",
         [
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(20),
         ],
-      ],*/
+      ],
       description: [
         "",
         [
           Validators.required,
           Validators.minLength(5),
-          Validators.maxLength(1000),
-        ],
-      ],
-      superficie: [
-        "",
-        [
-          // Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(100),
-          // Validators.pattern("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$"),
-        ],
-      ],
-      // dob: [this.defaultDate],
-      // mobile: ["", [Validators.required, Validators.pattern("^[0-9]+$")]],
-      coutmaindoeuvre: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(1000),
-          //  Validators.pattern("^[0-9]+$"),
-        ],
-      ],
-      frequence: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(1000),
-        ],
-      ],
-      periode: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(1000),
-        ],
-      ],
-      /*  besoinMateriel: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(1000),
-        ],
-      ],*/
-      coutMateriel: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(1),
           Validators.maxLength(1000),
         ],
       ],
@@ -201,56 +161,21 @@ export class AddActivieModalPage implements OnInit {
       console.log(this.ionicForm.value);
       let emp = this.ionicForm.value;
       emp["created"] = Date.now();
-      if (this.tab.length) {
-        emp["materielList"] = this.tab;
-        emp["name"] = this.name;
-        emp["nameKey"] = this.nameKey;
-        this.tab.forEach((materiel) => {
-          this.besoinMateriel =
-            this.besoinMateriel + "," + materiel.qty + "" + materiel.name;
-        });
-      }
-      emp["besoinMateriel"] = this.besoinMateriel;
+      emp["travauxList"] = this.travauxList;
       emp["startAt"] = debut;
       emp["endAt"] = fin;
 
-      this.activitiService.postActivitie(this.ionicForm.value).subscribe(
-        (result) => {
-          console.log(result["activitie"]);
-          this.isSubmitted = false;
+      this.projetService
+        .postPorjetToFirebase(emp)
+        .then((res) => {
+          console.log(res);
+          this.notif.presentMessage("enregistré!!!");
           this.ionicForm.reset();
-          this.getActivities();
-          this.activitiService
-            .postActivitieToFirebase(result["activitie"])
-            .then((res) => {
-              console.log(res);
-              this.updateActivitiesStatus({
-                id: result["activitie"]["_id"],
-                status: true,
-              });
-            })
-            .catch((err) => {
-              console.log(err);
-              this.updateActivitiesStatus({
-                id: result["activitie"]["_id"],
-                status: false,
-              });
-            });
-        },
-        (err) => {
+          this.travauxList = [];
+        })
+        .catch((err) => {
           console.log(err);
-          this.activitiService
-            .postActivitieToFirebase(emp)
-            .then((res) => {
-              console.log(res);
-              this.notif.presentMessage("l'activité a été enregistré!!!");
-              this.ionicForm.reset();
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      );
+        });
     }
   }
   getActivities() {
@@ -348,12 +273,6 @@ export class AddActivieModalPage implements OnInit {
     this.disabled = true;
     this.choixMateriel["qty"] = this.quantity;
   }
-  addMateriel() {
-    this.tab.push(this.choixMateriel);
-    this.disabled = false;
-    this.choixMateriel = null;
-    this.isDisabled = true;
-  }
 
   selectByday() {
     let day2 = this.model2.day + 1;
@@ -365,24 +284,33 @@ export class AddActivieModalPage implements OnInit {
       this.model2.year + "-" + this.model2.month + "-" + day2
     ).getTime();
   }
-  async pickActivitiName() {
-    console.log(this.nameList);
-
-    this.activitiList.setActivitieList(this.nameList);
+  async pickTravaux() {
     const modal = await this.modalController.create({
-      component: ListActivitiesPage,
+      component: ListCreatedTravauxPage,
       cssClass: "my-custom-class",
       backdropDismiss: false,
       componentProps: {},
     });
     modal.onWillDismiss().then((data) => {
       console.log(data);
-      if (data["data"]["activitie"]) {
-        this.activitieName = data["data"]["activitie"]["name"];
-        this.name = this.activitieName;
-        this.nameKey = data["data"]["activitie"]["key"];
+      if (data["data"]["activities"]) {
+        let tab = data["data"]["activities"];
+        if (tab && tab.length) {
+          this.travauxList = tab;
+        } else {
+          this.travauxList = [];
+        }
       }
     });
     return await modal.present();
+  }
+  selectVegetale(ev) {
+    console.log(ev.target.value);
+    this.openVegetale = !this.openVegetale;
+  }
+
+  selectAnimale(ev) {
+    console.log(ev.target.value);
+    this.openAnimale = !this.openAnimale;
   }
 }

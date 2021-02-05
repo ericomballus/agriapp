@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="save-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div class="ion-text-center ion-text-uppercase">
+          <h3>liste des travaux</h3>
+        </div>
+        <div>
+          <ion-row class="header-row">
+            <ion-col size="2" class="ion-align-self-center">
+              <div class="ion-text-center ion-text-uppercase">Nom</div>
+            </ion-col>
+
+            <ion-col size="2" class="ion-align-self-center">
+              <div class="ion-text-center ion-text-uppercase">éxécution</div>
+            </ion-col>
+            <ion-col size="3" class="ion-align-self-center">
+              <div class="ion-text-center ion-text-uppercase">date début</div>
+            </ion-col>
+            <ion-col size="3" class="ion-align-self-center">
+              <div class="ion-text-center ion-text-uppercase">date fin</div>
+            </ion-col>
+          </ion-row>
+        </div>
+        <ion-row
+          *ngFor="let row of activitiesTab; let i= index"
+          class="data-row data-update"
+          [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+        >
+          <ion-col
+            size="2"
+            class="ion-align-self-center"
+            [ngStyle]="{'height': '30px' }"
+          >
+            <div class="ion-text-center">{{row.name}}</div>
+          </ion-col>
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center">{{row.executant}}</div>
+          </ion-col>
+          <ion-col size="3" class="ion-align-self-center">
+            <div class="ion-text-center">{{ row.startAt | date:'medium' }}</div>
+          </ion-col>
+          <ion-col size="3" class="ion-align-self-center">
+            <div class="ion-text-center">{{ row.endAt | date:'medium' }}</div>
+          </ion-col>
+
+          <ion-col size="2">
+            <div class="ion-text-center">
+              <ion-checkbox
+                color="secondary"
+                (ionChange)="selectTravaux(row)"
+              ></ion-checkbox>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

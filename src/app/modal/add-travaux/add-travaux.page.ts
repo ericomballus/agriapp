@@ -15,19 +15,21 @@ import {
   NgbDateStruct,
 } from "@ng-bootstrap/ng-bootstrap";
 import { ListActivitiesPage } from "../list-activities/list-activities.page";
+import { ListCreatedActivitiesPage } from "../list-created-activities/list-created-activities.page";
+import { TravauxApiService } from "src/app/services/travaux-api.service";
 const { Network } = Plugins;
+
 @Component({
-  selector: "app-add-activie-modal",
-  templateUrl: "./add-activie-modal.page.html",
-  styleUrls: ["./add-activie-modal.page.scss"],
+  selector: "app-add-travaux",
+  templateUrl: "./add-travaux.page.html",
+  styleUrls: ["./add-travaux.page.scss"],
 })
-export class AddActivieModalPage implements OnInit {
-  ionicForm: FormGroup;
-  // defaultDate = "1987-06-30";
+export class AddTravauxPage implements OnInit {
   isSubmitted = false;
   networkStatus: NetworkStatus;
   networkListener: PluginListenerHandle;
   activitiesTab: any;
+  activitiesList: any;
   materieList: any[] = [];
   nameList: any[] = [];
   name: any;
@@ -46,6 +48,7 @@ export class AddActivieModalPage implements OnInit {
   model2: NgbDateStruct;
   date2: { year: number; month: number };
   activitieName = "";
+  ionicForm: FormGroup;
   constructor(
     public formBuilder: FormBuilder,
     public activitiService: ActivitiesApiService,
@@ -54,82 +57,32 @@ export class AddActivieModalPage implements OnInit {
     public materielService: MaterielService,
     public notif: NotificationService,
     private calendar: NgbCalendar,
-    private activitiList: ActivitiesApiService
+    private activitiList: ActivitiesApiService,
+    private travauxService: TravauxApiService
   ) {
     this.getStatus();
-    this.getActivitieName();
-    this.getMateriel();
+    //this.getActivitieName();
+    this.getAllActivities();
+    // this.getMateriel();
   }
 
   async ngOnInit() {
     this.model = this.calendar.getToday();
     this.model2 = this.calendar.getToday();
     this.ionicForm = this.formBuilder.group({
-      /* name: [
+      name: [
         "",
         [
           Validators.required,
           Validators.minLength(2),
           Validators.maxLength(20),
         ],
-      ],*/
+      ],
       description: [
         "",
         [
           Validators.required,
           Validators.minLength(5),
-          Validators.maxLength(1000),
-        ],
-      ],
-      superficie: [
-        "",
-        [
-          // Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(100),
-          // Validators.pattern("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$"),
-        ],
-      ],
-      // dob: [this.defaultDate],
-      // mobile: ["", [Validators.required, Validators.pattern("^[0-9]+$")]],
-      coutmaindoeuvre: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(1000),
-          //  Validators.pattern("^[0-9]+$"),
-        ],
-      ],
-      frequence: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(1000),
-        ],
-      ],
-      periode: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(1000),
-        ],
-      ],
-      /*  besoinMateriel: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(1000),
-        ],
-      ],*/
-      coutMateriel: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(1),
           Validators.maxLength(1000),
         ],
       ],
@@ -201,64 +154,29 @@ export class AddActivieModalPage implements OnInit {
       console.log(this.ionicForm.value);
       let emp = this.ionicForm.value;
       emp["created"] = Date.now();
-      if (this.tab.length) {
-        emp["materielList"] = this.tab;
-        emp["name"] = this.name;
-        emp["nameKey"] = this.nameKey;
-        this.tab.forEach((materiel) => {
-          this.besoinMateriel =
-            this.besoinMateriel + "," + materiel.qty + "" + materiel.name;
-        });
-      }
-      emp["besoinMateriel"] = this.besoinMateriel;
+      emp["activitieList"] = this.activitiesList;
       emp["startAt"] = debut;
       emp["endAt"] = fin;
 
-      this.activitiService.postActivitie(this.ionicForm.value).subscribe(
-        (result) => {
-          console.log(result["activitie"]);
-          this.isSubmitted = false;
+      this.travauxService
+        .postTravauxToFirebase(emp)
+        .then((res) => {
+          console.log(res);
+          this.notif.presentMessage("enregistré!!!");
           this.ionicForm.reset();
-          this.getActivities();
-          this.activitiService
-            .postActivitieToFirebase(result["activitie"])
-            .then((res) => {
-              console.log(res);
-              this.updateActivitiesStatus({
-                id: result["activitie"]["_id"],
-                status: true,
-              });
-            })
-            .catch((err) => {
-              console.log(err);
-              this.updateActivitiesStatus({
-                id: result["activitie"]["_id"],
-                status: false,
-              });
-            });
-        },
-        (err) => {
+          this.activitiesList = [];
+        })
+        .catch((err) => {
           console.log(err);
-          this.activitiService
-            .postActivitieToFirebase(emp)
-            .then((res) => {
-              console.log(res);
-              this.notif.presentMessage("l'activité a été enregistré!!!");
-              this.ionicForm.reset();
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      );
+        });
     }
   }
-  getActivities() {
+  /* getActivities() {
     this.activitiService.getLastTenActivitie().subscribe((data) => {
       console.log(data);
       this.activitiesTab = data;
     });
-  }
+  }  */
   updateActivitiesStatus(data) {
     this.activitiService
       .upadteActivitieFirebaseStatus(data)
@@ -270,39 +188,6 @@ export class AddActivieModalPage implements OnInit {
     this.modalController.dismiss({
       dismissed: true,
     });
-  }
-  selectEvent(ev) {
-    console.log(ev.detail.value);
-    let tab = ev.detail.value;
-    this.choixMateriel = ev.detail.value;
-    this.isDisabled = false;
-    /* tab.forEach((materiel) => {
-      this.besoinMateriel = this.besoinMateriel + "," + materiel.name;
-    }); */
-  }
-
-  selectNameEvent(ev) {
-    console.log(ev.detail.value);
-    this.name = ev.detail.value.name;
-    this.nameKey = ev.detail.value.key;
-    this.isDisabled = false;
-    /* tab.forEach((materiel) => {
-      this.besoinMateriel = this.besoinMateriel + "," + materiel.name;
-    }); */
-  }
-
-  getMateriel() {
-    this.materielService.getMateriel().subscribe(
-      (data: Array<any>) => {
-        console.log(data);
-
-        this.materieList = data;
-        // this.getEquipementFromFirebase();
-      },
-      (err) => {
-        // this.getEquipementFromFirebase();
-      }
-    );
   }
 
   getActivitieName() {
@@ -321,41 +206,7 @@ export class AddActivieModalPage implements OnInit {
     );
   }
 
-  getEquipementFromFirebase() {
-    let storage = JSON.parse(localStorage.getItem("equipement"));
-    if (Array.isArray(storage)) {
-      this.materieList = storage;
-    }
-    /* this.database
-      .list("/agriMatriels", (ref) =>
-        ref.orderByChild("agriMatriels").limitToLast(20)
-      )
-      .snapshotChanges()
-      .subscribe((actions) => {
-        let tab = [];
-        actions.forEach((action) => {
-          let a = action.payload.val();
-          a["key"] = action.key;
-          console.log(a);
-          tab.push(a);
-        });
-        this.materieList = tab;
-      }); */
-  }
-
-  addQuantity(ev) {
-    this.quantity = parseInt(ev.detail.value);
-    this.disabled = true;
-    this.choixMateriel["qty"] = this.quantity;
-  }
-  addMateriel() {
-    this.tab.push(this.choixMateriel);
-    this.disabled = false;
-    this.choixMateriel = null;
-    this.isDisabled = true;
-  }
-
-  selectByday() {
+  /* selectByday() {
     let day2 = this.model2.day + 1;
     let day1 = this.model.day;
     let debut = new Date(
@@ -364,25 +215,71 @@ export class AddActivieModalPage implements OnInit {
     let fin = new Date(
       this.model2.year + "-" + this.model2.month + "-" + day2
     ).getTime();
-  }
+  }*/
   async pickActivitiName() {
     console.log(this.nameList);
 
     this.activitiList.setActivitieList(this.nameList);
     const modal = await this.modalController.create({
-      component: ListActivitiesPage,
+      component: ListCreatedActivitiesPage,
       cssClass: "my-custom-class",
       backdropDismiss: false,
       componentProps: {},
     });
     modal.onWillDismiss().then((data) => {
       console.log(data);
-      if (data["data"]["activitie"]) {
-        this.activitieName = data["data"]["activitie"]["name"];
-        this.name = this.activitieName;
-        this.nameKey = data["data"]["activitie"]["key"];
+      if (data["data"]["activities"]) {
+        let tab = data["data"]["activities"];
+        if (tab && tab.length) {
+          this.activitiesList = tab;
+        } else {
+          this.activitiesList = [];
+        }
+        //this.name = this.activitieName;
+        // this.nameKey = data["data"]["activitie"]["key"];
       }
     });
     return await modal.present();
+  }
+  getAllActivities() {
+    this.activitiService.getLastTenActivitie().subscribe(
+      (data: Array<any>) => {
+        console.log(data);
+
+        this.activitiesTab = data;
+        // this.activitiesTab = this.activitiesTab.reverse();
+        this.getActivityFromFirebase();
+      },
+      (err) => {
+        this.getActivityFromFirebase();
+      }
+    );
+  }
+
+  getActivityFromFirebase() {
+    /*  this.database
+      .list("/agriActivities", (ref) =>
+        ref.orderByChild("agriActivities").limitToLast(20)
+      )
+      .snapshotChanges()
+      .subscribe((actions) => {
+        let tab = [];
+        actions.forEach((action) => {
+          let a = action.payload.val();
+          a["key"] = action.key;
+          tab.push(a);
+        });
+        if (this.activitiesTab.length) {
+          tab.forEach((act) => {
+            this.activitiesTab.forEach((elt) => {
+              if (elt._id == act._id) {
+                this.remplaceActivitie(act);
+              }
+            });
+          });
+        } else {
+          this.activitiesTab = tab;
+        }
+      });*/
   }
 }

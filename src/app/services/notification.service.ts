@@ -78,4 +78,16 @@ export class NotificationService {
   async dismmisLoading() {
     this.loadingController.dismiss();
   }
+
+  async infiniteLoading() {
+    const loading = await this.loadingController.create({
+      cssClass: "my-custom-class",
+      message: "Please wait...",
+      duration: 25000,
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
+    console.log("Loading dismissed!");
+  }
 }

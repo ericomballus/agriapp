@@ -1,0 +1,330 @@
+<ion-header>
+  <ion-toolbar color="medium">
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/projet"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
+    <div>
+      <ion-row>
+        <ion-col>
+          <div class="ion-text-uppercase ion-text-center">
+            <h6>planifier l'éxcution</h6>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+  <div class="date">
+    <div class="input-group">.</div>
+
+    <div class="input-group">
+      <input
+        style="display: none"
+        class="form-control"
+        placeholder="yyyy-mm-dd"
+        name="dp"
+        ngbDatepicker
+        #d="ngbDatepicker"
+        [(ngModel)]="model"
+      />
+      <div class="input-group-append">
+        <ion-button
+          fill="clear"
+          color="primary"
+          size="small"
+          class="btn btn-outline-secondary calendar"
+          (click)="d.toggle()"
+          type="button"
+          >Debut <ion-icon name="calendar"></ion-icon
+        ></ion-button>
+      </div>
+    </div>
+    <div class="input-group">
+      <pre>{{model.day}}/{{model.month}}/{{model.year}}</pre>
+    </div>
+    <div class="input-group">
+      <pre>{{model2.day}}/{{model2.month}}/{{model2.year}}</pre>
+    </div>
+    <div class="input-group">
+      <input
+        style="display: none"
+        class="form-control"
+        placeholder="yyyy-mm-dd"
+        name="dp2"
+        ngbDatepicker
+        #d2="ngbDatepicker"
+        [(ngModel)]="model2"
+      />
+      <div class="input-group-append">
+        <ion-button
+          fill="clear"
+          color="warning"
+          size="small"
+          class="btn btn-outline-secondary calendar"
+          (click)="d2.toggle()"
+          type="button"
+          >Fin <ion-icon name="calendar"></ion-icon
+        ></ion-button>
+      </div>
+    </div>
+
+    <div class="input-group">.</div>
+  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="12" size-lg="12" size-xs="12" size-sm="12" size-xl="12">
+        <div class="cole">
+          <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
+            <div>
+              <div>
+                <ion-row>
+                  <ion-col>
+                    <div class="ion-text-uppercase ion-text-center">
+                      <h6>details :</h6>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </div>
+            <div class="first">
+              <div class="divint">
+                <ion-item lines="none">
+                  <ion-label position="floating">Nom</ion-label>
+                  <ion-input
+                    placeholder="Entrer le nom du projet ici"
+                    formControlName="name"
+                    type="text"
+                  ></ion-input>
+                </ion-item>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.name.errors?.required"
+                >
+                  Name is required.
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.name.errors?.minlength"
+                >
+                  Name should be min 2 chars long.
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.name.errors?.maxLength"
+                >
+                  Name not should be max 20 chars long.
+                </span>
+              </div>
+            </div>
+            <div class="first">
+              <div>
+                <ion-item lines="none">
+                  <ion-label position="floating">Description</ion-label>
+                  <ion-textarea
+                    placeholder="faite une description ici"
+                    formControlName="description"
+                    type="text"
+                  ></ion-textarea>
+                </ion-item>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.description.errors?.required"
+                >
+                  description is required.
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.description.errors?.minlength"
+                >
+                  Name should be min 5 chars long.
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.description.errors?.maxLength"
+                >
+                  Name not should be max 1000 chars long.
+                </span>
+              </div>
+            </div>
+            <div class="checkboxlist">
+              <ion-list>
+                <ion-item>
+                  <div
+                    class="ion-text-left checkboxbtn"
+                    (click)="this.open =!this.open"
+                  >
+                    <h6>type de production</h6>
+                    <ion-icon name="add-outline" *ngIf="!open"></ion-icon>
+                    <ion-icon name="arrow-up-outline" *ngIf="open"></ion-icon>
+                  </div>
+                </ion-item>
+
+                <ion-list *ngIf="open">
+                  <ion-item>
+                    <ion-label>Animale</ion-label>
+                    <ion-checkbox
+                      value="animale"
+                      slot="start"
+                      (ionChange)="selectAnimale($event)"
+                    ></ion-checkbox>
+                  </ion-item>
+                  <div class="selectAnimale" *ngIf="openAnimale">
+                    <ion-list>
+                      <ion-item>
+                        <ion-label>Animale</ion-label>
+                        <ion-checkbox
+                          value="animale"
+                          slot="start"
+                          (ionChange)="selectAnimale($event)"
+                        ></ion-checkbox>
+                      </ion-item>
+                    </ion-list>
+                  </div>
+                  <ion-item>
+                    <ion-label>Végétale</ion-label>
+                    <ion-checkbox
+                      value="vegetale"
+                      slot="start"
+                      (ionChange)="selectVegetale($event)"
+                    ></ion-checkbox>
+                  </ion-item>
+                  <div class="selectvegetale" *ngIf="openVegetale">
+                    <ion-list>
+                      <ion-item>
+                        <ion-label>cultures perénne</ion-label>
+                        <ion-checkbox
+                          value="perenne"
+                          slot="start"
+                          (ionChange)="selectCulturePerenne($event)"
+                        ></ion-checkbox>
+                      </ion-item>
+                      <ion-item>
+                        <ion-label>cultures marechéres</ion-label>
+                        <ion-checkbox
+                          value="marechere"
+                          slot="start"
+                          (ionChange)="selectCultureMarechere($event)"
+                        ></ion-checkbox>
+                      </ion-item>
+                      <ion-item>
+                        <ion-label>cultures annuels</ion-label>
+                        <ion-checkbox
+                          value="annuels"
+                          slot="start"
+                          (ionChange)="selectCultureAnnuel($event)"
+                        ></ion-checkbox>
+                      </ion-item>
+                    </ion-list>
+                  </div>
+                </ion-list>
+              </ion-list>
+            </div>
+            <ion-row>
+              <ion-col>
+                <div class="ion-text-right">
+                  <ion-button type="submit" color="danger" size="small"
+                    >suivant</ion-button
+                  >
+                </div>
+              </ion-col>
+            </ion-row>
+          </form>
+
+          <ion-row>
+            <ion-col size="12"> </ion-col>
+
+            <ion-col size="12">
+              <div class="ion-text-left">name2</div>
+            </ion-col>
+          </ion-row>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<!--
+   <div>
+              <div>
+                <ion-row>
+                  <ion-col>
+                    <div class="ion-text-uppercase ion-text-center">
+                      <h6 (click)="pickTravaux()">liste travaux</h6>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </div>
+   <div *ngIf="travauxList">
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <div>
+                      <ion-row class="header-row">
+                        <ion-col size="2" class="ion-align-self-center">
+                          <div class="ion-text-center ion-text-uppercase">
+                            Nom
+                          </div>
+                        </ion-col>
+
+                        <ion-col size="2" class="ion-align-self-center">
+                          <div class="ion-text-center ion-text-uppercase">
+                            éxécution
+                          </div>
+                        </ion-col>
+                        <ion-col size="2" class="ion-align-self-center">
+                          <div class="ion-text-center ion-text-uppercase">
+                            date début
+                          </div>
+                        </ion-col>
+                        <ion-col size="4" class="ion-align-self-center">
+                          <div class="ion-text-center ion-text-uppercase">
+                            materiels
+                          </div>
+                        </ion-col>
+                        <ion-col size="2" class="ion-align-self-center">
+                          <div class="ion-text-center ion-text-uppercase">
+                            Budget
+                          </div>
+                        </ion-col>
+                      </ion-row>
+                    </div>
+                    <ion-row
+                      *ngFor="let row of travauxList; let i= index"
+                      class="data-row data-update"
+                      [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+                    >
+                      <ion-col
+                        size="2"
+                        class="ion-align-self-center"
+                        [ngStyle]="{'height': '30px' }"
+                      >
+                        <div class="ion-text-center">{{row.name}}</div>
+                      </ion-col>
+                      <ion-col size="2" class="ion-align-self-center">
+                        <div class="ion-text-center">{{row.frequence}}</div>
+                      </ion-col>
+                      <ion-col size="2" class="ion-align-self-center">
+                        <div class="ion-text-center">{{row.periode}}</div>
+                      </ion-col>
+                      <ion-col size="4" class="ion-align-self-center">
+                        <div class="ion-text-center">
+                          {{row.besoinMateriel}}
+                        </div>
+                      </ion-col>
+
+                      <ion-col size="2" class="ion-align-self-center">
+                        <div class="ion-text-center ion-text-uppercase">
+                          Total dépense: {{row.coutMateriel}}
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </div>
+-->

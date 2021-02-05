@@ -150,6 +150,7 @@ export class InventoryPage implements OnInit {
   }
 
   selectByday() {
+    this.notif.infiniteLoading();
     let tab = [];
     this.tabList = [];
     let day2 = this.model2.day + 1;
@@ -168,7 +169,7 @@ export class InventoryPage implements OnInit {
       .snapshotChanges()
       .subscribe((actions) => {
         // console.log(actions);
-
+        this.notif.dismmisLoading();
         actions.forEach((action) => {
           let a = action.payload.val();
           a["key"] = action.key;
@@ -206,6 +207,9 @@ export class InventoryPage implements OnInit {
     let fin = new Date(
       this.model2.year + "-" + this.model2.month + "-" + day2
     ).getTime();
+    console.log(debut);
+    console.log(fin);
+
     this.database
       .list("/agriActivities", (ref) =>
         ref.orderByChild("created").startAt(debut).endAt(fin)
@@ -213,6 +217,7 @@ export class InventoryPage implements OnInit {
       .snapshotChanges()
       .subscribe((actions) => {
         // console.log(actions);
+        console.log("hello");
 
         actions.forEach((action) => {
           let a = action.payload.val();

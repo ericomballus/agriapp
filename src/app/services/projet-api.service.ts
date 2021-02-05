@@ -10,13 +10,13 @@ import { log } from "console";
 @Injectable({
   providedIn: "root",
 })
-export class ActivitiesApiService {
+export class ProjetApiService {
   url = "http://localhost:3000/";
-  activite = new BehaviorSubject([]);
-  selectAtivitie: any;
+  projet = new BehaviorSubject([]);
+  newprojet: any;
   activitieList: any;
   constructor(private http: HttpClient, private database: AngularFireDatabase) {
-    let ref = firebase.database().ref("agriActivities");
+    let ref = firebase.database().ref("agriProjet");
     let a = ref
       .onDisconnect()
       .cancel()
@@ -26,24 +26,23 @@ export class ActivitiesApiService {
   }
 
   setData(data) {
-    this.selectAtivitie = data;
+    this.newprojet = data;
   }
 
   getData() {
-    if (isNullOrUndefined(this.selectAtivitie)) {
+    if (isNullOrUndefined(this.newprojet)) {
       return 0;
     } else {
-      return this.selectAtivitie;
+      return this.newprojet;
     }
   }
-
   setActivitieList(data) {
     console.log(data);
 
     this.activitieList = data;
   }
 
-  getActivitieList() {
+  getList() {
     if (isNullOrUndefined(this.activitieList)) {
       return 0;
     } else {
@@ -52,11 +51,11 @@ export class ActivitiesApiService {
   }
 
   updateData(data) {
-    let database = this.database.list("agriActivities");
+    let database = this.database.list("agriProjet");
     return database.update(data.key, data);
   }
 
-  postActivitie(data) {
+  postActi(data) {
     data["firebaseAdd"] = false;
     return this.http.post(this.url + `activities`, data);
   }
@@ -64,12 +63,12 @@ export class ActivitiesApiService {
     return this.http.patch(this.url + `activities/firebaseAdd`, data);
   }
 
-  postActivitieToFirebase(activitie) {
-    console.log(activitie);
+  postPorjetToFirebase(data) {
+    console.log(data);
     return new Promise((resolve, reject) => {
-      let database = this.database.list("agriActivities");
+      let database = this.database.list("agriProjet");
       database
-        .push(activitie)
+        .push(data)
         .then((b) => {
           resolve(b);
         })
@@ -79,14 +78,14 @@ export class ActivitiesApiService {
     });
   }
 
-  getLastTenActivitie() {
-    let storage = JSON.parse(localStorage.getItem("activite"));
+  getLastTenPorjet() {
+    let storage = JSON.parse(localStorage.getItem("projet"));
     if (Array.isArray(storage) && storage.length) {
-      this.activite.next(storage);
+      this.projet.next(storage);
     }
     this.database
-      .list("/agriActivities", (ref) =>
-        ref.orderByChild("agriActivities").limitToLast(20)
+      .list("/agriProjet", (ref) =>
+        ref.orderByChild("agriProjet").limitToLast(20)
       )
       .snapshotChanges()
       .subscribe((actions) => {
@@ -96,9 +95,9 @@ export class ActivitiesApiService {
           a["key"] = action.key;
           tab.push(a);
         });
-        this.activite.next(tab);
-        localStorage.setItem("activite", JSON.stringify(tab));
+        this.projet.next(tab);
+        localStorage.setItem("projet", JSON.stringify(tab));
       });
-    return this.activite;
+    return this.projet;
   }
 }

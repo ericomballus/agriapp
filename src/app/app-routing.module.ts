@@ -112,6 +112,38 @@ const routes: Routes = [
     path: 'update-employe',
     loadChildren: () => import('./pages/update-employe/update-employe.module').then( m => m.UpdateEmployePageModule)
   },
+  {
+    path: 'list-activities',
+    loadChildren: () => import('./modal/list-activities/list-activities.module').then( m => m.ListActivitiesPageModule)
+  },
+  {
+    path: 'projet',
+    loadChildren: () => import('./pages/projet/projet.module').then( m => m.ProjetPageModule)
+  },
+  {
+    path: 'add-projet',
+    loadChildren: () => import('./modal/add-projet/add-projet.module').then( m => m.AddProjetPageModule)
+  },
+  {
+    path: 'add-travaux',
+    loadChildren: () => import('./modal/add-travaux/add-travaux.module').then( m => m.AddTravauxPageModule)
+  },
+  {
+    path: 'travaux',
+    loadChildren: () => import('./pages/travaux/travaux.module').then( m => m.TravauxPageModule)
+  },
+  {
+    path: 'services',
+    loadChildren: () => import('./services/services.module').then( m => m.ServicesPageModule)
+  },
+  {
+    path: 'list-created-activities',
+    loadChildren: () => import('./modal/list-created-activities/list-created-activities.module').then( m => m.ListCreatedActivitiesPageModule)
+  },
+  {
+    path: 'list-created-travaux',
+    loadChildren: () => import('./modal/list-created-travaux/list-created-travaux.module').then( m => m.ListCreatedTravauxPageModule)
+  },
 ];
 
 @NgModule({

@@ -91,9 +91,7 @@ export class MaterielService {
       this.activitie.next(storage);
     }
     this.database
-      .list("/agriActivitiName", (ref) =>
-        ref.orderByChild("agriActivitiName").limitToLast(60)
-      )
+      .list("/agriActivitiName", (ref) => ref.orderByChild("agriActivitiName"))
       .snapshotChanges()
       .subscribe((actions) => {
         let tab = [];

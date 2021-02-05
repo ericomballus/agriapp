@@ -10,13 +10,13 @@ import { log } from "console";
 @Injectable({
   providedIn: "root",
 })
-export class ActivitiesApiService {
+export class TravauxApiService {
   url = "http://localhost:3000/";
-  activite = new BehaviorSubject([]);
+  travaux = new BehaviorSubject([]);
   selectAtivitie: any;
   activitieList: any;
   constructor(private http: HttpClient, private database: AngularFireDatabase) {
-    let ref = firebase.database().ref("agriActivities");
+    let ref = firebase.database().ref("agriTravaux");
     let a = ref
       .onDisconnect()
       .cancel()
@@ -43,7 +43,7 @@ export class ActivitiesApiService {
     this.activitieList = data;
   }
 
-  getActivitieList() {
+  getList() {
     if (isNullOrUndefined(this.activitieList)) {
       return 0;
     } else {
@@ -52,11 +52,11 @@ export class ActivitiesApiService {
   }
 
   updateData(data) {
-    let database = this.database.list("agriActivities");
+    let database = this.database.list("agriTravaux");
     return database.update(data.key, data);
   }
 
-  postActivitie(data) {
+  postActi(data) {
     data["firebaseAdd"] = false;
     return this.http.post(this.url + `activities`, data);
   }
@@ -64,12 +64,12 @@ export class ActivitiesApiService {
     return this.http.patch(this.url + `activities/firebaseAdd`, data);
   }
 
-  postActivitieToFirebase(activitie) {
-    console.log(activitie);
+  postTravauxToFirebase(data) {
+    console.log(data);
     return new Promise((resolve, reject) => {
-      let database = this.database.list("agriActivities");
+      let database = this.database.list("agriTravaux");
       database
-        .push(activitie)
+        .push(data)
         .then((b) => {
           resolve(b);
         })
@@ -79,14 +79,14 @@ export class ActivitiesApiService {
     });
   }
 
-  getLastTenActivitie() {
-    let storage = JSON.parse(localStorage.getItem("activite"));
+  getLastTenTravaux() {
+    let storage = JSON.parse(localStorage.getItem("travaux"));
     if (Array.isArray(storage) && storage.length) {
-      this.activite.next(storage);
+      this.travaux.next(storage);
     }
     this.database
-      .list("/agriActivities", (ref) =>
-        ref.orderByChild("agriActivities").limitToLast(20)
+      .list("/agriTravaux", (ref) =>
+        ref.orderByChild("agriTravaux").limitToLast(20)
       )
       .snapshotChanges()
       .subscribe((actions) => {
@@ -96,9 +96,9 @@ export class ActivitiesApiService {
           a["key"] = action.key;
           tab.push(a);
         });
-        this.activite.next(tab);
-        localStorage.setItem("activite", JSON.stringify(tab));
+        this.travaux.next(tab);
+        localStorage.setItem("travaux", JSON.stringify(tab));
       });
-    return this.activite;
+    return this.travaux;
   }
 }

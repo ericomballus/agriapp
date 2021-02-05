@@ -1,0 +1,100 @@
+.first {
+  display: block;
+  // background-color: brown;
+}
+.first {
+  display: flex;
+  //flex-wrap: nowrap;
+  //justify-content: space-between;
+}
+.first div {
+  // width: 25%;
+  flex-grow: 1;
+  border: 1px solid #f1f1f1;
+  margin: 15px;
+}
+
+.second {
+  display: flex;
+  // flex-wrap: wrap;
+  // justify-content: space-between;
+}
+.second div {
+  // width: 25%;
+  flex-grow: 1;
+  border: 1px solid #f1f1f1;
+  margin: 15px;
+}
+.filebtn {
+  opacity: 0;
+  position: absolute;
+  top: -100em;
+  left: -100em;
+  display: none;
+}
+
+.uploadBtn {
+  display: none;
+}
+.thumbnailM {
+  height: 100px;
+  width: 100px;
+}
+.imgthumbnail {
+  margin-right: 10px;
+}
+@media screen and (max-width: 950px) {
+  .first {
+    display: flex;
+    flex-wrap: wrap;
+    //justify-content: space-between;
+  }
+  .first div {
+    // width: 25%;
+    flex-grow: 1;
+    border: 1px solid #f1f1f1;
+    margin: 15px;
+  }
+
+  .second {
+    display: flex;
+    // flex-wrap: wrap;
+    // justify-content: space-between;
+  }
+  .second div {
+    // width: 25%;
+    flex-grow: 1;
+    border: 1px solid #f1f1f1;
+    margin: 15px;
+  }
+
+  .second {
+    display: flex;
+    flex-wrap: wrap;
+    // justify-content: space-between;
+  }
+
+  .second div {
+    // width: 25%;
+    flex-grow: 1;
+    border: 1px solid #f1f1f1;
+    margin: 15px;
+  }
+
+  ion-col div {
+    font-size: 10px;
+  }
+  ion-label {
+    font-size: 8px;
+    text-transform: uppercase;
+  }
+}
+
+.date {
+  display: flex;
+  justify-content: space-between;
+}
+.input-group {
+  text-align: center;
+  flex-grow: 1;
+}

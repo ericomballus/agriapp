@@ -93,8 +93,20 @@
             </div>
             <div class="first">
               <div class="divint">
-                <ion-item lines="none" class="itemcustum">
-                  <ion-select
+                <ion-item
+                  lines="none"
+                  class="itemcustum"
+                  (click)="pickActivitiName()"
+                >
+                  <ion-input
+                    placeholder="Nom activité"
+                    [value]="activitieName"
+                    readonly
+                  ></ion-input>
+                </ion-item>
+              </div>
+              <!--
+                <ion-select
                     [interfaceOptions]="customAlertOptions"
                     interface="alert"
                     placeholder="Nom activité"
@@ -108,9 +120,7 @@
                       >{{mat.name}}</ion-select-option
                     >
                   </ion-select>
-                </ion-item>
-              </div>
-              <!--
+
                 <div class="divint">
                 <ion-item lines="none">
                   <ion-label position="floating">Nom</ion-label>
