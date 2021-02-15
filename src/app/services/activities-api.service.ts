@@ -14,6 +14,7 @@ export class ActivitiesApiService {
   url = "http://localhost:3000/";
   activite = new BehaviorSubject([]);
   selectAtivitie: any;
+  oneAtivitie: any;
   activitieList: any;
   constructor(private http: HttpClient, private database: AngularFireDatabase) {
     let ref = firebase.database().ref("agriActivities");
@@ -34,6 +35,18 @@ export class ActivitiesApiService {
       return 0;
     } else {
       return this.selectAtivitie;
+    }
+  }
+
+  setOneActivity(data) {
+    this.oneAtivitie = data;
+  }
+
+  getOneActivity() {
+    if (isNullOrUndefined(this.oneAtivitie)) {
+      return 0;
+    } else {
+      return this.oneAtivitie;
     }
   }
 

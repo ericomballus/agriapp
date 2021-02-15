@@ -97,6 +97,7 @@ export class EmployeePage implements OnInit {
       ],
       //dob: [this.defaultDate],
       mobile: ["", [Validators.required, Validators.pattern("^[0-9]+$")]],
+      salaire: ["", [Validators.required, Validators.pattern("^[0-9]+$")]],
     });
   }
 
@@ -131,7 +132,8 @@ export class EmployeePage implements OnInit {
         emp.mobile,
         emp.photoUser,
         emp.cniUser,
-        emp.password
+        emp.password,
+        emp.salaire
       );
       console.log(employe);
       if (this.userRole) {

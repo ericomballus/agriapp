@@ -14,7 +14,7 @@ export class ProjetApiService {
   url = "http://localhost:3000/";
   projet = new BehaviorSubject([]);
   newprojet: any;
-  activitieList: any;
+  projetData: any;
   constructor(private http: HttpClient, private database: AngularFireDatabase) {
     let ref = firebase.database().ref("agriProjet");
     let a = ref
@@ -36,17 +36,16 @@ export class ProjetApiService {
       return this.newprojet;
     }
   }
-  setActivitieList(data) {
+  setProjet(data) {
     console.log(data);
-
-    this.activitieList = data;
+    this.projetData = data;
   }
 
-  getList() {
-    if (isNullOrUndefined(this.activitieList)) {
+  getProjet() {
+    if (isNullOrUndefined(this.projetData)) {
       return 0;
     } else {
-      return this.activitieList;
+      return this.projetData;
     }
   }
 

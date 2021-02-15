@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <div class="ion-text-center ion-text-uppercase">
+        <h3>AVANCE DE SALAIRE</h3>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size-xs="1" size-md="1" size-lg="1" size-sm="1"></ion-col>
+    <ion-col size-xs="12" size-md="12" size-lg="12" size-sm="12">
+      <ion-list>
+        <ion-item>
+          <ion-thumbnail *ngIf="!user.photoUser" slot="start">
+            <ion-img src="../../../assets/person.jpg"></ion-img>
+          </ion-thumbnail>
+          <ion-thumbnail
+            *ngIf="user.photoUser"
+            class="imgthumbnail"
+            slot="start"
+          >
+            <ion-img [src]="user.photoUser"></ion-img>
+          </ion-thumbnail>
+          <ion-label>
+            <p>NOM: {{user.name}}</p>
+            <p>POSTE: {{user.poste}}</p>
+            <p>TEL: {{user.mobile}}</p>
+            <p>EMAIL: {{user.email}}</p>
+            <p>SALAIRE: {{user.salaire}} FCFA</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+    <ion-col size-xs="1" size-md="1" size-lg="1" size-sm="1"></ion-col>
+  </ion-row>
+  <ion-item>
+    <ion-label position="stacked">choisir le mois</ion-label>
+    <ion-datetime
+      displayFormat="MMMM YYYY"
+      value="2021-01-15T13:47:20.789"
+      (ionChange)="selectDate($event)"
+    ></ion-datetime>
+  </ion-item>
+</ion-content>

@@ -17,6 +17,7 @@ import {
 import { ListActivitiesPage } from "../list-activities/list-activities.page";
 import { ListCreatedTravauxPage } from "../list-created-travaux/list-created-travaux.page";
 import { ProjetApiService } from "src/app/services/projet-api.service";
+import { Router } from "@angular/router";
 const { Network } = Plugins;
 
 @Component({
@@ -54,7 +55,7 @@ export class AddProjetPage implements OnInit {
   typeProduction: any;
   openAnimale = false;
   openVegetale = false;
-  iLikeIt: any;
+  typeCulture: any;
   constructor(
     public formBuilder: FormBuilder,
     public activitiService: ActivitiesApiService,
@@ -64,7 +65,8 @@ export class AddProjetPage implements OnInit {
     public notif: NotificationService,
     private calendar: NgbCalendar,
     private activitiList: ActivitiesApiService,
-    private projetService: ProjetApiService
+    private projetService: ProjetApiService,
+    private router: Router
   ) {
     this.getStatus();
     // this.getActivitieName();
@@ -93,14 +95,14 @@ export class AddProjetPage implements OnInit {
           Validators.maxLength(1000),
         ],
       ],
-      executant: [
+      /* executant: [
         "",
         [
           Validators.required,
           Validators.minLength(1),
           Validators.maxLength(1000),
         ],
-      ],
+      ],*/
     });
   }
   async getStatus() {
@@ -164,8 +166,12 @@ export class AddProjetPage implements OnInit {
       emp["travauxList"] = this.travauxList;
       emp["startAt"] = debut;
       emp["endAt"] = fin;
-
-      this.projetService
+      emp["type_production"] = this.typeProduction;
+      emp["type_culture"] = this.typeCulture;
+      console.log(emp);
+      this.projetService.setProjet(emp);
+      this.router.navigateByUrl("add-travaux");
+      /* this.projetService
         .postPorjetToFirebase(emp)
         .then((res) => {
           console.log(res);
@@ -175,7 +181,7 @@ export class AddProjetPage implements OnInit {
         })
         .catch((err) => {
           console.log(err);
-        });
+        }); */
     }
   }
   getActivities() {
@@ -206,14 +212,19 @@ export class AddProjetPage implements OnInit {
     }); */
   }
 
-  selectNameEvent(ev) {
+  typeDeProduction(ev) {
     console.log(ev.detail.value);
-    this.name = ev.detail.value.name;
-    this.nameKey = ev.detail.value.key;
-    this.isDisabled = false;
+    this.typeProduction = ev.detail.value;
     /* tab.forEach((materiel) => {
       this.besoinMateriel = this.besoinMateriel + "," + materiel.name;
-    }); */
+    }); 
+    
+   */
+  }
+
+  typeDeCulture(ev) {
+    console.log(ev.detail.value);
+    this.typeCulture = ev.detail.value;
   }
 
   getMateriel() {
@@ -244,28 +255,6 @@ export class AddProjetPage implements OnInit {
         // this.getEquipementFromFirebase();
       }
     );
-  }
-
-  getEquipementFromFirebase() {
-    let storage = JSON.parse(localStorage.getItem("equipement"));
-    if (Array.isArray(storage)) {
-      this.materieList = storage;
-    }
-    /* this.database
-      .list("/agriMatriels", (ref) =>
-        ref.orderByChild("agriMatriels").limitToLast(20)
-      )
-      .snapshotChanges()
-      .subscribe((actions) => {
-        let tab = [];
-        actions.forEach((action) => {
-          let a = action.payload.val();
-          a["key"] = action.key;
-          console.log(a);
-          tab.push(a);
-        });
-        this.materieList = tab;
-      }); */
   }
 
   addQuantity(ev) {
@@ -312,5 +301,9 @@ export class AddProjetPage implements OnInit {
   selectAnimale(ev) {
     console.log(ev.target.value);
     this.openAnimale = !this.openAnimale;
+  }
+
+  selectCultureType(name) {
+    console.log(name);
   }
 }

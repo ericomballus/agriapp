@@ -21,13 +21,16 @@
           </ion-col>
 
           <ion-col size="2" class="ion-align-self-center">
-            <div class="ion-text-center ion-text-uppercase">éxécution</div>
+            <div class="ion-text-center ion-text-uppercase">periode</div>
           </ion-col>
           <ion-col size="3" class="ion-align-self-center">
-            <div class="ion-text-center ion-text-uppercase">date début</div>
+            <div class="ion-text-center ion-text-uppercase">travaux</div>
           </ion-col>
           <ion-col size="3" class="ion-align-self-center">
-            <div class="ion-text-center ion-text-uppercase">date fin</div>
+            <div class="ion-text-center ion-text-uppercase">actvités</div>
+          </ion-col>
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">matériels</div>
           </ion-col>
         </ion-row>
       </div>
@@ -44,52 +47,24 @@
           <div class="ion-text-center">{{row.name}}</div>
         </ion-col>
         <ion-col size="2" class="ion-align-self-center">
-          <div class="ion-text-center">{{row.executant}}</div>
+          <div class="ion-text-center" (click)="displayPeriode(row)">voir</div>
         </ion-col>
         <ion-col size="3" class="ion-align-self-center">
-          <div class="ion-text-center">{{ row.startAt | date:'medium' }}</div>
+          <div class="ion-text-center" (click)="displayPorjetTravaux(row)">
+            {{row.travauxlist.length}}
+          </div>
         </ion-col>
         <ion-col size="3" class="ion-align-self-center">
-          <div class="ion-text-center">{{ row.endAt | date:'medium' }}</div>
+          <div class="ion-text-center" (click)="displayProjetActivity(row)">
+            {{row.nbractivite}}
+          </div>
         </ion-col>
 
         <ion-col size="2">
-          <div class="ion-text-center">
-            <ion-button
-              size="small"
-              (click)="presentModal(row)"
-              *ngIf="!row.confirm && !row.cancel"
-            >
-              voir
-            </ion-button>
-            <ion-button
-              (click)="presentModal(row)"
-              size="small"
-              fill="clear"
-              color="success"
-              *ngIf="row.confirm"
-            >
-              <ion-icon
-                slot="icon-only"
-                name="checkmark-circle-outline"
-              ></ion-icon>
-            </ion-button>
-            <ion-button
-              (click)="presentModal(row)"
-              size="small"
-              fill="clear"
-              color="success"
-              *ngIf="row.cancel"
-            >
-              <ion-icon
-                slot="icon-only"
-                color="danger"
-                name="close-outline"
-              ></ion-icon>
-            </ion-button>
-          </div>
+          <div class="ion-text-center" (click)="displayMateriel(row)">voir</div>
         </ion-col>
       </ion-row>
     </ion-col>
   </ion-row>
+  <!--{{ row.endAt | date:'medium' }}-->
 </ion-content>

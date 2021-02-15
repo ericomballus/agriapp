@@ -80,21 +80,10 @@
       <ion-col size-md="12" size-lg="12" size-xs="12" size-sm="12" size-xl="12">
         <div class="cole">
           <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
-            <div>
-              <div>
-                <ion-row>
-                  <ion-col>
-                    <div class="ion-text-uppercase ion-text-center">
-                      <h6>details :</h6>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </div>
-            </div>
             <div class="first">
               <div class="divint">
                 <ion-item lines="none">
-                  <ion-label position="floating">Nom</ion-label>
+                  <ion-label position="floating">Nom du projet</ion-label>
                   <ion-input
                     placeholder="Entrer le nom du projet ici"
                     formControlName="name"
@@ -151,95 +140,50 @@
                 </span>
               </div>
             </div>
-            <div class="checkboxlist">
-              <ion-list>
-                <ion-item>
-                  <div
-                    class="ion-text-left checkboxbtn"
-                    (click)="this.open =!this.open"
-                  >
-                    <h6>type de production</h6>
-                    <ion-icon name="add-outline" *ngIf="!open"></ion-icon>
-                    <ion-icon name="arrow-up-outline" *ngIf="open"></ion-icon>
-                  </div>
-                </ion-item>
-
-                <ion-list *ngIf="open">
-                  <ion-item>
-                    <ion-label>Animale</ion-label>
-                    <ion-checkbox
-                      value="animale"
-                      slot="start"
-                      (ionChange)="selectAnimale($event)"
-                    ></ion-checkbox>
-                  </ion-item>
-                  <div class="selectAnimale" *ngIf="openAnimale">
-                    <ion-list>
-                      <ion-item>
-                        <ion-label>Animale</ion-label>
-                        <ion-checkbox
-                          value="animale"
-                          slot="start"
-                          (ionChange)="selectAnimale($event)"
-                        ></ion-checkbox>
-                      </ion-item>
-                    </ion-list>
-                  </div>
-                  <ion-item>
-                    <ion-label>Végétale</ion-label>
-                    <ion-checkbox
-                      value="vegetale"
-                      slot="start"
-                      (ionChange)="selectVegetale($event)"
-                    ></ion-checkbox>
-                  </ion-item>
-                  <div class="selectvegetale" *ngIf="openVegetale">
-                    <ion-list>
-                      <ion-item>
-                        <ion-label>cultures perénne</ion-label>
-                        <ion-checkbox
-                          value="perenne"
-                          slot="start"
-                          (ionChange)="selectCulturePerenne($event)"
-                        ></ion-checkbox>
-                      </ion-item>
-                      <ion-item>
-                        <ion-label>cultures marechéres</ion-label>
-                        <ion-checkbox
-                          value="marechere"
-                          slot="start"
-                          (ionChange)="selectCultureMarechere($event)"
-                        ></ion-checkbox>
-                      </ion-item>
-                      <ion-item>
-                        <ion-label>cultures annuels</ion-label>
-                        <ion-checkbox
-                          value="annuels"
-                          slot="start"
-                          (ionChange)="selectCultureAnnuel($event)"
-                        ></ion-checkbox>
-                      </ion-item>
-                    </ion-list>
-                  </div>
-                </ion-list>
-              </ion-list>
-            </div>
-            <ion-row>
-              <ion-col>
-                <div class="ion-text-right">
-                  <ion-button type="submit" color="danger" size="small"
-                    >suivant</ion-button
-                  >
-                </div>
-              </ion-col>
-            </ion-row>
           </form>
 
-          <ion-row>
-            <ion-col size="12"> </ion-col>
+          <div class="checkboxlist">
+            <ion-list>
+              <ion-item>
+                <ion-label>type de production</ion-label>
+                <ion-select
+                  placeholder="Select One"
+                  (ionChange)=" typeDeProduction($event)"
+                >
+                  <ion-select-option value="animal">Animale</ion-select-option>
+                  <ion-select-option value="végétale"
+                    >Végétale</ion-select-option
+                  >
+                </ion-select>
+              </ion-item>
 
-            <ion-col size="12">
-              <div class="ion-text-left">name2</div>
+              <ion-item>
+                <ion-label>type de culture</ion-label>
+                <ion-select
+                  placeholder="Select One"
+                  (ionChange)=" typeDeCulture($event)"
+                >
+                  <ion-select-option value="cultures perénne"
+                    >cultures perénne</ion-select-option
+                  >
+                  <ion-select-option value="cultures marechéres"
+                    >cultures marechéres</ion-select-option
+                  >
+                  <ion-select-option value="cultures annuels"
+                    >cultures annuels</ion-select-option
+                  >
+                </ion-select>
+              </ion-item>
+            </ion-list>
+          </div>
+
+          <ion-row>
+            <ion-col class="ion-margin-top">
+              <div class="ion-text-right">
+                <ion-button (click)="submitForm()" color="danger" size="small"
+                  >suivant</ion-button
+                >
+              </div>
             </ion-col>
           </ion-row>
         </div>
@@ -248,6 +192,64 @@
   </ion-grid>
 </ion-content>
 <!--
+   <ion-list *ngIf="open">
+                <ion-item>
+                  <ion-label>Animale</ion-label>
+                  <ion-checkbox
+                    value="animale"
+                    slot="start"
+                    (ionChange)="selectAnimale($event)"
+                  ></ion-checkbox>
+                </ion-item>
+                <div class="selectAnimale" *ngIf="openAnimale">
+                  <ion-list>
+                    <ion-item>
+                      <ion-label>Animale</ion-label>
+                      <ion-checkbox
+                        value="animale"
+                        slot="start"
+                        (ionChange)="selectAnimale($event)"
+                      ></ion-checkbox>
+                    </ion-item>
+                  </ion-list>
+                </div>
+                <ion-item>
+                  <ion-label>Végétale</ion-label>
+                  <ion-checkbox
+                    value="vegetale"
+                    slot="start"
+                    (ionChange)="selectVegetale($event)"
+                  ></ion-checkbox>
+                </ion-item>
+                <div class="selectvegetale" *ngIf="openVegetale">
+                  <ion-list>
+                    <ion-item>
+                      <ion-label>cultures perénne</ion-label>
+                      <ion-checkbox
+                        value="perenne"
+                        slot="start"
+                        (click)="selectCultureType('perenne')"
+                      ></ion-checkbox>
+                    </ion-item>
+                    <ion-item>
+                      <ion-label>cultures marechéres</ion-label>
+                      <ion-checkbox
+                        value="marechere"
+                        slot="start"
+                        (click)="selectCultureType('marechere')"
+                      ></ion-checkbox>
+                    </ion-item>
+                    <ion-item>
+                      <ion-label>cultures annuels</ion-label>
+                      <ion-checkbox
+                        value="annuels"
+                        slot="start"
+                        (click)="selectCultureType('annuels')"
+                      ></ion-checkbox>
+                    </ion-item>
+                  </ion-list>
+                </div>
+              </ion-list>
    <div>
               <div>
                 <ion-row>

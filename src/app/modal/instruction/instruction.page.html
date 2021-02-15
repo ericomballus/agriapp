@@ -27,7 +27,8 @@
     <ion-row>
       <ion-col size="12" class="ion-align-self-center">
         <div class="ion-text-center ion-text-uppercase">
-          <h3>titre: {{activitie.name}}</h3>
+          <h5>titre: {{activitie.name}}</h5>
+          <h5>projet: {{activitie.projetName}}</h5>
           <h6>montant: {{montant | currency: "FCFA":"symbol":"3.0-0":"fr"}}</h6>
         </div>
       </ion-col>
@@ -58,7 +59,8 @@
               </ion-item>
             </div>
 
-            <div class="divint">
+            <!--
+              <div class="divint">
               <ion-item lines="none">
                 <ion-label position="floating">Superficie</ion-label>
                 <ion-input
@@ -80,10 +82,12 @@
                 ></ion-input>
               </ion-item>
             </div>
+            -->
           </div>
 
           <div class="second">
-            <div>
+            <!--
+              <div>
               <ion-item lines="none">
                 <ion-label position="floating">Fréquence</ion-label>
                 <ion-input
@@ -105,6 +109,7 @@
                 ></ion-input>
               </ion-item>
             </div>
+           -->
             <div>
               <ion-item lines="none">
                 <ion-label position="floating">cout materiel</ion-label>

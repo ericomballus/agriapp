@@ -149,36 +149,6 @@
                   Name not should be max 20 chars long.
                 </span>
               </div>
-             -->
-              <div>
-                <ion-item lines="none">
-                  <ion-label position="floating">executant</ion-label>
-                  <ion-input
-                    placeholder="Entrer l'information ici"
-                    formControlName="executant"
-                    type="texte"
-                  ></ion-input>
-                </ion-item>
-
-                <span
-                  class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.executant.errors?.minlength"
-                >
-                  Please provide valid executant .
-                </span>
-                <span
-                  class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.executant.errors?.maxLength"
-                >
-                  Please provide valid executant .
-                </span>
-                <span
-                  class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.executant.errors?.required"
-                >
-                  Entrer le executant.
-                </span>
-              </div>
 
               <div class="divint">
                 <ion-item lines="none">
@@ -231,9 +201,40 @@
                   Entrer le cout de la main d'oeuvre.
                 </span>
               </div>
+             -->
+              <div>
+                <ion-item lines="none">
+                  <ion-label position="floating">executant</ion-label>
+                  <ion-input
+                    placeholder="Entrer l'information ici"
+                    formControlName="executant"
+                    type="texte"
+                  ></ion-input>
+                </ion-item>
+
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.executant.errors?.minlength"
+                >
+                  Please provide valid executant .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.executant.errors?.maxLength"
+                >
+                  Please provide valid executant .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.executant.errors?.required"
+                >
+                  Entrer le executant.
+                </span>
+              </div>
             </div>
 
-            <div class="second">
+            <!--
+              <div class="second">
               <div>
                 <ion-item lines="none">
                   <ion-label position="floating">Fréquence</ion-label>
@@ -351,6 +352,7 @@
                 </span>
               </div>
             </div>
+            -->
 
             <div>
               <div>
@@ -438,7 +440,11 @@
             <ion-row>
               <ion-col>
                 <div class="ion-text-center">
-                  <ion-button type="submit" color="danger" size="small"
+                  <ion-button
+                    type="submit"
+                    color="danger"
+                    size="small"
+                    [disabled]="!ionicForm.valid"
                     >Submit</ion-button
                   >
                 </div>

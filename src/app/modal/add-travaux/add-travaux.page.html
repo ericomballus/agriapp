@@ -2,12 +2,29 @@
   <ion-toolbar color="medium">
     <ion-title></ion-title>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/travaux"></ion-back-button>
+      <ion-back-button defaultHref="/add-projet"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="saveProjet()">
+        <ion-icon slot="icon-only" name="save-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <div>
+    <div>
+      <ion-row>
+        <ion-col>
+          <div class="ion-text-uppercase ion-text-center">
+            <h6>PROJET: {{projet.name}}</h6>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+  <!--
   <div>
     <div>
       <ion-row>
@@ -75,6 +92,7 @@
 
     <div class="input-group">.</div>
   </div>
+  -->
   <ion-grid>
     <ion-row>
       <ion-col size-md="12" size-lg="12" size-xs="12" size-sm="12" size-xl="12">
@@ -85,7 +103,9 @@
                 <ion-row>
                   <ion-col>
                     <div class="ion-text-uppercase ion-text-center">
-                      <h6>details :</h6>
+                      <h6>
+                        ajouter des travaux au projet: {{tabTravaux.length}}
+                      </h6>
                     </div>
                   </ion-col>
                 </ion-row>
@@ -96,7 +116,7 @@
                 <ion-item lines="none">
                   <ion-label position="floating">Nom</ion-label>
                   <ion-input
-                    placeholder="Entrer le nom de l'activité ici"
+                    placeholder="Entrer le nom du travail"
                     formControlName="name"
                     type="text"
                   ></ion-input>
@@ -118,35 +138,6 @@
                   *ngIf="isSubmitted && errorControl.name.errors?.maxLength"
                 >
                   Name not should be max 20 chars long.
-                </span>
-              </div>
-              <div>
-                <ion-item lines="none">
-                  <ion-label position="floating">executant</ion-label>
-                  <ion-input
-                    placeholder="Entrer l'information ici"
-                    formControlName="executant"
-                    type="texte"
-                  ></ion-input>
-                </ion-item>
-
-                <span
-                  class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.executant.errors?.minlength"
-                >
-                  Please provide valid executant .
-                </span>
-                <span
-                  class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.executant.errors?.maxLength"
-                >
-                  Please provide valid executant .
-                </span>
-                <span
-                  class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.executant.errors?.required"
-                >
-                  Entrer le executant.
                 </span>
               </div>
 
@@ -178,25 +169,36 @@
                   Name not should be max 1000 chars long.
                 </span>
               </div>
+              <div>
+                <ion-item lines="none" class="itemcustum">
+                  <ion-label>Ajouter activités</ion-label>
+                  <ion-button slot="start" (click)="pickActivitiName()">
+                    <ion-icon name="add-outline"></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </div>
             </div>
 
             <div>
               <div>
                 <ion-row>
                   <ion-col>
-                    <div class="ion-text-uppercase ion-text-center">
-                      <h6 (click)="pickActivitiName()">liste activités</h6>
+                    <div
+                      class="ion-text-uppercase ion-text-center"
+                      *ngIf="activitiesList"
+                    >
+                      <h6 (click)="pickActivitiName()">liste des activités</h6>
                     </div>
                   </ion-col>
                 </ion-row>
               </div>
             </div>
 
-            <div *ngIf="activitiesList">
+            <div *ngIf="activitiesList && activitiesList.length">
               <ion-grid>
                 <ion-row>
                   <ion-col>
-                    <div>
+                    <div *ngIf="activitiesList && activitiesList.length ">
                       <ion-row class="header-row">
                         <ion-col size="2" class="ion-align-self-center">
                           <div class="ion-text-center ion-text-uppercase">
@@ -239,10 +241,12 @@
                         <div class="ion-text-center">{{row.name}}</div>
                       </ion-col>
                       <ion-col size="2" class="ion-align-self-center">
-                        <div class="ion-text-center">{{row.frequence}}</div>
+                        <div class="ion-text-center">{{row.executant}}</div>
                       </ion-col>
                       <ion-col size="2" class="ion-align-self-center">
-                        <div class="ion-text-center">{{row.periode}}</div>
+                        <div class="ion-text-center">
+                          {{row.startAt | date:'medium'}}
+                        </div>
                       </ion-col>
                       <ion-col size="4" class="ion-align-self-center">
                         <div class="ion-text-center">
@@ -262,9 +266,12 @@
             </div>
             <ion-row>
               <ion-col>
-                <div class="ion-text-center">
+                <div
+                  class="ion-text-center"
+                  *ngIf="activitiesList && activitiesList.length "
+                >
                   <ion-button type="submit" color="danger" size="small"
-                    >Submit</ion-button
+                    >Ajouter</ion-button
                   >
                 </div>
               </ion-col>

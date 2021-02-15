@@ -144,6 +144,34 @@ const routes: Routes = [
     path: 'list-created-travaux',
     loadChildren: () => import('./modal/list-created-travaux/list-created-travaux.module').then( m => m.ListCreatedTravauxPageModule)
   },
+  {
+    path: 'travaux-before-save',
+    loadChildren: () => import('./modal/travaux-before-save/travaux-before-save.module').then( m => m.TravauxBeforeSavePageModule)
+  },
+  {
+    path: 'display-travaux-list',
+    loadChildren: () => import('./modal/display-travaux-list/display-travaux-list.module').then( m => m.DisplayTravauxListPageModule)
+  },
+  {
+    path: 'display-activity-list',
+    loadChildren: () => import('./modal/display-activity-list/display-activity-list.module').then( m => m.DisplayActivityListPageModule)
+  },
+  {
+    path: 'display-materiel-list',
+    loadChildren: () => import('./modal/display-materiel-list/display-materiel-list.module').then( m => m.DisplayMaterielListPageModule)
+  },
+  {
+    path: 'display-one-activity-list',
+    loadChildren: () => import('./modal/display-one-activity-list/display-one-activity-list.module').then( m => m.DisplayOneActivityListPageModule)
+  },
+  {
+    path: 'display-one-materiel-list',
+    loadChildren: () => import('./modal/display-one-materiel-list/display-one-materiel-list.module').then( m => m.DisplayOneMaterielListPageModule)
+  },
+  {
+    path: 'avance-salaire',
+    loadChildren: () => import('./modal/avance-salaire/avance-salaire.module').then( m => m.AvanceSalairePageModule)
+  },
 ];
 
 @NgModule({

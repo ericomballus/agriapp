@@ -2,11 +2,13 @@
   <ion-buttons slot="start">
     <ion-back-button defaultHref="/home"></ion-back-button>
   </ion-buttons>
-  <ion-buttons slot="end">
+  <!--
+    <ion-buttons slot="end">
     <ion-button fill="clear" slot="icon-only" (click)="createActivitie()">
       <ion-icon name="add-circle-outline"></ion-icon>
     </ion-button>
   </ion-buttons>
+  -->
 </ion-toolbar>
 <ion-content>
   <ion-grid>
@@ -21,18 +23,18 @@
               <div class="ion-text-center ion-text-uppercase">Nom</div>
             </ion-col>
 
-            <ion-col size="2" class="ion-align-self-center">
+            <!-- <ion-col size="2" class="ion-align-self-center">
               <div class="ion-text-center ion-text-uppercase">fréquence</div>
             </ion-col>
             <ion-col size="2" class="ion-align-self-center">
               <div class="ion-text-center ion-text-uppercase">période</div>
-            </ion-col>
-            <ion-col size="2" class="ion-align-self-center">
+            </ion-col>-->
+            <ion-col size="4" class="ion-align-self-center">
               <div class="ion-text-center ion-text-uppercase">
                 Besoin matériel
               </div>
             </ion-col>
-            <ion-col size="2" class="ion-align-self-center">
+            <ion-col size="4" class="ion-align-self-center">
               <div class="ion-text-center ion-text-uppercase">
                 cout matériel
               </div>
@@ -51,17 +53,12 @@
           >
             <div class="ion-text-center">{{row.name}}</div>
           </ion-col>
-          <ion-col size="2" class="ion-align-self-center">
-            <div class="ion-text-center">{{row.frequence}}</div>
-          </ion-col>
-          <ion-col size="2" class="ion-align-self-center">
-            <div class="ion-text-center">{{row.periode}}</div>
-          </ion-col>
-          <ion-col size="2" class="ion-align-self-center">
+
+          <ion-col size="4" class="ion-align-self-center">
             <div class="ion-text-center">{{row.besoinMateriel}}</div>
           </ion-col>
 
-          <ion-col size="2" class="ion-align-self-center">
+          <ion-col size="4" class="ion-align-self-center">
             <div class="ion-text-center ion-text-uppercase">
               Total dépense: {{row.coutMateriel}}
             </div>

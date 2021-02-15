@@ -17,6 +17,10 @@ import {
 import { ListActivitiesPage } from "../list-activities/list-activities.page";
 import { ListCreatedActivitiesPage } from "../list-created-activities/list-created-activities.page";
 import { TravauxApiService } from "src/app/services/travaux-api.service";
+import { ProjetApiService } from "src/app/services/projet-api.service";
+import { TravauxBeforeSavePage } from "../travaux-before-save/travaux-before-save.page";
+import { Router } from "@angular/router";
+import { AddActivieModalPage } from "../add-activie-modal/add-activie-modal.page";
 const { Network } = Plugins;
 
 @Component({
@@ -29,7 +33,7 @@ export class AddTravauxPage implements OnInit {
   networkStatus: NetworkStatus;
   networkListener: PluginListenerHandle;
   activitiesTab: any;
-  activitiesList: any;
+  activitiesList = [];
   materieList: any[] = [];
   nameList: any[] = [];
   name: any;
@@ -48,7 +52,10 @@ export class AddTravauxPage implements OnInit {
   model2: NgbDateStruct;
   date2: { year: number; month: number };
   activitieName = "";
+  travailName = "";
   ionicForm: FormGroup;
+  projet: any;
+  tabTravaux = [];
   constructor(
     public formBuilder: FormBuilder,
     public activitiService: ActivitiesApiService,
@@ -58,11 +65,14 @@ export class AddTravauxPage implements OnInit {
     public notif: NotificationService,
     private calendar: NgbCalendar,
     private activitiList: ActivitiesApiService,
-    private travauxService: TravauxApiService
+    private travauxService: TravauxApiService,
+    private projetService: ProjetApiService,
+    public router: Router
   ) {
     this.getStatus();
     //this.getActivitieName();
     this.getAllActivities();
+    this.projet = this.projetService.getProjet();
     // this.getMateriel();
   }
 
@@ -86,14 +96,14 @@ export class AddTravauxPage implements OnInit {
           Validators.maxLength(1000),
         ],
       ],
-      executant: [
+      /* executant: [
         "",
         [
           Validators.required,
           Validators.minLength(1),
           Validators.maxLength(1000),
         ],
-      ],
+      ],*/
     });
   }
   async getStatus() {
@@ -153,12 +163,17 @@ export class AddTravauxPage implements OnInit {
     } else {
       console.log(this.ionicForm.value);
       let emp = this.ionicForm.value;
+
       emp["created"] = Date.now();
       emp["activitieList"] = this.activitiesList;
-      emp["startAt"] = debut;
-      emp["endAt"] = fin;
+      this.tabTravaux.push(emp);
+      this.activitiesList = [];
+      console.log(this.tabTravaux);
+      this.ionicForm.reset();
+      // emp["startAt"] = debut;
+      // emp["endAt"] = fin;
 
-      this.travauxService
+      /* this.travauxService
         .postTravauxToFirebase(emp)
         .then((res) => {
           console.log(res);
@@ -168,8 +183,27 @@ export class AddTravauxPage implements OnInit {
         })
         .catch((err) => {
           console.log(err);
-        });
+        }); */
     }
+  }
+  async saveProjet() {
+    console.log(this.projet);
+    console.log(this.tabTravaux);
+    this.projet["travauxlist"] = this.tabTravaux;
+    this.projetService.setProjet(this.projet);
+    const modal = await this.modalController.create({
+      component: TravauxBeforeSavePage,
+      cssClass: "my-custom-class",
+      backdropDismiss: false,
+      componentProps: {},
+    });
+    modal.onWillDismiss().then((data) => {
+      console.log(data);
+      if (data["data"] && data["data"]["save"]) {
+        this.router.navigateByUrl("projet");
+      }
+    });
+    return await modal.present();
   }
   /* getActivities() {
     this.activitiService.getLastTenActivitie().subscribe((data) => {
@@ -221,7 +255,8 @@ export class AddTravauxPage implements OnInit {
 
     this.activitiList.setActivitieList(this.nameList);
     const modal = await this.modalController.create({
-      component: ListCreatedActivitiesPage,
+      // component: ListCreatedActivitiesPage,
+      component: AddActivieModalPage,
       cssClass: "my-custom-class",
       backdropDismiss: false,
       componentProps: {},
@@ -235,6 +270,17 @@ export class AddTravauxPage implements OnInit {
         } else {
           this.activitiesList = [];
         }
+        //this.name = this.activitieName;
+        // this.nameKey = data["data"]["activitie"]["key"];
+      }
+      if (data["data"]["activitie"]) {
+        let prix = 0;
+        let tab = data["data"]["activitie"];
+        tab.materielList.forEach((elt) => {
+          prix = prix + parseInt(elt.price) * parseInt(elt.qty);
+        });
+        tab["coutMateriel"] = prix;
+        this.activitiesList.push(tab);
         //this.name = this.activitieName;
         // this.nameKey = data["data"]["activitie"]["key"];
       }
@@ -281,5 +327,25 @@ export class AddTravauxPage implements OnInit {
           this.activitiesTab = tab;
         }
       });*/
+  }
+  async pickTravauxName() {
+    console.log(this.projet);
+
+    this.activitiList.setActivitieList(this.nameList);
+    const modal = await this.modalController.create({
+      component: ListActivitiesPage,
+      cssClass: "my-custom-class",
+      backdropDismiss: false,
+      componentProps: {},
+    });
+    modal.onWillDismiss().then((data) => {
+      console.log(data);
+      if (data["data"]["activitie"]) {
+        this.activitieName = data["data"]["activitie"]["name"];
+        this.name = this.activitieName;
+        this.nameKey = data["data"]["activitie"]["key"];
+      }
+    });
+    return await modal.present();
   }
 }

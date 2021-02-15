@@ -9,6 +9,23 @@
 </ion-header>
 
 <ion-content>
+  <ion-row>
+    <ion-col size-xs="1" size-md="1" size-lg="1" size-sm="1"></ion-col>
+    <ion-col size-xs="12" size-md="12" size-lg="12" size-sm="12">
+      <ion-list>
+        <ion-item>
+          <ion-label>
+            <p>
+              NOM: {{user.name}} SALAIRE: {{user.salaire | currency:
+              "FCFA":"symbol":"3.0-0":"fr"}}
+            </p>
+            <p>TEL: {{user.mobile}}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+    <ion-col size-xs="1" size-md="1" size-lg="1" size-sm="1"></ion-col>
+  </ion-row>
   <input
     class="uploadBtn"
     type="file"
@@ -21,7 +38,16 @@
   <ion-row>
     <ion-col size-md="6" size-lg="6" size-xs="12" size-sm="12" size-xl="12">
       <ion-item>
-        <ion-label position="floating">Salaire</ion-label>
+        <ion-label>Type de paiement</ion-label>
+        <ion-select (ionChange)="selectTypePaiment($event)">
+          <ion-select-option value="avance">AVANCE</ion-select-option>
+          <ion-select-option value="complet">COMPLET</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+    <ion-col size-md="6" size-lg="6" size-xs="12" size-sm="12" size-xl="12">
+      <ion-item>
+        <ion-label position="floating">montant paiement</ion-label>
         <ion-input
           placeholder="montant salaire"
           type="number"
@@ -29,7 +55,16 @@
         ></ion-input>
       </ion-item>
     </ion-col>
-
+    <ion-col size-md="6" size-lg="6" size-xs="12" size-sm="12" size-xl="12">
+      <ion-item>
+        <ion-label position="stacked">choisir le mois</ion-label>
+        <ion-datetime
+          displayFormat="MMMM YYYY"
+          value="2021-01-15T13:47:20.789"
+          (ionChange)="selectDate($event)"
+        ></ion-datetime>
+      </ion-item>
+    </ion-col>
     <ion-col size-md="6" size-lg="6" size-xs="12" size-sm="12" size-xl="12">
       <ion-item>
         <ion-label position="floating">photo signature</ion-label>
@@ -51,7 +86,7 @@
     <ion-col>
       <div class="ion-text-center">
         <ion-button
-          [disabled]="(!photoURL && !salaire)"
+          [disabled]="(!photoURL || !salaire)"
           (click)=" enregistrerImageFirebase()"
           color="danger"
           size="small"

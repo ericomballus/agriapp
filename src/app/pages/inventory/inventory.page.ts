@@ -14,7 +14,8 @@ import {
 } from "@ng-bootstrap/ng-bootstrap";
 import { Router } from "@angular/router";
 import { DisplayImagePage } from "../display-image/display-image.page";
-import { ModalController } from "@ionic/angular";
+import { AlertController, ModalController } from "@ionic/angular";
+import { DisplayOneActivityListPage } from "src/app/modal/display-one-activity-list/display-one-activity-list.page";
 @Component({
   selector: "app-inventory",
   templateUrl: "./inventory.page.html",
@@ -27,6 +28,7 @@ export class InventoryPage implements OnInit {
   date2: { year: number; month: number };
   tabList = [];
   materielList = [];
+  travauxList = [];
   tabListActivitie = [];
   total_amount = 0;
   totalQty = 0;
@@ -37,6 +39,8 @@ export class InventoryPage implements OnInit {
   nameActivitie: any;
   isActivitie: Boolean = false;
   activitieName = [];
+  travaux: Boolean = false;
+  open: Boolean = true;
   constructor(
     private materialService: MaterielService,
     public activitiService: ActivitiesApiService,
@@ -47,7 +51,9 @@ export class InventoryPage implements OnInit {
     private database: AngularFireDatabase,
     private router: Router,
     public materielService: MaterielService,
-    public modalController: ModalController
+    public modalController: ModalController,
+    public activityService: ActivitiesApiService,
+    public alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -58,7 +64,14 @@ export class InventoryPage implements OnInit {
     this.getActivitieName();
   }
   toggle() {
+    this.open = true;
+    this.travaux = false;
     this.disabled = !this.disabled;
+  }
+
+  toggleTravaux() {
+    this.open = false;
+    this.travaux = true;
   }
   getMat() {
     let tab = [];
@@ -244,6 +257,47 @@ export class InventoryPage implements OnInit {
         });
       });
   }
+  selectTravauxByDate() {
+    let tab = [];
+    this.tabList = [];
+    let day2 = this.model2.day + 1;
+    let day1 = this.model.day;
+    let debut = new Date(
+      this.model.year + "-" + this.model.month + "-" + day1
+    ).getTime();
+    let fin = new Date(
+      this.model2.year + "-" + this.model2.month + "-" + day2
+    ).getTime();
+    console.log(debut);
+    console.log(fin);
+
+    this.database
+      .list("/agriTravaux", (ref) =>
+        ref.orderByChild("created").startAt(debut).endAt(fin)
+      )
+      .snapshotChanges()
+      .subscribe((actions) => {
+        // console.log(actions);
+        console.log("hello");
+
+        actions.forEach((action) => {
+          let a = action.payload.val();
+          a["key"] = action.key;
+          if (this.isActivitie) {
+            if (
+              a["name"].toLocaleLowerCase() ===
+              this.nameActivitie.toLocaleLowerCase()
+            ) {
+              tab.push(a);
+            }
+          } else {
+            tab.push(a);
+          }
+        });
+        console.log(tab);
+        this.travauxList = tab;
+      });
+  }
   async presentModal(row) {
     console.log(row);
     this.activitiService.setData(row);
@@ -285,5 +339,37 @@ export class InventoryPage implements OnInit {
       console.log(data);
     });
     return await modal.present();
+  }
+
+  async displayProjetActivity(row, activitie) {
+    console.log(activitie);
+    this.activityService.setOneActivity(activitie);
+    const modal = await this.modalController.create({
+      component: DisplayOneActivityListPage,
+      cssClass: "my-custom-class",
+      componentProps: {
+        activity: activitie,
+      },
+    });
+    return await modal.present();
+  }
+  async displayPeriode(row) {
+    var d = new Date(row.endAt).getDate();
+    var m = new Date(row.endAt).getMonth();
+    var y = new Date(row.endAt).getFullYear();
+    var d1 = new Date(row.startAt).getDate();
+    var m1 = new Date(row.startAt).getMonth();
+    var y1 = new Date(row.startAt).getFullYear();
+
+    const alert = await this.alertController.create({
+      cssClass: "my-custom-class",
+      header: "Periode",
+      subHeader: "",
+      message: `Début: ${d1}-${m1}-${y1}
+        FIN: ${d}-${m}-${y}`,
+      buttons: ["OK"],
+    });
+
+    await alert.present();
   }
 }

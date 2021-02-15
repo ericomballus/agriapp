@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>PROJET: {{activity[0].projetName}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <div class="ion-text-center ion-text-uppercase"></div>
+      <div>
+        <ion-row class="header-row">
+          <ion-col size="3" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">Nom</div>
+          </ion-col>
+
+          <ion-col size="3" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">executant</div>
+          </ion-col>
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">matériels</div>
+          </ion-col>
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">cout</div>
+          </ion-col>
+          <ion-col size="2" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">travail</div>
+          </ion-col>
+        </ion-row>
+      </div>
+      <ion-row
+        *ngFor="let row of activity; let i= index"
+        class="data-row data-update"
+        [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+      >
+        <ion-col
+          size="3"
+          class="ion-align-self-center"
+          [ngStyle]="{'height': '30px' }"
+        >
+          <div class="ion-text-center">{{row.name}}</div>
+        </ion-col>
+        <ion-col size="3" class="ion-align-self-center">
+          <div class="ion-text-center">{{row.executant}}</div>
+        </ion-col>
+        <ion-col size="2" class="ion-align-self-center">
+          <div class="ion-text-center" (click)="displayMateriel(row)">
+            {{row.materielList.length}}
+          </div>
+        </ion-col>
+        <ion-col size="2" class="ion-align-self-center">
+          <div class="ion-text-center">{{row.coutMateriel}}</div>
+        </ion-col>
+        <ion-col size="2" class="ion-align-self-center">
+          <div class="ion-text-center">{{row.travauxName}}</div>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>

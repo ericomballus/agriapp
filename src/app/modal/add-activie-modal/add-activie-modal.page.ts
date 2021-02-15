@@ -54,7 +54,8 @@ export class AddActivieModalPage implements OnInit {
     public materielService: MaterielService,
     public notif: NotificationService,
     private calendar: NgbCalendar,
-    private activitiList: ActivitiesApiService
+    private activitiList: ActivitiesApiService,
+    public modalCtrl: ModalController
   ) {
     this.getStatus();
     this.getActivitieName();
@@ -73,7 +74,7 @@ export class AddActivieModalPage implements OnInit {
           Validators.maxLength(20),
         ],
       ],*/
-      description: [
+      /* description: [
         "",
         [
           Validators.required,
@@ -89,10 +90,10 @@ export class AddActivieModalPage implements OnInit {
           Validators.maxLength(100),
           // Validators.pattern("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$"),
         ],
-      ],
+      ], */
       // dob: [this.defaultDate],
       // mobile: ["", [Validators.required, Validators.pattern("^[0-9]+$")]],
-      coutmaindoeuvre: [
+      /* coutmaindoeuvre: [
         "",
         [
           Validators.required,
@@ -117,6 +118,7 @@ export class AddActivieModalPage implements OnInit {
           Validators.maxLength(1000),
         ],
       ],
+      */
       /*  besoinMateriel: [
         "",
         [
@@ -125,14 +127,14 @@ export class AddActivieModalPage implements OnInit {
           Validators.maxLength(1000),
         ],
       ],*/
-      coutMateriel: [
+      /* coutMateriel: [
         "",
         [
           Validators.required,
           Validators.minLength(1),
           Validators.maxLength(1000),
         ],
-      ],
+      ],*/
       executant: [
         "",
         [
@@ -213,8 +215,11 @@ export class AddActivieModalPage implements OnInit {
       emp["besoinMateriel"] = this.besoinMateriel;
       emp["startAt"] = debut;
       emp["endAt"] = fin;
-
-      this.activitiService.postActivitie(this.ionicForm.value).subscribe(
+      this.modalCtrl.dismiss({
+        dismissed: true,
+        activitie: emp,
+      });
+      /*  this.activitiService.postActivitie(this.ionicForm.value).subscribe(
         (result) => {
           console.log(result["activitie"]);
           this.isSubmitted = false;
@@ -250,7 +255,7 @@ export class AddActivieModalPage implements OnInit {
               console.log(err);
             });
         }
-      );
+      ); */
     }
   }
   getActivities() {

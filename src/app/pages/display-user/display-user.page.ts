@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ModalController } from "@ionic/angular";
+import { AvanceSalairePage } from "src/app/modal/avance-salaire/avance-salaire.page";
 import { UserService } from "src/app/services/user.service";
 import { DisplayImagePage } from "../display-image/display-image.page";
 import { PaieUserPage } from "../paie-user/paie-user.page";
@@ -25,6 +26,19 @@ export class DisplayUserPage implements OnInit {
   async presentModal() {
     const modal = await this.modalController.create({
       component: PaieUserPage,
+      cssClass: "my-custom-class",
+      backdropDismiss: false,
+      componentProps: {},
+    });
+    modal.onWillDismiss().then((data) => {
+      console.log(data);
+    });
+    return await modal.present();
+  }
+
+  async effectuerAvanceSalaire() {
+    const modal = await this.modalController.create({
+      component: AvanceSalairePage,
       cssClass: "my-custom-class",
       backdropDismiss: false,
       componentProps: {},

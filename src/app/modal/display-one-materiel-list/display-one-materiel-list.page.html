@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>PROJET: {{activity.projetName}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <div class="ion-text-center ion-text-uppercase">
+        <h3>TRAVAIL: {{activity.travauxName}}</h3>
+        <h3>ACTIVITE: {{activity.name}}</h3>
+        <h3>liste matériel</h3>
+      </div>
+      <div>
+        <ion-row class="header-row">
+          <ion-col size="3" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">Nom</div>
+          </ion-col>
+
+          <ion-col size="3" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">quantité</div>
+          </ion-col>
+          <ion-col size="3" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">prix unitaire</div>
+          </ion-col>
+          <ion-col size="3" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">Total</div>
+          </ion-col>
+        </ion-row>
+      </div>
+      <ion-row
+        *ngFor="let row of tabMateriel; let i= index"
+        class="data-row data-update"
+        [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+      >
+        <ion-col
+          size="3"
+          class="ion-align-self-center"
+          [ngStyle]="{'height': '30px' }"
+        >
+          <div class="ion-text-center">{{row.name}}</div>
+        </ion-col>
+        <ion-col size="3" class="ion-align-self-center">
+          <div class="ion-text-center">{{row.qty}}</div>
+        </ion-col>
+        <ion-col size="3" class="ion-align-self-center">
+          <div class="ion-text-center">{{row.price}}</div>
+        </ion-col>
+        <ion-col size="3" class="ion-align-self-center">
+          <div class="ion-text-center">{{row.price * row.qty}}</div>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <div class="ion-text-center">Montant Total: {{total}} FCFA</div>
+    </ion-col>
+  </ion-row>
+</ion-content>

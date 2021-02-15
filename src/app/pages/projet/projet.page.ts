@@ -5,13 +5,16 @@ import { ActivitiesApiService } from "src/app/services/activities-api.service";
 import { Plugins, NetworkStatus, PluginListenerHandle } from "@capacitor/core";
 import { AngularFireDatabase } from "@angular/fire/database";
 import { AngularFireStorage } from "@angular/fire/storage";
-import { ModalController } from "@ionic/angular";
+import { AlertController, ModalController } from "@ionic/angular";
 import { InstructionPage } from "../../modal/instruction/instruction.page";
 import * as firebsase from "firebase";
 import { AddActivieModalPage } from "src/app/modal/add-activie-modal/add-activie-modal.page";
 import { Router } from "@angular/router";
 import { NotificationService } from "src/app/services/notification.service";
 import { ProjetApiService } from "src/app/services/projet-api.service";
+import { DisplayTravauxListPage } from "src/app/modal/display-travaux-list/display-travaux-list.page";
+import { DisplayActivityListPage } from "src/app/modal/display-activity-list/display-activity-list.page";
+import { DisplayMaterielListPage } from "src/app/modal/display-materiel-list/display-materiel-list.page";
 const { Network } = Plugins;
 
 @Component({
@@ -34,7 +37,8 @@ export class ProjetPage implements OnInit {
     public modalController: ModalController,
     private notif: NotificationService,
     public router: Router,
-    public projetService: ProjetApiService
+    public projetService: ProjetApiService,
+    public alertController: AlertController
   ) {
     this.getStatus();
     this.getTravaux();
@@ -206,10 +210,15 @@ export class ProjetPage implements OnInit {
     this.projetService.getLastTenPorjet().subscribe(
       (data: Array<any>) => {
         console.log(data);
-
         this.activitiesTab = data;
-        // this.activitiesTab = this.activitiesTab.reverse();
-        //  this.getActivityFromFirebase();
+        this.activitiesTab.forEach((projet) => {
+          let nbr_activites = 0;
+          let travaux = projet["travauxlist"];
+          travaux.forEach((tra) => {
+            nbr_activites = nbr_activites + tra["activitieList"].length;
+          });
+          projet["nbractivite"] = nbr_activites;
+        });
       },
       (err) => {
         // this.getActivityFromFirebase();
@@ -226,8 +235,8 @@ export class ProjetPage implements OnInit {
 
   async presentModal(row) {
     console.log(row);
-    this.activitiService.setData(row);
-    this.router.navigateByUrl("instruction");
+    // this.activitiService.setData(row);
+    // this.router.navigateByUrl("instruction");
     /* const modal = await this.modalController.create({
       component: InstructionPage,
       cssClass: "my-custom-class",
@@ -244,32 +253,6 @@ export class ProjetPage implements OnInit {
     this.router.navigateByUrl("add-projet");
   }
 
-  getActivityFromFirebase() {
-    /*  this.database
-      .list("/agriActivities", (ref) =>
-        ref.orderByChild("agriActivities").limitToLast(20)
-      )
-      .snapshotChanges()
-      .subscribe((actions) => {
-        let tab = [];
-        actions.forEach((action) => {
-          let a = action.payload.val();
-          a["key"] = action.key;
-          tab.push(a);
-        });
-        if (this.activitiesTab.length) {
-          tab.forEach((act) => {
-            this.activitiesTab.forEach((elt) => {
-              if (elt._id == act._id) {
-                this.remplaceActivitie(act);
-              }
-            });
-          });
-        } else {
-          this.activitiesTab = tab;
-        }
-      });*/
-  }
   remplaceActivitie(act) {
     let index = this.activitiesTab.findIndex((elt) => {
       return elt._id == act._id;
@@ -278,5 +261,61 @@ export class ProjetPage implements OnInit {
       console.log("existe");
       this.activitiesTab.splice(index, 1, act);
     }
+  }
+
+  async displayPorjetTravaux(row) {
+    this.projetService.setProjet(row);
+    const modal = await this.modalController.create({
+      component: DisplayTravauxListPage,
+      cssClass: "my-custom-class",
+      componentProps: {
+        projet: row,
+      },
+    });
+    return await modal.present();
+  }
+  async displayProjetActivity(row) {
+    console.log(row);
+    this.projetService.setProjet(row);
+    const modal = await this.modalController.create({
+      component: DisplayActivityListPage,
+      cssClass: "my-custom-class",
+      componentProps: {
+        projet: row,
+      },
+    });
+    return await modal.present();
+  }
+
+  async displayMateriel(row) {
+    this.projetService.setProjet(row);
+    const modal = await this.modalController.create({
+      component: DisplayMaterielListPage,
+      cssClass: "my-custom-class",
+      componentProps: {
+        projet: row,
+      },
+    });
+    return await modal.present();
+  }
+
+  async displayPeriode(row) {
+    var d = new Date(row.endAt).getDate();
+    var m = new Date(row.endAt).getMonth();
+    var y = new Date(row.endAt).getFullYear();
+    var d1 = new Date(row.startAt).getDate();
+    var m1 = new Date(row.startAt).getMonth();
+    var y1 = new Date(row.startAt).getFullYear();
+
+    const alert = await this.alertController.create({
+      cssClass: "my-custom-class",
+      header: "Periode",
+      subHeader: "",
+      message: `Début: ${d1}-${m1}-${y1}
+        FIN: ${d}-${m}-${y}`,
+      buttons: ["OK"],
+    });
+
+    await alert.present();
   }
 }
