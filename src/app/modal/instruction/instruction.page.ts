@@ -5,9 +5,12 @@ import { NotificationService } from "src/app/services/notification.service";
 import firebase from "firebase/app";
 import "firebase/storage";
 import { AchatService } from "src/app/services/achat.service";
-import { ModalController } from "@ionic/angular";
+import { AlertController, ModalController } from "@ionic/angular";
 import { UserService } from "src/app/services/user.service";
 import { DisplayImagePage } from "src/app/pages/display-image/display-image.page";
+import { PayeMaindoeuvrePage } from "../paye-maindoeuvre/paye-maindoeuvre.page";
+import { DisplaymodalService } from "src/app/services/displaymodal.service";
+import { DisplayUserMaindooeuvrePage } from "../display-user-maindooeuvre/display-user-maindooeuvre.page";
 @Component({
   selector: "app-instruction",
   templateUrl: "./instruction.page.html",
@@ -27,13 +30,17 @@ export class InstructionPage implements OnInit {
   imageUrl: string;
   index: number;
   tabRole = [];
+  total = 0;
+  reste = 0;
   constructor(
     public activitiService: ActivitiesApiService,
     public notif: NotificationService,
     public router: Router,
     public achatService: AchatService,
     private userService: UserService,
-    public modalController: ModalController
+    public modalService: DisplaymodalService,
+    public modalController: ModalController,
+    public alertController: AlertController
   ) {
     this.activitie = this.activitiService.getData();
     if (this.activitie.coutmaindoeuvre) {
@@ -44,6 +51,8 @@ export class InstructionPage implements OnInit {
         this.montant = this.montant + parseInt(mat.price) * parseInt(mat.qty);
       });
     }
+    this.faireLeBilan();
+    this.montantPerçu();
   }
 
   ngOnInit() {}
@@ -257,5 +266,127 @@ export class InstructionPage implements OnInit {
       console.log(data);
     });
     return await modal.present();
+  }
+  async saveMaindeouvre(user) {
+    const modal = await this.modalController.create({
+      component: PayeMaindoeuvrePage,
+      cssClass: "my-custom-class",
+      backdropDismiss: false,
+      componentProps: {
+        user: user,
+        activity: this.activitie,
+      },
+    });
+    modal.onWillDismiss().then((data) => {
+      console.log(data);
+      if (data["data"] && data["data"]["activity"]) {
+        this.activitie = data["data"]["activity"];
+        this.faireLeBilan();
+        this.montantPerçu();
+        // this.router.navigateByUrl("projet");
+      }
+    });
+    return await modal.present();
+    /* console.log(user);
+    let sum = 0;
+    let cout_maindoeuvre = parseInt(this.activitie["coutmaindoeuvre"]);
+    this.activitie["executant"].forEach((exe) => {
+      console.log(exe);
+      if (exe["maindoeuvre"]) {
+        sum = sum + exe["maindoeuvre"];
+      }
+    });
+    if (sum > cout_maindoeuvre) {
+      this.notif.presentMessage("impossible d'effectuer cette opération");
+      user["maindoeuvre"] = 0;
+    } else {
+      this.activitiService
+        .updateData(this.activitie)
+        .then((res) => {
+          this.notif.presentToast();
+          this.faireLeBilan();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } */
+  }
+
+  faireLeBilan() {
+    let sum = 0;
+    /* this.activitie["executant"].forEach((exe) => {
+      console.log(exe);
+      if (exe["maindoeuvre"]) {
+        sum = sum + exe["maindoeuvre"];
+      }
+    });*/
+    this.activitie["executant"].forEach((exe) => {
+      console.log(exe);
+      if (exe["maindoeuvreList"] && exe["maindoeuvreList"].length) {
+        // sum = sum + exe["maindoeuvre"];
+        exe["maindoeuvreList"].forEach((elt) => {
+          sum = sum + elt["montant"];
+        });
+      }
+    });
+    this.total = sum;
+    this.reste = parseInt(this.activitie.coutmaindoeuvre) - sum;
+  }
+  montantPerçu() {
+    this.activitie["executant"].forEach((exe) => {
+      console.log(exe);
+      if (exe["maindoeuvreList"] && exe["maindoeuvreList"].length) {
+        // sum = sum + exe["maindoeuvre"];
+        let sum = 0;
+        exe["maindoeuvreList"].forEach((elt) => {
+          if (elt["activityKey"] == this.activitie["key"]) {
+            sum = sum + elt["montant"];
+          }
+        });
+        exe["maindoeuvre"] = sum;
+      } else {
+        exe["maindoeuvre"] = 0;
+      }
+    });
+
+    //  this.reste = parseInt(this.activitie.coutmaindoeuvre) - sum;
+  }
+  async voirPaiement(user) {
+    const modal = await this.modalController.create({
+      component: DisplayUserMaindooeuvrePage,
+      cssClass: "my-custom-class",
+      backdropDismiss: false,
+      componentProps: {
+        user: user,
+        activity: this.activitie,
+      },
+    });
+    modal.onWillDismiss().then((data) => {
+      console.log(data);
+      if (data["data"] && data["data"]["activity"]) {
+        this.activitie = data["data"]["activity"];
+        this.faireLeBilan();
+        this.montantPerçu();
+        // this.router.navigateByUrl("projet");
+      }
+    });
+    return await modal.present();
+  }
+  async showMotif(user) {
+    const alert = await this.alertController.create({
+      cssClass: "my-custom-class",
+      header: "Motif suppression",
+      message: `${user.motif}`,
+      buttons: [
+        {
+          text: "Ok",
+          handler: () => {
+            console.log("Confirm Okay");
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

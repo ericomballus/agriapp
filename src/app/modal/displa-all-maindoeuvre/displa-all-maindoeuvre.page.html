@@ -1,0 +1,90 @@
+<ion-header>
+  <ion-toolbar color="medium">
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
+    <ion-row>
+      <ion-col size="12" class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase">
+          <h3>Montants reçus</h3>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row [ngStyle]="{'background-color': '#9c9797' }">
+      <ion-col size="2" class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase">Projet</div>
+      </ion-col>
+      <ion-col size="2" class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase">Activité</div>
+      </ion-col>
+      <ion-col size="2" class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase">Montant</div>
+      </ion-col>
+      <!-- -->
+      <ion-col size="3" class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase">date</div>
+      </ion-col>
+      <ion-col size="3" class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase">signature</div>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div>
+    <ion-row
+      *ngFor="let row of user.maindoeuvreList; let i= index"
+      style="width: 100%; max-height: 600px"
+      class="data-row data-update"
+      [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+    >
+      <ion-col size="2" class="ion-align-self-center">
+        <div
+          class="ion-text-center inte ion-text-uppercase"
+          *ngIf="row.projetName"
+        >
+          {{row.projetName}}
+        </div>
+      </ion-col>
+      <ion-col size="2" class="ion-align-self-center">
+        <div
+          class="ion-text-center inte ion-text-uppercase"
+          *ngIf="row.activityName"
+        >
+          {{row.activityName}}
+        </div>
+      </ion-col>
+      <ion-col size="2" class="ion-align-self-center">
+        <div class="ion-text-center inte ion-text-uppercase">
+          {{row.montant}}
+        </div>
+      </ion-col>
+      <ion-col size="3" class="ion-align-self-center">
+        <div class="ion-text-center inte">{{row.created | date}}</div>
+      </ion-col>
+      <ion-col size="3" class="ion-align-self-center">
+        <div class="ion-text-right">
+          <ion-thumbnail slot="end" *ngIf="row.url" class="thumbnailM">
+            <ion-img (click)="zoomImage(row.url)" [src]="row.url"></ion-img>
+          </ion-thumbnail>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" class="ion-align-self-center">
+        <div class="ion-text-center ion-text-uppercase">
+          <h6 class="recu">
+            total reçus: {{total | currency: "FCFA":"symbol":"3.0-0":"fr"}}
+          </h6>
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

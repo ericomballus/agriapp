@@ -15,6 +15,7 @@ import {
   NgbDateStruct,
 } from "@ng-bootstrap/ng-bootstrap";
 import { ListActivitiesPage } from "../list-activities/list-activities.page";
+import { SelectEmployePage } from "../select-employe/select-employe.page";
 const { Network } = Plugins;
 @Component({
   selector: "app-add-activie-modal",
@@ -30,6 +31,7 @@ export class AddActivieModalPage implements OnInit {
   activitiesTab: any;
   materieList: any[] = [];
   nameList: any[] = [];
+  executantList: any[] = [];
   name: any;
   nameKey: any;
   tab: any[] = [];
@@ -51,6 +53,7 @@ export class AddActivieModalPage implements OnInit {
     public activitiService: ActivitiesApiService,
     private database: AngularFireDatabase,
     public modalController: ModalController,
+    public modalController2: ModalController,
     public materielService: MaterielService,
     public notif: NotificationService,
     private calendar: NgbCalendar,
@@ -82,26 +85,10 @@ export class AddActivieModalPage implements OnInit {
           Validators.maxLength(1000),
         ],
       ],
-      superficie: [
-        "",
-        [
-          // Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(100),
-          // Validators.pattern("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$"),
-        ],
-      ], */
+      */
       // dob: [this.defaultDate],
       // mobile: ["", [Validators.required, Validators.pattern("^[0-9]+$")]],
-      /* coutmaindoeuvre: [
-        "",
-        [
-          Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(1000),
-          //  Validators.pattern("^[0-9]+$"),
-        ],
-      ],
+      /* 
       frequence: [
         "",
         [
@@ -135,14 +122,32 @@ export class AddActivieModalPage implements OnInit {
           Validators.maxLength(1000),
         ],
       ],*/
-      executant: [
+      coutmaindoeuvre: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(1000),
+          //  Validators.pattern("^[0-9]+$"),
+        ],
+      ],
+      superficie: [
+        "",
+        [
+          // Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(100),
+          // Validators.pattern("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}$"),
+        ],
+      ],
+      /* executant: [
         "",
         [
           Validators.required,
           Validators.minLength(1),
           Validators.maxLength(1000),
         ],
-      ],
+      ],*/
     });
   }
   async getStatus() {
@@ -215,6 +220,8 @@ export class AddActivieModalPage implements OnInit {
       emp["besoinMateriel"] = this.besoinMateriel;
       emp["startAt"] = debut;
       emp["endAt"] = fin;
+      emp["executant"] = this.executantList;
+
       this.modalCtrl.dismiss({
         dismissed: true,
         activitie: emp,
@@ -386,6 +393,30 @@ export class AddActivieModalPage implements OnInit {
         this.activitieName = data["data"]["activitie"]["name"];
         this.name = this.activitieName;
         this.nameKey = data["data"]["activitie"]["key"];
+      }
+    });
+    return await modal.present();
+  }
+
+  async pickEmploye() {
+    console.log(this.nameList);
+
+    const modal = await this.modalController2.create({
+      component: SelectEmployePage,
+      cssClass: "my-custom-class",
+      backdropDismiss: false,
+      componentProps: {},
+    });
+    modal.onWillDismiss().then((data) => {
+      console.log(data);
+      if (
+        data["data"] &&
+        data["data"]["employeList"] &&
+        data["data"]["employeList"].length
+      ) {
+        this.executantList = data["data"]["employeList"];
+      } else {
+        this.executantList = [];
       }
     });
     return await modal.present();

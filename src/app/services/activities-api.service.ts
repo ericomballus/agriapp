@@ -6,6 +6,7 @@ import firebase from "firebase/app";
 import { BehaviorSubject } from "rxjs";
 import { isNullOrUndefined } from "util";
 import { log } from "console";
+import { resolve } from "dns";
 
 @Injectable({
   providedIn: "root",
@@ -114,4 +115,41 @@ export class ActivitiesApiService {
       });
     return this.activite;
   }
+  getActivitie(key) {
+    return new Promise((resolve, reject) => {
+      this.database
+        .list("/agriActivities", (ref) => ref.orderByKey().equalTo(key))
+        .snapshotChanges()
+        .subscribe((actions) => {
+          let tab = [];
+          actions.forEach((action) => {
+            let a = action.payload.val();
+            a["key"] = action.key;
+            tab.push(a);
+          });
+          resolve(tab);
+        });
+    });
+  }
+
+  getOneActivitie(ladate) {
+    return new Promise((resolve, reject) => {
+      this.database
+        .list("/agriActivities", (ref) =>
+          ref.orderByChild("created").equalTo(ladate)
+        )
+        .snapshotChanges()
+        .subscribe((actions) => {
+          let tab = [];
+          actions.forEach((action) => {
+            let a = action.payload.val();
+            a["key"] = action.key;
+            tab.push(a);
+          });
+          resolve(tab);
+        });
+      // return this.activite;
+    });
+  }
 }
+//nameKey

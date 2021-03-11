@@ -3,6 +3,7 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import firebase from "firebase/app";
 import { ToastController } from "@ionic/angular";
 import { Subject } from "rxjs";
+import { AngularFireDatabase } from "@angular/fire/database";
 
 @Injectable({
   providedIn: "root",
@@ -13,7 +14,8 @@ export class AuthentificationService {
 
   constructor(
     public toastController: ToastController,
-    public auth: AngularFireAuth
+    public auth: AngularFireAuth,
+    private database: AngularFireDatabase
   ) {}
 
   emettre() {
@@ -92,5 +94,47 @@ export class AuthentificationService {
       position: "top",
     });
     toast.present();
+  }
+
+  changeInitPassWord(data) {
+    return new Promise((resolve, reject) => {
+      let database = this.database.list("agriInitPassWord");
+      database
+        .push(data)
+        .then((b) => {
+          resolve(b);
+        })
+        .catch((error) => {
+          reject(JSON.stringify(error));
+        });
+    });
+  }
+
+  getInitPassWord() {
+    return new Promise((resolve, reject) => {
+      this.database
+        .list("/agriInitPassWord")
+        .snapshotChanges()
+        .subscribe((actions) => {
+          if (!actions.length) {
+            resolve(actions);
+          } else {
+            let tab = [];
+            actions.forEach((action) => {
+              let a = action.payload.val();
+              a["key"] = action.key;
+              tab.push(a);
+
+              resolve(tab);
+            });
+          }
+        });
+    });
+  }
+  updateInitPassWord(data) {
+    console.log(data);
+
+    let database = this.database.list("agriInitPassWord");
+    return database.update(data.key, data);
   }
 }

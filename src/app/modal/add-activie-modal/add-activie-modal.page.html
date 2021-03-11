@@ -2,7 +2,9 @@
   <ion-toolbar color="medium">
     <ion-title></ion-title>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/created-activitie"></ion-back-button>
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -20,9 +22,7 @@
     </div>
   </div>
   <div class="date">
-    <div class="input-group">.</div>
-
-    <div class="input-group">
+    <div>
       <input
         style="display: none"
         class="form-control"
@@ -44,13 +44,8 @@
         ></ion-button>
       </div>
     </div>
-    <div class="input-group">
-      <pre>{{model.day}}/{{model.month}}/{{model.year}}</pre>
-    </div>
-    <div class="input-group">
-      <pre>{{model2.day}}/{{model2.month}}/{{model2.year}}</pre>
-    </div>
-    <div class="input-group">
+
+    <div>
       <input
         style="display: none"
         class="form-control"
@@ -72,25 +67,16 @@
         ></ion-button>
       </div>
     </div>
-
-    <div class="input-group">.</div>
+  </div>
+  <div class="divdate">
+    <div class="taille">{{model.day}}/{{model.month}}/{{model.year}}</div>
+    <div class="taille">{{model2.day}}/{{model2.month}}/{{model2.year}}</div>
   </div>
   <ion-grid>
     <ion-row>
       <ion-col size-md="12" size-lg="12" size-xs="12" size-sm="12" size-xl="12">
         <div class="cole">
           <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
-            <div>
-              <div>
-                <ion-row>
-                  <ion-col>
-                    <div class="ion-text-uppercase ion-text-center">
-                      <h6>details :</h6>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </div>
-            </div>
             <div class="first">
               <div class="divint">
                 <ion-item
@@ -98,6 +84,7 @@
                   class="itemcustum"
                   (click)="pickActivitiName()"
                 >
+                  <ion-label position="floating">Nom activité</ion-label>
                   <ion-input
                     placeholder="Nom activité"
                     [value]="activitieName"
@@ -150,7 +137,42 @@
                 </span>
               </div>
 
-              <div class="divint">
+             
+             
+             -->
+
+              <!--
+                    <div>
+                <ion-item lines="none" (click)="pickEmploye()">
+                  <ion-label position="floating">executant</ion-label>
+                    <ion-input
+                    placeholder="Entrer l'information ici"
+                    formControlName="executant"
+                    type="texte"
+                  ></ion-input>
+                  <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.executant.errors?.minlength"
+                >
+                  Please provide valid executant .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.executant.errors?.maxLength"
+                >
+                  Please provide valid executant .
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.executant.errors?.required"
+                >
+                  Entrer le executant.
+                </span>
+                  </ion-item>
+              </div>
+                 -->
+
+              <div>
                 <ion-item lines="none">
                   <ion-label position="floating">Superficie</ion-label>
                   <ion-input
@@ -199,36 +221,6 @@
                   *ngIf="isSubmitted && errorControl.coutmaindoeuvre.errors?.required"
                 >
                   Entrer le cout de la main d'oeuvre.
-                </span>
-              </div>
-             -->
-              <div>
-                <ion-item lines="none">
-                  <ion-label position="floating">executant</ion-label>
-                  <ion-input
-                    placeholder="Entrer l'information ici"
-                    formControlName="executant"
-                    type="texte"
-                  ></ion-input>
-                </ion-item>
-
-                <span
-                  class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.executant.errors?.minlength"
-                >
-                  Please provide valid executant .
-                </span>
-                <span
-                  class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.executant.errors?.maxLength"
-                >
-                  Please provide valid executant .
-                </span>
-                <span
-                  class="error ion-padding"
-                  *ngIf="isSubmitted && errorControl.executant.errors?.required"
-                >
-                  Entrer le executant.
                 </span>
               </div>
             </div>
@@ -353,7 +345,39 @@
               </div>
             </div>
             -->
-
+            <div>
+              <ion-item lines="none" class="itemcustum">
+                <ion-button
+                  color="success"
+                  slot="start"
+                  (click)="pickEmploye()"
+                >
+                  Ajouter éxécutants au travail
+                  <ion-icon slot="end" name="add-outline"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </div>
+            <div *ngIf="executantList.length">
+              <div>
+                <ion-row>
+                  <ion-col>
+                    <div class="ion-text-uppercase ion-text-center">
+                      <h6>Exécutants</h6>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </div>
+            <div class="second three" *ngIf="executantList.length">
+              <div>
+                <ion-item *ngFor="let user of executantList">
+                  <ion-icon slot="start" name="person-outline"></ion-icon>
+                  <ion-label>
+                    <h2>{{user.name}}</h2>
+                  </ion-label>
+                </ion-item>
+              </div>
+            </div>
             <div>
               <div>
                 <ion-row>
@@ -368,9 +392,8 @@
             <div class="second three">
               <div>
                 <ion-item>
-                  <ion-label>besoin materiel</ion-label>
                   <ion-select
-                    placeholder="materiel"
+                    placeholder="besoin materiel"
                     cancelText="Annuler"
                     okText="Ok"
                     (ionChange)="selectEvent($event)"
@@ -394,16 +417,16 @@
                   ></ion-input>
                 </ion-item>
               </div>
-              <div>
-                <ion-button
-                  [disabled]="(!disabled)"
-                  (click)="addMateriel()"
-                  size="small"
-                  >valider</ion-button
-                >
-              </div>
             </div>
-            <div *ngIf="tab.length">
+            <div class="btnvalidation">
+              <ion-button
+                [disabled]="(!disabled)"
+                (click)="addMateriel()"
+                size="small"
+                >valider</ion-button
+              >
+            </div>
+            <div *ngIf="tab.length" class="listmat">
               <ion-row
                 *ngFor="let mat of tab; let i= index"
                 style="width: 100%; max-height: 600px; overflow-y: scroll"
@@ -444,8 +467,8 @@
                     type="submit"
                     color="danger"
                     size="small"
-                    [disabled]="!ionicForm.valid"
-                    >Submit</ion-button
+                    *ngIf="ionicForm.valid"
+                    >Enregistrer l'activité</ion-button
                   >
                 </div>
               </ion-col>

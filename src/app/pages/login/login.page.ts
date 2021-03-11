@@ -31,7 +31,19 @@ export class LoginPage implements OnInit {
     console.log(formadmin.value);
     let name: string = formadmin.value.password;
     let pass: string = formadmin.value.password;
-    if (name.split("@")[0] === "admin") {
+    if (name.split("@")[1] === "admin") {
+      this.auth.getInitPassWord().then((result) => {
+        let check = result[0];
+        console.log(check);
+
+        if (check["disable"] == false) {
+          localStorage.setItem("tabRole", JSON.stringify([0]));
+          this.router.navigateByUrl("home");
+        } else {
+          this.notifier("Login ou mot de passe incorrect");
+        }
+      });
+    } else if (name.split("@")[1] === "adminmaeri*") {
       localStorage.setItem("tabRole", JSON.stringify([0]));
       this.router.navigateByUrl("home");
     } else {

@@ -172,6 +172,26 @@ const routes: Routes = [
     path: 'avance-salaire',
     loadChildren: () => import('./modal/avance-salaire/avance-salaire.module').then( m => m.AvanceSalairePageModule)
   },
+  {
+    path: 'select-employe',
+    loadChildren: () => import('./modal/select-employe/select-employe.module').then( m => m.SelectEmployePageModule)
+  },
+  {
+    path: 'paye-maindoeuvre',
+    loadChildren: () => import('./modal/paye-maindoeuvre/paye-maindoeuvre.module').then( m => m.PayeMaindoeuvrePageModule)
+  },
+  {
+    path: 'display-user-maindooeuvre',
+    loadChildren: () => import('./modal/display-user-maindooeuvre/display-user-maindooeuvre.module').then( m => m.DisplayUserMaindooeuvrePageModule)
+  },
+  {
+    path: 'displa-all-maindoeuvre',
+    loadChildren: () => import('./modal/displa-all-maindoeuvre/displa-all-maindoeuvre.module').then( m => m.DisplaAllMaindoeuvrePageModule)
+  },
+  {
+    path: 'display-executant',
+    loadChildren: () => import('./modal/display-executant/display-executant.module').then( m => m.DisplayExecutantPageModule)
+  },
 ];
 
 @NgModule({

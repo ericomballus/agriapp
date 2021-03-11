@@ -10,6 +10,7 @@ import "firebase/storage";
 import { NotificationService } from "src/app/services/notification.service";
 import { Router } from "@angular/router";
 import { ManagerInventoryPage } from "../manager-inventory/manager-inventory.page";
+import { TrackingService } from "src/app/services/tracking.service";
 @Component({
   selector: "app-employee",
   templateUrl: "./employee.page.html",
@@ -20,6 +21,7 @@ export class EmployeePage implements OnInit {
   defaultDate = "1987-06-30";
   isSubmitted = false;
   userList = [];
+  allEmployee = [];
   @ViewChild("fileButton", { static: false }) fileButton;
   @ViewChild("fileButton2", { static: false }) fileButton2;
   file: any;
@@ -29,6 +31,8 @@ export class EmployeePage implements OnInit {
   videoURL: string;
   imageUrl: string;
   userRole: number;
+  type_employe: String;
+  disableField = false;
   tabRole = [];
   roles = [
     { name: "Admin", id: 0 },
@@ -36,6 +40,11 @@ export class EmployeePage implements OnInit {
     { name: "Warehouseman", id: 2 },
     { name: "Other", id: 3 },
   ];
+  opts = {
+    slidesPerView: 4.5,
+    spaceBetween: 10,
+    slidesOffsetBefore: 0,
+  };
   constructor(
     public formBuilder: FormBuilder,
     public userService: UserService,
@@ -43,23 +52,35 @@ export class EmployeePage implements OnInit {
     private database: AngularFireDatabase,
     public auth: AuthentificationService,
     public notif: NotificationService,
-    public router: Router
+    public router: Router,
+    public tracking: TrackingService
   ) {}
   ionViewWillEnter() {
     console.log(JSON.parse(localStorage.getItem("tabRole")));
     this.tabRole = JSON.parse(localStorage.getItem("tabRole"));
     if (
-      this.tabRole.includes(1) ||
+      // this.tabRole.includes(1) ||
       this.tabRole.includes(2) ||
       this.tabRole.includes(3)
     ) {
+      const url = this.router.url;
       this.router.navigateByUrl("home");
       this.notif.presentError(
         "vous n'avez pas les autorisations necéssaires pour cette page",
         "danger"
       );
+      this.tracking.postTrackingToFirebase("page employé", url);
     } else {
       this.getEmployees();
+    }
+    if (this.tabRole.includes(1)) {
+      this.disableField = true;
+      this.roles = [
+        //  { name: "Admin", id: 0 },
+        // { name: "Manager", id: 1 },
+        { name: "Warehouseman", id: 2 },
+        { name: "Other", id: 3 },
+      ];
     }
   }
   ngOnInit() {
@@ -139,6 +160,10 @@ export class EmployeePage implements OnInit {
       if (this.userRole) {
         employe.tabRole.push(this.userRole);
       }
+
+      if (this.type_employe) {
+        employe["typ_employe"] = this.type_employe;
+      }
       this.auth.inscription(employe.email, employe.password).then((res) => {
         console.log(res);
         delete employe.password;
@@ -179,6 +204,7 @@ export class EmployeePage implements OnInit {
         });
         console.log(this.userList);
         this.userList = tab;
+        this.allEmployee = tab;
       });
   }
   async notifier(texte: string) {
@@ -192,20 +218,44 @@ export class EmployeePage implements OnInit {
   }
 
   removeEmploye(user) {
-    console.log(user);
-    this.database
-      .list("agriUser")
-      .remove(user.key)
-      .then((res) => {
-        this.getEmployees();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (this.disableField) {
+      this.notif.presentError(
+        "vous n'avez pas les autorisations necéssaires pour cette action",
+        "danger"
+      );
+      const url = this.router.url;
+      this.tracking.postTrackingToFirebase(
+        "page achat",
+        `tentative suppresion ${user.name}`
+      );
+    } else {
+      console.log(user);
+      this.database
+        .list("agriUser")
+        .remove(user.key)
+        .then((res) => {
+          this.getEmployees();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
   updateEmploye(user) {
-    this.userService.setEmploye(user);
-    this.router.navigateByUrl("update-employe");
+    if (this.disableField) {
+      this.notif.presentError(
+        "vous n'avez pas les autorisations necéssaires pour cette action",
+        "danger"
+      );
+      const url = this.router.url;
+      this.tracking.postTrackingToFirebase(
+        "page achat",
+        `tentative modification des informations de ${user.name}`
+      );
+    } else {
+      this.userService.setEmploye(user);
+      this.router.navigateByUrl("update-employe");
+    }
   }
 
   galerie() {
@@ -291,5 +341,23 @@ export class EmployeePage implements OnInit {
     /* tab.forEach((materiel) => {
       this.besoinMateriel = this.besoinMateriel + "," + materiel.name;
     }); */
+  }
+  typeEmploye(ev) {
+    console.log(ev.detail.value);
+    this.type_employe = ev.detail.value;
+  }
+
+  segmentChanged(ev: any) {
+    console.log("Segment changed", ev.detail.value);
+    let choice = ev.detail.value;
+    if (choice == "temporaire") {
+      this.userList = this.allEmployee.filter((emp) => {
+        return emp["typ_employe"] == "temporaire";
+      });
+    } else {
+      this.userList = this.allEmployee.filter((emp) => {
+        return emp["typ_employe"] != "temporaire";
+      });
+    }
   }
 }

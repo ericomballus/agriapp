@@ -4,7 +4,7 @@ import { ActivitiesApiService } from "src/app/services/activities-api.service";
 import { Plugins, NetworkStatus, PluginListenerHandle } from "@capacitor/core";
 import { AngularFireDatabase } from "@angular/fire/database";
 import { AngularFireStorage } from "@angular/fire/storage";
-import { ModalController } from "@ionic/angular";
+import { AlertController, ModalController } from "@ionic/angular";
 import { InstructionPage } from "../../modal/instruction/instruction.page";
 import * as firebsase from "firebase";
 import { MaterielService } from "src/app/services/materiel.service";
@@ -56,6 +56,7 @@ export class AddTravauxPage implements OnInit {
   ionicForm: FormGroup;
   projet: any;
   tabTravaux = [];
+  displayForm = true;
   constructor(
     public formBuilder: FormBuilder,
     public activitiService: ActivitiesApiService,
@@ -67,7 +68,8 @@ export class AddTravauxPage implements OnInit {
     private activitiList: ActivitiesApiService,
     private travauxService: TravauxApiService,
     private projetService: ProjetApiService,
-    public router: Router
+    public router: Router,
+    public alertController: AlertController
   ) {
     this.getStatus();
     //this.getActivitieName();
@@ -170,6 +172,10 @@ export class AddTravauxPage implements OnInit {
       this.activitiesList = [];
       console.log(this.tabTravaux);
       this.ionicForm.reset();
+      this.displayForm = false;
+      setTimeout(() => {
+        this.presentAlertConfirm();
+      }, 1500);
       // emp["startAt"] = debut;
       // emp["endAt"] = fin;
 
@@ -185,6 +191,29 @@ export class AddTravauxPage implements OnInit {
           console.log(err);
         }); */
     }
+  }
+  async presentAlertConfirm() {
+    const alert = await this.alertController.create({
+      cssClass: "my-custom-class",
+      header: "Travail enregistré!",
+      message: "Ajouter un autre <strong>travail </strong>?",
+      buttons: [
+        {
+          text: "NON",
+          role: "cancel",
+          cssClass: "secondary",
+          handler: (blah) => {},
+        },
+        {
+          text: "OUI",
+          handler: () => {
+            this.displayForm = true;
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
   async saveProjet() {
     console.log(this.projet);

@@ -147,26 +147,21 @@
       [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
     >
       <ion-col size="3" class="ion-align-self-center">
-        <div class="ion-text-center ion-text-uppercase taille">
-          <p>{{elt.quantity}} {{ elt.name}}</p>
-        </div>
+        <div class="ion-text-center">{{elt.quantity}} {{ elt.name}}</div>
       </ion-col>
       <ion-col size="2" class="ion-align-self-center">
-        <div class="ion-text-center ion-text-uppercase taille">
-          <p>
-            {{ elt.price * elt.quantity | currency:
-            "FCFA":"symbol":"2.0-0":"fr"}}
-          </p>
+        <div class="ion-text-center ion-text-uppercase">
+          {{ elt.price * elt.quantity | currency: "FCFA":"symbol":"2.0-0":"fr"}}
         </div>
       </ion-col>
       <ion-col size="3" class="ion-align-self-center">
-        <div class="ion-text-center ion-text-uppercase taille">
-          <p>{{ elt.created | date:'medium'}}</p>
+        <div class="ion-text-center ion-text-uppercase">
+          {{ elt.created | date:'medium'}}
         </div>
       </ion-col>
       <ion-col size="2" class="ion-align-self-center">
-        <div class="ion-text-center ion-text-uppercase taille">
-          <p>{{ elt.activityName}}</p>
+        <div class="ion-text-center ion-text-uppercase">
+          {{ elt.activityName}}
         </div>
       </ion-col>
       <ion-col size="2" class="ion-align-self-center">

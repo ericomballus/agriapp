@@ -103,8 +103,11 @@
                 <ion-row>
                   <ion-col>
                     <div class="ion-text-uppercase ion-text-center">
-                      <h6>
-                        ajouter des travaux au projet: {{tabTravaux.length}}
+                      <h6 *ngIf="tabTravaux.length == 0">
+                        ajouter des travaux au projet
+                      </h6>
+                      <h6 *ngIf="tabTravaux.length" class="travauxAjoutes">
+                        travaux ajoutés au projet: {{tabTravaux.length}}
                       </h6>
                     </div>
                   </ion-col>
@@ -112,9 +115,9 @@
               </div>
             </div>
             <div class="first">
-              <div class="divint">
+              <div class="divint" *ngIf="displayForm">
                 <ion-item lines="none">
-                  <ion-label position="floating">Nom</ion-label>
+                  <ion-label position="floating">Nom du travail</ion-label>
                   <ion-input
                     placeholder="Entrer le nom du travail"
                     formControlName="name"
@@ -171,9 +174,13 @@
               </div>
               <div>
                 <ion-item lines="none" class="itemcustum">
-                  <ion-label>Ajouter activités</ion-label>
-                  <ion-button slot="start" (click)="pickActivitiName()">
-                    <ion-icon name="add-outline"></ion-icon>
+                  <ion-button
+                    color="success"
+                    slot="start"
+                    (click)="pickActivitiName()"
+                  >
+                    Ajouter activités au travail
+                    <ion-icon slot="end" name="add-outline"></ion-icon>
                   </ion-button>
                 </ion-item>
               </div>
@@ -241,7 +248,9 @@
                         <div class="ion-text-center">{{row.name}}</div>
                       </ion-col>
                       <ion-col size="2" class="ion-align-self-center">
-                        <div class="ion-text-center">{{row.executant}}</div>
+                        <div class="ion-text-center">
+                          {{row.executant.length}}
+                        </div>
                       </ion-col>
                       <ion-col size="2" class="ion-align-self-center">
                         <div class="ion-text-center">
@@ -271,7 +280,7 @@
                   *ngIf="activitiesList && activitiesList.length "
                 >
                   <ion-button type="submit" color="danger" size="small"
-                    >Ajouter</ion-button
+                    >Ajouter le travail au projet</ion-button
                   >
                 </div>
               </ion-col>

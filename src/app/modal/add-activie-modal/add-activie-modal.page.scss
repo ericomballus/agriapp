@@ -59,18 +59,19 @@
   .second {
     display: flex;
     // flex-wrap: wrap;
-    // justify-content: space-between;
+    justify-content: space-between;
+    flex-wrap: nowrap;
   }
   .second div {
     // width: 25%;
     flex-grow: 1;
     border: 1px solid #f1f1f1;
-    margin: 15px;
+    //  margin: 15px;
   }
 
   .second {
-    display: flex;
-    flex-wrap: wrap;
+    // display: flex;
+    // flex-wrap: wrap;
     // justify-content: space-between;
   }
 
@@ -78,7 +79,7 @@
     // width: 25%;
     flex-grow: 1;
     border: 1px solid #f1f1f1;
-    margin: 15px;
+    //  margin: 15px;
   }
 
   ion-col div {
@@ -97,4 +98,19 @@
 .input-group {
   text-align: center;
   flex-grow: 1;
+}
+.divdate {
+  display: flex;
+  justify-content: space-between;
+}
+.taille {
+  padding: 10px;
+}
+.btnvalidation {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.listmat {
+  margin-bottom: 15px;
 }

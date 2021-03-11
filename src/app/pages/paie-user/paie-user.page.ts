@@ -84,7 +84,113 @@ export class PaieUserPage implements OnInit {
     let dat = new Date(this.mois_de_paiment);
     let queryMonth = dat.getMonth() + 1;
     let queryYear = dat.getFullYear();
-    if (this.user["salaireList"].length) {
+    let tabSum = [];
+    if (this.user["salaireList"] && this.user["salaireList"].length) {
+      tabSum = this.user["salaireList"].filter((sal) => {
+        return sal.mois == queryMonth && sal.year == queryYear;
+      });
+      /* let index = this.user["salaireList"].findIndex((elt) => {
+        return elt.mois == queryMonth && elt.year == queryYear;
+      }); */
+      // if (index >= 0) {
+      if (tabSum.length) {
+        // let sum=
+        console.log(tabSum);
+        let lastAvance = 0;
+        let sum = 0;
+        tabSum.forEach((elt) => {
+          console.log(elt);
+
+          sum = sum + elt["avance"];
+        });
+        console.log(sum);
+        sum = sum + this.salaire;
+        // let lastAvance = this.user["salaireList"][index]["avance"];
+        // let sum = lastAvance + this.salaire;
+        if (sum > this.user.salaire) {
+          console.log("superieure");
+          this.notif.presentError(
+            "impossible de faire cette opération; le somme des avances est supérieur au salaire de cette employé",
+            "danger"
+          );
+        } else {
+          //  console.log("inferieure");
+          this.paieInExistAvance(sum, this.salaire);
+        }
+      } else {
+        if (parseInt(this.user.salaire) - this.salaire > 0) {
+          this.presentAlertConfirm();
+        } else {
+          return new Promise((resolve, reject) => {
+            this.presentLoading();
+            var storageRef = firebase
+              .storage()
+              .ref("/agriApp/" + this.file.name);
+            var task = storageRef.put(this.file);
+            task
+              .then((data) => {
+                console.log("data");
+
+                storageRef
+                  .getDownloadURL()
+                  .then((url) => {
+                    let data = {};
+                    if (parseInt(this.user.salaire) - this.salaire > 0) {
+                      data = {
+                        // salaire: this.salaire,
+                        recu: this.salaire,
+                        avance: this.salaire,
+                        reste: parseInt(this.user.salaire) - this.salaire,
+                        created: Date.now(),
+                        signature: url,
+                        mois_de_paiment: this.mois_de_paiment,
+                        type_de_paiement: "avance",
+                        mont_name: this.month_name,
+                      };
+                    } else {
+                      let dat = new Date(this.mois_de_paiment);
+                      data = {
+                        salaire: this.salaire,
+                        recu: this.salaire,
+                        created: Date.now(),
+                        signature: url,
+                        mois_de_paiment: this.mois_de_paiment,
+                        mois: dat.getMonth() + 1,
+                        year: dat.getFullYear(),
+                        type_de_paiement: "complet",
+                        mont_name: this.month_name,
+                      };
+                    }
+
+                    if (this.user["salaireList"]) {
+                      this.user["salaireList"].push(data);
+                    } else {
+                      let tab = [data];
+                      this.user["salaireList"] = tab;
+                    }
+                    this.userService
+                      .addUserSalaire(this.user)
+                      .then((res) => {
+                        this.loadingController.dismiss();
+                        this.dismiss(this.user);
+                      })
+                      .catch((e) => {
+                        console.log(e);
+                      });
+                  })
+                  .catch((e) => {
+                    reject(e);
+                  });
+              })
+              .catch((e) => {
+                reject(e);
+              });
+          });
+        }
+      }
+    } else {
+      this.user["salaireList"] = [];
+
       let index = this.user["salaireList"].findIndex((elt) => {
         return elt.mois == queryMonth && elt.year == queryYear;
       });
@@ -123,6 +229,7 @@ export class PaieUserPage implements OnInit {
                     if (parseInt(this.user.salaire) - this.salaire > 0) {
                       data = {
                         // salaire: this.salaire,
+                        recu: this.salaire,
                         avance: this.salaire,
                         reste: parseInt(this.user.salaire) - this.salaire,
                         created: Date.now(),
@@ -135,6 +242,7 @@ export class PaieUserPage implements OnInit {
                       let dat = new Date(this.mois_de_paiment);
                       data = {
                         salaire: this.salaire,
+                        recu: this.salaire,
                         created: Date.now(),
                         signature: url,
                         mois_de_paiment: this.mois_de_paiment,
@@ -171,7 +279,6 @@ export class PaieUserPage implements OnInit {
           });
         }
       }
-    } else {
     }
   }
   async presentLoading() {
@@ -222,7 +329,7 @@ export class PaieUserPage implements OnInit {
     if (month == 11) {
       this.month_name = "novembre";
     }
-    if (month == 3) {
+    if (month == 12) {
       this.month_name = "décembre";
     }
   }
@@ -261,6 +368,7 @@ export class PaieUserPage implements OnInit {
 
                       data = {
                         // salaire: this.salaire,
+                        recu: this.salaire,
                         avance: this.salaire,
                         reste: parseInt(this.user.salaire) - this.salaire,
                         created: Date.now(),
@@ -277,6 +385,7 @@ export class PaieUserPage implements OnInit {
                         let tab = [data];
                         this.user["salaireList"] = tab;
                       }
+                      console.log(this.user);
                       this.userService
                         .addUserSalaire(this.user)
                         .then((res) => {
@@ -302,7 +411,7 @@ export class PaieUserPage implements OnInit {
 
     await alert.present();
   }
-  paieInExistAvance(index, montant) {
+  paieInExistAvance(sum, montant) {
     this.presentLoading();
     return new Promise((resolve, reject) => {
       var storageRef = firebase.storage().ref("/agriApp/" + this.file.name);
@@ -318,9 +427,10 @@ export class PaieUserPage implements OnInit {
               let dat = new Date(this.mois_de_paiment);
               if (montant < this.user.salaire) {
                 data = {
-                  // salaire: this.salaire,
+                  recu: this.salaire,
                   avance: montant,
-                  reste: parseInt(this.user.salaire) - montant,
+                  // reste: parseInt(this.user.salaire) - montant,
+                  reste: parseInt(this.user.salaire) - sum,
                   created: Date.now(),
                   signature: url,
                   mois_de_paiment: this.mois_de_paiment,
@@ -331,7 +441,7 @@ export class PaieUserPage implements OnInit {
                 };
               } else {
                 data = {
-                  // salaire: this.salaire,
+                  recu: this.salaire,
                   salaire: montant,
                   reste: parseInt(this.user.salaire) - montant,
                   created: Date.now(),
@@ -345,8 +455,11 @@ export class PaieUserPage implements OnInit {
               }
 
               if (this.user["salaireList"]) {
-                this.user["salaireList"].splice(index, 1, data);
+                // this.user["salaireList"].splice(index, 1, data);
+
+                this.user["salaireList"].unshift(data);
               }
+              console.log(this.user);
               this.userService
                 .addUserSalaire(this.user)
                 .then((res) => {

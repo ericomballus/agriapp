@@ -1,0 +1,36 @@
+.filebtn {
+  opacity: 0;
+  position: absolute;
+  top: -100em;
+  left: -100em;
+  display: none;
+}
+
+.uploadBtn {
+  display: none;
+}
+.thumbnailM {
+  height: 100px;
+  width: 100px;
+}
+.imgthumbnail {
+  margin-right: 10px;
+}
+ion-select::part(icon) {
+  color: #971e49;
+  opacity: 1;
+}
+ion-select::part(text) {
+  color: #545ca7;
+}
+ion-select {
+  width: 100%;
+
+  justify-content: center;
+}
+
+/* Set the flex in order to size the text width to its content */
+ion-select::part(placeholder),
+ion-select::part(text) {
+  flex: 0 0 auto;
+}

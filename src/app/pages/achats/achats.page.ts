@@ -11,6 +11,7 @@ import { DisplayImagePage } from "../display-image/display-image.page";
 import firebase from "firebase/app";
 import "firebase/storage";
 import { Router } from "@angular/router";
+import { TrackingService } from "src/app/services/tracking.service";
 
 @Component({
   selector: "app-achats",
@@ -41,7 +42,8 @@ export class AchatsPage implements OnInit {
     private userService: UserService,
     public modalController: ModalController,
     public materielService: MaterielService,
-    private router: Router
+    private router: Router,
+    public tracking: TrackingService
   ) {
     this.getMateriel();
     this.getAllMateriel();
@@ -139,6 +141,11 @@ export class AchatsPage implements OnInit {
       this.notif.presentError(
         "vous n'avez pas les autorisations necéssaires pour cette action",
         "danger"
+      );
+      const url = this.router.url;
+      this.tracking.postTrackingToFirebase(
+        "page achat",
+        `tentative suppresion ${row.name}, activité ${row["activityName"]}`
       );
     } else {
       this.database

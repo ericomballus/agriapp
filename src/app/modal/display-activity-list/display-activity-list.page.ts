@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ModalController } from "@ionic/angular";
 import { ActivitiesApiService } from "src/app/services/activities-api.service";
 import { ProjetApiService } from "src/app/services/projet-api.service";
+import { DisplayExecutantPage } from "../display-executant/display-executant.page";
 import { DisplayOneMaterielListPage } from "../display-one-materiel-list/display-one-materiel-list.page";
 
 @Component({
@@ -51,6 +52,17 @@ export class DisplayActivityListPage implements OnInit {
     this.activityService.setOneActivity(row);
     const modal = await this.modalController.create({
       component: DisplayOneMaterielListPage,
+      cssClass: "my-custom-class",
+      componentProps: {
+        activity: row,
+      },
+    });
+    return await modal.present();
+  }
+
+  async displayAllExecutant(row) {
+    const modal = await this.modalController.create({
+      component: DisplayExecutantPage,
       cssClass: "my-custom-class",
       componentProps: {
         activity: row,

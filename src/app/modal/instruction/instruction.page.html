@@ -29,7 +29,8 @@
         <div class="ion-text-center ion-text-uppercase">
           <h5>titre: {{activitie.name}}</h5>
           <h5>projet: {{activitie.projetName}}</h5>
-          <h6>montant: {{montant | currency: "FCFA":"symbol":"3.0-0":"fr"}}</h6>
+          <h5>travail: {{activitie.travauxName}}</h5>
+          <h6>cout: {{montant | currency: "FCFA":"symbol":"3.0-0":"fr"}}</h6>
         </div>
       </ion-col>
       <ion-col
@@ -47,7 +48,8 @@
       <ion-col size-md="12" size-lg="12" size-xs="12" size-sm="12" size-xl="12">
         <div class="cole">
           <div class="first">
-            <div>
+            <!--
+              <div>
               <ion-item lines="none">
                 <ion-label position="floating">executant</ion-label>
                 <ion-input
@@ -58,9 +60,9 @@
                 ></ion-input>
               </ion-item>
             </div>
+           -->
 
-            <!--
-              <div class="divint">
+            <div class="divint">
               <ion-item lines="none">
                 <ion-label position="floating">Superficie</ion-label>
                 <ion-input
@@ -82,7 +84,6 @@
                 ></ion-input>
               </ion-item>
             </div>
-            -->
           </div>
 
           <div class="second">
@@ -121,6 +122,9 @@
                 ></ion-input>
               </ion-item>
             </div>
+            <div>
+              <ion-item lines="none"> </ion-item>
+            </div>
           </div>
           <div>
             <ion-row class="header-row">
@@ -134,7 +138,7 @@
                 <div>
                   <div class="ion-text-center ion-text-uppercase">
                     <h6>description</h6>
-                    <p>{{activitie.description}}</p>
+                    <ion-label>{{activitie.description}}</ion-label>
                   </div>
                 </div>
               </ion-col>
@@ -149,8 +153,9 @@
                   class="recommandation"
                   [ngStyle]="{'background-color': '#f1f1f1' }"
                 >
-                  <div class="ion-text-uppercase with-border">
-                    <h6>recommandation</h6>
+                  <div class="ion-text-uppercase">
+                    <ion-label>recommandation</ion-label>
+
                     <ion-textarea
                       [(ngModel)]="activitie.recommandation"
                       placeholder="instruction ?"
@@ -161,12 +166,116 @@
                 </div>
               </ion-col>
             </ion-row>
-            <ion-row class="header-row">
+            <ion-row>
+              <ion-col size="12" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">
+                  <h2>Exécutants</h2>
+                </div>
+              </ion-col>
+            </ion-row>
+            <ion-row [ngStyle]="{'background-color': '#9c9797' }">
+              <ion-col size="3" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">Nom</div>
+              </ion-col>
+              <!-- -->
+              <ion-col size="3" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">
+                  main d'oeuvre
+                </div>
+              </ion-col>
+              <ion-col size="3" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">reçu</div>
+              </ion-col>
+
+              <ion-col size="3" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">action</div>
+              </ion-col>
+            </ion-row>
+          </div>
+          <div>
+            <ion-row
+              *ngFor="let user of activitie.executant; let i= index"
+              style="width: 100%; max-height: 600px"
+              class="data-row data-update"
+              [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+            >
+              <ion-col size="3" class="ion-align-self-center">
+                <div class="ion-text-center inte ion-text-uppercase">
+                  {{user.name}}
+                </div>
+              </ion-col>
+              <ion-col size="3" class="ion-align-self-center">
+                <div class="ion-text-center inte">
+                  {{activitie.coutmaindoeuvre}}
+                </div>
+              </ion-col>
+
+              <ion-col size="3" class="ion-align-self-center">
+                <div class="ion-text-center inte">
+                  <ion-input
+                    placeholder="Entrer la main d'oeuvre"
+                    type="number"
+                    [(ngModel)]="user.maindoeuvre"
+                  ></ion-input>
+                </div>
+              </ion-col>
+
+              <ion-col size="3" class="ion-align-self-center">
+                <div class="ion-text-center inte">
+                  <ion-button
+                    *ngIf="user.display !== false"
+                    (click)="saveMaindeouvre(user)"
+                    color="success"
+                    size="small"
+                  >
+                    <ion-icon name="add-circle-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button
+                    *ngIf="user.display !== false"
+                    (click)="voirPaiement(user)"
+                    color="warning"
+                    size="small"
+                  >
+                    voir
+                  </ion-button>
+                  <ion-button
+                    (click)="showMotif(user)"
+                    *ngIf="user.display == false"
+                    color="danger"
+                    size="small"
+                    fill="outline"
+                  >
+                    a été retiré
+                  </ion-button>
+                </div>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="12" class="ion-align-self-center">
+                <div class="ion-text-center ion-text-uppercase">
+                  <h6 class="reste">
+                    reste: {{reste | currency: "FCFA":"symbol":"3.0-0":"fr"}}
+                  </h6>
+                  <h6 class="recu">
+                    total reçus: {{total | currency:
+                    "FCFA":"symbol":"3.0-0":"fr"}}
+                  </h6>
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
+          <div>
+            <ion-row></ion-row>
+          </div>
+          <div>
+            <ion-row>
               <ion-col size="12" class="ion-align-self-center">
                 <div class="ion-text-center ion-text-uppercase">
                   <h3>Besoin materiél</h3>
                 </div>
               </ion-col>
+            </ion-row>
+            <ion-row [ngStyle]="{'background-color': '#9c9797' }">
               <ion-col size="2" class="ion-align-self-center">
                 <div class="ion-text-center ion-text-uppercase">Nom</div>
               </ion-col>
@@ -174,6 +283,7 @@
               <ion-col size="1" class="ion-align-self-center">
                 <div class="ion-text-center ion-text-uppercase">quantité</div>
               </ion-col>
+              <!-- -->
               <ion-col size="1" class="ion-align-self-center">
                 <div class="ion-text-center ion-text-uppercase">avaible</div>
               </ion-col>
@@ -191,6 +301,7 @@
               </ion-col>
             </ion-row>
           </div>
+
           <div>
             <ion-row
               *ngFor="let mat of activitie.materielList; let i= index"
@@ -199,7 +310,9 @@
               [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
             >
               <ion-col size="2" class="ion-align-self-center">
-                <div class="ion-text-center inte">{{mat.name}}</div>
+                <div class="ion-text-center inte ion-text-uppercase">
+                  {{mat.name}}
+                </div>
               </ion-col>
               <ion-col size="1" class="ion-align-self-center">
                 <div class="ion-text-center inte">

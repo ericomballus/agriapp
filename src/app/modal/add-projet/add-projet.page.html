@@ -20,9 +20,7 @@
     </div>
   </div>
   <div class="date">
-    <div class="input-group">.</div>
-
-    <div class="input-group">
+    <div>
       <input
         style="display: none"
         class="form-control"
@@ -44,13 +42,8 @@
         ></ion-button>
       </div>
     </div>
-    <div class="input-group">
-      <pre>{{model.day}}/{{model.month}}/{{model.year}}</pre>
-    </div>
-    <div class="input-group">
-      <pre>{{model2.day}}/{{model2.month}}/{{model2.year}}</pre>
-    </div>
-    <div class="input-group">
+
+    <div>
       <input
         style="display: none"
         class="form-control"
@@ -72,8 +65,10 @@
         ></ion-button>
       </div>
     </div>
-
-    <div class="input-group">.</div>
+  </div>
+  <div class="divdate">
+    <div class="taille">{{model.day}}/{{model.month}}/{{model.year}}</div>
+    <div class="taille">{{model2.day}}/{{model2.month}}/{{model2.year}}</div>
   </div>
   <ion-grid>
     <ion-row>

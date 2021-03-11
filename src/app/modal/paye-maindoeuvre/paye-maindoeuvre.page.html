@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar color="medium">
+    <ion-title></ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <input
+    class="uploadBtn"
+    type="file"
+    class="upload"
+    (change)="uploadFile2($event)"
+    class="filebtn"
+    #fileButton2
+  />
+
+  <ion-row>
+    <ion-col class="ion-align-self-center">
+      <ion-item lines="full">
+        <ion-label position="floating">Montant</ion-label>
+        <ion-input [(ngModel)]="montant" type="number"></ion-input>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col (click)="galerie2()" class="ion-align-self-center">
+      <ion-button
+        *ngIf="!photoURL2"
+        size="small"
+        fill="clear"
+        class="thumbnailM"
+      >
+        signature
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+      <ion-thumbnail *ngIf="photoURL2" class="thumbnailM">
+        <ion-img *ngIf="photoURL2" [src]="photoURL2"></ion-img>
+      </ion-thumbnail>
+    </ion-col>
+  </ion-row>
+  <ion-button
+    [disabled]="!file2 && !montant"
+    expand="block"
+    color="success"
+    (click)="saveMainDoeuvre()"
+    >enregistrer</ion-button
+  >
+</ion-content>

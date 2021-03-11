@@ -33,12 +33,21 @@
           <ion-label>
             <p>NOM: {{user.name}}</p>
             <p>POSTE: {{user.poste}}</p>
+            <p>STATUS: {{user.typ_employe}}</p>
             <p>TEL: {{user.mobile}}</p>
             <p>EMAIL: {{user.email}}</p>
             <p>SALAIRE: {{user.salaire}} FCFA</p>
           </ion-label>
           <ion-button (click)="presentModal()" fill="outline" slot="end"
             >Salaire</ion-button
+          >
+          <ion-button
+            color="warning"
+            *ngIf="user.typ_employe == 'temporaire'"
+            (click)="displayMaindeouvre(user)"
+            fill="outline"
+            slot="end"
+            >list</ion-button
           >
           <!--
             <ion-button
@@ -68,13 +77,13 @@
             <div class="ion-text-center ion-text-uppercase">Avance</div>
           </ion-col>
 
+          <ion-col size="3" class="ion-align-self-center">
+            <div class="ion-text-center ion-text-uppercase">Date</div>
+          </ion-col>
           <ion-col size="2" class="ion-align-self-center">
             <div class="ion-text-center ion-text-uppercase">Mois</div>
           </ion-col>
           <ion-col size="2" class="ion-align-self-center">
-            <div class="ion-text-center ion-text-uppercase">Année</div>
-          </ion-col>
-          <ion-col size="3" class="ion-align-self-center">
             <div class="ion-text-right ion-text-uppercase">signature</div>
           </ion-col>
         </ion-row>
@@ -89,26 +98,27 @@
             {{row.salaire | currency: "FCFA":"symbol":"3.0-0":"fr"}}
           </div>
           <div class="ion-text-center inte" *ngIf="row.avance">
-            Reste: {{user.salaire - row.avance | currency:
-            "FCFA":"symbol":"3.0-0":"fr"}}
+            Reste: {{row.reste | currency: "FCFA":"symbol":"3.0-0":"fr"}}
           </div>
         </ion-col>
         <ion-col size="2" class="ion-align-self-center">
           <div class="ion-text-center inte" *ngIf="row.avance">
-            {{row.avance | currency: "FCFA":"symbol":"3.0-0":"fr"}}
+            {{row.recu | currency: "FCFA":"symbol":"3.0-0":"fr"}}
           </div>
           <div class="ion-text-center inte" *ngIf="!row.avance">
             {{0 | currency: "FCFA":"symbol":"3.0-0":"fr"}}
           </div>
         </ion-col>
 
-        <ion-col size="2" class="ion-align-self-center">
-          <div class="ion-text-center inte">{{row.mont_name }}</div>
-        </ion-col>
-        <ion-col size="2" class="ion-align-self-center">
-          <div class="ion-text-center inte">{{row.year}}</div>
-        </ion-col>
         <ion-col size="3" class="ion-align-self-center">
+          <div class="ion-text-center inte">
+            {{ row.created | date:'medium' }}
+          </div>
+        </ion-col>
+        <ion-col size="2" class="ion-align-self-center">
+          <div class="ion-text-center inte">{{row.mont_name}}</div>
+        </ion-col>
+        <ion-col size="2" class="ion-align-self-center">
           <div class="ion-text-right" (click)="zoomImage(row.signature)">
             <ion-item color="ligth" lines="none">
               <ion-thumbnail slot="end" class="thumbnailM">

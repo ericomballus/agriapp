@@ -32,6 +32,7 @@ export class UserService {
   }
 
   addUserSalaire(user) {
+    // user["salaireList"] = [];
     return new Promise((resolve, reject) => {
       let database = this.database.list("agriUser");
       database

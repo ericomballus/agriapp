@@ -7,6 +7,7 @@ import { AngularFireStorage } from "@angular/fire/storage";
 import * as firebsase from "firebase";
 import { NotificationService } from "src/app/services/notification.service";
 import { Router } from "@angular/router";
+import { TrackingService } from "src/app/services/tracking.service";
 @Component({
   selector: "app-add-activitie-name",
   templateUrl: "./add-activitie-name.page.html",
@@ -24,7 +25,8 @@ export class AddActivitieNamePage implements OnInit {
     public materielService: MaterielService,
     private database: AngularFireDatabase,
     private notif: NotificationService,
-    public router: Router
+    public router: Router,
+    public tracking: TrackingService
   ) {
     this.getActivitieName();
   }
@@ -37,11 +39,13 @@ export class AddActivitieNamePage implements OnInit {
       this.tabRole.includes(2) ||
       this.tabRole.includes(3)
     ) {
+      const url = this.router.url;
       this.router.navigateByUrl("home");
       this.notif.presentError(
         "vous n'avez pas les autorisations necéssaires pour cette page",
         "danger"
       );
+      this.tracking.postTrackingToFirebase("page nom activité", url);
     } else {
     }
   }

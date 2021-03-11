@@ -83,7 +83,7 @@ export class NotificationService {
     const loading = await this.loadingController.create({
       cssClass: "my-custom-class",
       message: "Please wait...",
-      duration: 25000,
+      duration: 5000,
     });
     await loading.present();
 

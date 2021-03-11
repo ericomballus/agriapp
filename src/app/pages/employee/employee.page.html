@@ -260,6 +260,27 @@
           class="ion-align-self-center"
         >
           <ion-item>
+            <ion-label>type d'employé</ion-label>
+            <ion-select
+              placeholder="Select One"
+              (ionChange)=" typeEmploye($event)"
+            >
+              <ion-select-option value="temporaire"
+                >temporaire</ion-select-option
+              >
+              <ion-select-option value="permanant">permanant</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+
+        <ion-col
+          size-xs="12"
+          size-md="6"
+          size-lg="6"
+          size-sm="12"
+          class="ion-align-self-center"
+        >
+          <ion-item>
             <ion-label>User Role</ion-label>
             <ion-select
               placeholder="Select One"
@@ -289,6 +310,14 @@
         </div>
       </ion-col>
     </ion-row>
+    <ion-segment (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="permanant">
+        <ion-label>Permanants</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="temporaire">
+        <ion-label>Temporaires</ion-label>
+      </ion-segment-button>
+    </ion-segment>
     <ion-row>
       <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="12"> </ion-col>
       <ion-col size-xs="12" size-md="6" size-lg="6" size-sm="12">

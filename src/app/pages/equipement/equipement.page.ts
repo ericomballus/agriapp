@@ -7,6 +7,7 @@ import { AngularFireStorage } from "@angular/fire/storage";
 import * as firebsase from "firebase";
 import { Router } from "@angular/router";
 import { NotificationService } from "src/app/services/notification.service";
+import { TrackingService } from "src/app/services/tracking.service";
 
 @Component({
   selector: "app-equipement",
@@ -25,7 +26,8 @@ export class EquipementPage implements OnInit {
     public materielService: MaterielService,
     private database: AngularFireDatabase,
     public notif: NotificationService,
-    public router: Router
+    public router: Router,
+    public tracking: TrackingService
   ) {
     this.getMateriel();
   }
@@ -37,11 +39,13 @@ export class EquipementPage implements OnInit {
       this.tabRole.includes(2) ||
       this.tabRole.includes(3)
     ) {
+      const url = this.router.url;
       this.router.navigateByUrl("home");
       this.notif.presentError(
         "vous n'avez pas les autorisations necéssaires pour cette page",
         "danger"
       );
+      this.tracking.postTrackingToFirebase("page equipement", url);
     } else {
     }
   }
