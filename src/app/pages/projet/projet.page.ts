@@ -211,14 +211,22 @@ export class ProjetPage implements OnInit {
       (data: Array<any>) => {
         console.log(data);
         this.activitiesTab = data;
-        this.activitiesTab.forEach((projet) => {
-          let nbr_activites = 0;
-          let travaux = projet["travauxlist"];
-          travaux.forEach((tra) => {
-            nbr_activites = nbr_activites + tra["activitieList"].length;
+        if (this.activitiesTab && this.activitiesTab.length) {
+          this.activitiesTab.forEach((projet) => {
+            let nbr_activites = 0;
+            let travaux = projet["travauxlist"];
+            if (travaux && travaux.length) {
+              travaux.forEach((tra) => {
+                if (tra["activitieList"] && tra["activitieList"].length) {
+                  nbr_activites = nbr_activites + tra["activitieList"].length;
+                } else {
+                  nbr_activites = nbr_activites;
+                }
+              });
+              projet["nbractivite"] = nbr_activites;
+            }
           });
-          projet["nbractivite"] = nbr_activites;
-        });
+        }
       },
       (err) => {
         // this.getActivityFromFirebase();
@@ -264,13 +272,36 @@ export class ProjetPage implements OnInit {
   }
 
   async displayPorjetTravaux(row) {
+    row["add"] = true;
     this.projetService.setProjet(row);
+    this.projetService.setOldProjet(row);
     const modal = await this.modalController.create({
       component: DisplayTravauxListPage,
       cssClass: "my-custom-class",
       componentProps: {
         projet: row,
       },
+    });
+    modal.onWillDismiss().then(async (result) => {
+      console.log(result);
+      if (result.data["somedata"]) {
+        let projet = result.data["projet"];
+
+        let activity = this.activitiService.getOneActivity(); // array des activités
+
+        let travail = this.projetService.getTravail();
+
+        let index = activity.length - 1; // je recupére l'index de l'activité ajouté
+        let act = activity[index];
+        act["projetName"] = projet["name"];
+        act["travauxName"] = travail["name"];
+        this.activitiService
+          .postActivitieToFirebase(act)
+          .then((res) => console.log(res));
+        this.projetService.updateProjet(projet).then((res) => {
+          this.notif.presentMessage("activité correctement ajouté au projet");
+        });
+      }
     });
     return await modal.present();
   }

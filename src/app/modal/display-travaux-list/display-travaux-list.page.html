@@ -4,7 +4,12 @@
       <ion-button (click)="dismiss()">
         <ion-icon slot="icon-only" name="close-outline"></ion-icon>
       </ion-button>
+      <ion-button (click)="addTravail()">
+        ajouter un travail
+        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
+
     <ion-title>PROJET: {{projet.name}}</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -50,13 +55,13 @@
         <ion-col size="3" class="ion-align-self-center">
           <div
             class="ion-text-center"
-            (click)="displayProjetActivity(row, row.activitieList)"
+            (click)="displayProjetActivity(row, row.activitieList, i)"
           >
-            {{row.activitieList.length}}
+            {{row.activitieList ? row.activitieList.length : 0}}
           </div>
         </ion-col>
         <ion-col size="3" class="ion-align-self-center">
-          <div class="ion-text-center">{{row.materiel}}</div>
+          <div class="ion-text-center">{{row.materiel ? row.materiel : 0}}</div>
         </ion-col>
       </ion-row>
     </ion-col>

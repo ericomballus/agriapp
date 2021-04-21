@@ -15,6 +15,8 @@ export class ProjetApiService {
   projet = new BehaviorSubject([]);
   newprojet: any;
   projetData: any;
+  travail: any;
+  projetDataOld: any;
   constructor(private http: HttpClient, private database: AngularFireDatabase) {
     let ref = firebase.database().ref("agriProjet");
     let a = ref
@@ -41,11 +43,37 @@ export class ProjetApiService {
     this.projetData = data;
   }
 
+  setOldProjet(data) {
+    console.log(data);
+    this.projetDataOld = data;
+  }
+
+  setTravaux(data) {
+    console.log(data);
+    this.travail = data;
+  }
+
+  getTravail() {
+    if (isNullOrUndefined(this.travail)) {
+      return 0;
+    } else {
+      return this.travail;
+    }
+  }
+
   getProjet() {
     if (isNullOrUndefined(this.projetData)) {
       return 0;
     } else {
       return this.projetData;
+    }
+  }
+
+  getOldProjet() {
+    if (isNullOrUndefined(this.projetDataOld)) {
+      return 0;
+    } else {
+      return this.projetDataOld;
     }
   }
 
@@ -98,5 +126,12 @@ export class ProjetApiService {
         localStorage.setItem("projet", JSON.stringify(tab));
       });
     return this.projet;
+  }
+
+  updateProjet(projet) {
+    return new Promise((resolve, reject) => {
+      let database = this.database.list("agriProjet");
+      database.update(projet.key, projet).then((res) => resolve(res));
+    });
   }
 }

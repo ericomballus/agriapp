@@ -8,51 +8,217 @@
 
 <ion-content>
   <ion-row>
-    <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="12"> </ion-col>
-    <ion-col size-xs="12" size-md="6" size-lg="6" size-sm="12">
+    <ion-col>
+      <div class="ion-text-center ion-text-uppercase">
+        <h2>fiche employé</h2>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col
+      offset-md="3"
+      offset-lg="3"
+      class="ion-align-self-center"
+      size-xs="12"
+      size-md="3"
+      size-lg="3"
+      size-sm="12"
+    >
+      <ion-item lines="none">
+        <h3>Photo profil</h3>
+        <ion-label position="floating"></ion-label>
+        <ion-thumbnail
+          *ngIf="employe.photoUser"
+          class="imgthumbnail"
+          (click)="zoomImage(employe.photoUser)"
+        >
+          <ion-img [src]="employe.photoUser"></ion-img>
+        </ion-thumbnail>
+        <ion-icon
+          *ngIf="!employe.photoUser"
+          slot="start"
+          name="person-outline"
+        ></ion-icon>
+      </ion-item>
+    </ion-col>
+    <ion-col
+      class="ion-align-self-center"
+      size-xs="12"
+      size-md="6"
+      size-lg="6"
+      size-sm="12"
+    >
+      <ion-item lines="none">
+        <h3>photo cni</h3>
+        <ion-label position="floating"></ion-label>
+
+        <ion-thumbnail
+          *ngIf="employe.cniUser"
+          class="imgthumbnail"
+          (click)="zoomImage(employe.cniUser)"
+        >
+          <ion-img [src]="employe.cniUser"></ion-img>
+        </ion-thumbnail>
+        <ion-icon
+          *ngIf="!employe.cniUser"
+          slot="start"
+          name="person-outline"
+        ></ion-icon>
+      </ion-item>
+    </ion-col>
+    <ion-col
+      class="ion-align-self-center"
+      size-xs="12"
+      size-md="6"
+      size-lg="6"
+      size-sm="12"
+    >
+      <ion-item lines="none">
+        <ion-label position="floating">Nom</ion-label>
+        <ion-input [(ngModel)]="employe.name" type="texte"></ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col
+      class="ion-align-self-center"
+      size-xs="12"
+      size-md="6"
+      size-lg="6"
+      size-sm="12"
+    >
+      <ion-item lines="none">
+        <ion-label position="floating">Prénom</ion-label>
+        <ion-input [(ngModel)]="employe.firstname" type="texte"></ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col
+      class="ion-align-self-center"
+      size-xs="12"
+      size-md="6"
+      size-lg="6"
+      size-sm="12"
+    >
+      <ion-item lines="none">
+        <ion-label position="floating">Poste</ion-label>
+        <ion-input [(ngModel)]="employe.poste" type="texte"></ion-input>
+      </ion-item>
+    </ion-col>
+
+    <ion-col
+      class="ion-align-self-center"
+      size-xs="12"
+      size-md="6"
+      size-lg="6"
+      size-sm="12"
+    >
+      <ion-item lines="none">
+        <ion-label position="floating">Salaire</ion-label>
+        <ion-input [(ngModel)]="employe.salaire" type="number"></ion-input>
+      </ion-item>
+    </ion-col>
+
+    <ion-col
+      class="ion-align-self-center"
+      size-xs="12"
+      size-md="6"
+      size-lg="6"
+      size-sm="12"
+    >
+      <ion-item lines="none">
+        <ion-label position="floating">type employé</ion-label>
+        <ion-input [(ngModel)]="employe.typ_employe" type="texte"></ion-input>
+      </ion-item>
+    </ion-col>
+
+    <ion-col
+      class="ion-align-self-center"
+      size-xs="12"
+      size-md="6"
+      size-lg="6"
+      size-sm="12"
+    >
+      <ion-item lines="none">
+        <ion-label position="floating">employé role</ion-label>
+        <ion-input [(ngModel)]="employe.status" type="texte"></ion-input>
+      </ion-item>
+    </ion-col>
+
+    <ion-col
+      class="ion-align-self-center"
+      size-xs="12"
+      size-md="6"
+      size-lg="6"
+      size-sm="12"
+    >
+      <ion-item lines="none">
+        <ion-label position="floating">Telephone</ion-label>
+        <ion-input [(ngModel)]="employe.mobile" type="texte"></ion-input>
+      </ion-item>
+    </ion-col>
+
+    <ion-col
+      class="ion-align-self-center"
+      size-xs="12"
+      size-md="6"
+      size-lg="6"
+      size-sm="12"
+    >
+      <ion-item lines="none">
+        <ion-label position="floating">Date de naissance</ion-label>
+        <ion-datetime
+          displayFormat="DDDD MMM D, YYYY"
+          (ionChange)="birthday($event)"
+          [value]="employe.dateNaissance"
+        ></ion-datetime>
+      </ion-item>
+    </ion-col>
+
+    <ion-col
+      class="ion-align-self-center"
+      size-xs="12"
+      size-md="6"
+      size-lg="6"
+      size-sm="12"
+    >
+      <ion-item lines="none">
+        <ion-label position="floating">Lieu de naissance</ion-label>
+        <ion-input
+          [(ngModel)]="employe.lieudenaissance"
+          type="texte"
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+
+    <ion-col
+      class="ion-align-self-center"
+      size-xs="12"
+      size-md="6"
+      size-lg="6"
+      size-sm="12"
+    >
+      <ion-item>
+        <ion-label>User Role</ion-label>
+        <ion-select placeholder="Select One" (ionChange)="selectEvent($event)">
+          <ion-select-option
+            *ngFor="let role of roles; let i= index"
+            [value]="role"
+            >{{role.name}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+    </ion-col>
+
+    <ion-col offset="3" size-xs="12" size-md="6" size-lg="6" size-sm="12">
       <ion-list>
-        <ion-item>
-          <ion-thumbnail *ngIf="employe.photoUser" class="imgthumbnail">
-            <ion-img [src]="employe.photoUser"></ion-img>
-          </ion-thumbnail>
-          <ion-icon
-            *ngIf="!employe.photoUser"
-            slot="start"
-            name="person-outline"
-          ></ion-icon>
-          <ion-label> </ion-label>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label position="floating">Name</ion-label>
-          <ion-input [(ngModel)]="employe.name" type="texte"></ion-input>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label position="floating">Salaire</ion-label>
-          <ion-input [(ngModel)]="employe.salaire" type="number"></ion-input>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label position="floating">Telephone</ion-label>
-          <ion-input [(ngModel)]="employe.mobile" type="texte"></ion-input>
-        </ion-item>
-        <ion-item lines="none">
+        <!--
+          <ion-item lines="none">
           <ion-label position="floating">Email: </ion-label>
           <ion-input [(ngModel)]="employe.email" type="texte"></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-label>User Role</ion-label>
-          <ion-select
-            placeholder="Select One"
-            (ionChange)="selectEvent($event)"
-          >
-            <ion-select-option
-              *ngFor="let role of roles; let i= index"
-              [value]="role"
-              >{{role.name}}</ion-select-option
-            >
-          </ion-select>
-        </ion-item>
+       -->
       </ion-list>
-      <ion-button color="danger" (click)="updatEmploye()"> update</ion-button>
+      <ion-button size="full" color="danger" (click)="updatEmploye()">
+        update</ion-button
+      >
     </ion-col>
     <ion-col size-xs="12" size-md="3" size-lg="3" size-sm="12"> </ion-col>
   </ion-row>

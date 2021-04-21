@@ -21,6 +21,7 @@ import { ProjetApiService } from "src/app/services/projet-api.service";
 import { TravauxBeforeSavePage } from "../travaux-before-save/travaux-before-save.page";
 import { Router } from "@angular/router";
 import { AddActivieModalPage } from "../add-activie-modal/add-activie-modal.page";
+import { SelectEmployePage } from "../select-employe/select-employe.page";
 const { Network } = Plugins;
 
 @Component({
@@ -55,8 +56,10 @@ export class AddTravauxPage implements OnInit {
   travailName = "";
   ionicForm: FormGroup;
   projet: any;
+  maindeouvre;
   tabTravaux = [];
   displayForm = true;
+  add = false;
   constructor(
     public formBuilder: FormBuilder,
     public activitiService: ActivitiesApiService,
@@ -75,6 +78,9 @@ export class AddTravauxPage implements OnInit {
     //this.getActivitieName();
     this.getAllActivities();
     this.projet = this.projetService.getProjet();
+    if (this.projet["add"]) {
+      this.add = true;
+    }
     // this.getMateriel();
   }
 
@@ -87,7 +93,7 @@ export class AddTravauxPage implements OnInit {
         [
           Validators.required,
           Validators.minLength(2),
-          Validators.maxLength(20),
+          Validators.maxLength(1000),
         ],
       ],
       description: [
@@ -95,7 +101,7 @@ export class AddTravauxPage implements OnInit {
         [
           Validators.required,
           Validators.minLength(5),
-          Validators.maxLength(1000),
+          Validators.maxLength(10000),
         ],
       ],
       /* executant: [
@@ -161,6 +167,9 @@ export class AddTravauxPage implements OnInit {
     this.isSubmitted = true;
     if (!this.ionicForm.valid) {
       console.log("Please provide all the required values!");
+      this.notif.presentAlert(
+        `veillez fournir  le nom et la description du travail`
+      );
       return false;
     } else {
       console.log(this.ionicForm.value);
@@ -216,9 +225,18 @@ export class AddTravauxPage implements OnInit {
     await alert.present();
   }
   async saveProjet() {
-    console.log(this.projet);
-    console.log(this.tabTravaux);
-    this.projet["travauxlist"] = this.tabTravaux;
+    //console.log(this.projet);
+    // console.log(this.tabTravaux);
+    if (this.projet["travauxlist"]) {
+      this.projet["travauxlist"] = [
+        ...this.projet["travauxlist"],
+        ...this.tabTravaux,
+      ];
+      this.projet["TravauxListToAdd"] = this.tabTravaux;
+    } else {
+      this.projet["travauxlist"] = this.tabTravaux;
+    }
+
     this.projetService.setProjet(this.projet);
     const modal = await this.modalController.create({
       component: TravauxBeforeSavePage,
@@ -229,7 +247,13 @@ export class AddTravauxPage implements OnInit {
     modal.onWillDismiss().then((data) => {
       console.log(data);
       if (data["data"] && data["data"]["save"]) {
-        this.router.navigateByUrl("projet");
+        if (this.projet["add"]) {
+          setTimeout(() => {
+            this.modalController.dismiss();
+          });
+        } else {
+          this.router.navigateByUrl("projet");
+        }
       }
     });
     return await modal.present();
@@ -309,6 +333,7 @@ export class AddTravauxPage implements OnInit {
           prix = prix + parseInt(elt.price) * parseInt(elt.qty);
         });
         tab["coutMateriel"] = prix;
+        //this.maindeouvre= parseInt(tab["coutmaindoeuvre"])
         this.activitiesList.push(tab);
         //this.name = this.activitieName;
         // this.nameKey = data["data"]["activitie"]["key"];
@@ -373,6 +398,31 @@ export class AddTravauxPage implements OnInit {
         this.activitieName = data["data"]["activitie"]["name"];
         this.name = this.activitieName;
         this.nameKey = data["data"]["activitie"]["key"];
+      }
+    });
+    return await modal.present();
+  }
+
+  async addExecutant(row) {
+    console.log(this.nameList);
+
+    const modal = await this.modalController.create({
+      component: SelectEmployePage,
+      cssClass: "my-custom-class",
+      backdropDismiss: false,
+      componentProps: {},
+    });
+    modal.onWillDismiss().then((data) => {
+      console.log(data);
+      if (
+        data["data"] &&
+        data["data"]["employeList"] &&
+        data["data"]["employeList"].length
+      ) {
+        // this.executantList = data["data"]["employeList"];
+        row.executant = data["data"]["employeList"];
+      } else {
+        // this.executantList = [];
       }
     });
     return await modal.present();

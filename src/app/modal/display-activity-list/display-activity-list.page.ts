@@ -23,20 +23,26 @@ export class DisplayActivityListPage implements OnInit {
     console.log(this.projet);
 
     let travaux1 = this.projet["travauxlist"];
-    travaux1.forEach((elt) => {
-      let materiel = 0;
-      let activityList = elt["activitieList"];
-      elt["activitieList"].forEach((activity) => {
-        activity["travailName"] = elt.name;
-      });
+    if (travaux1 && travaux1.length) {
+      travaux1.forEach((elt) => {
+        let materiel = 0;
+        let activityList = elt["activitieList"];
+        if (activityList && activityList.length) {
+          activityList.forEach((activity) => {
+            activity["travailName"] = elt.name;
+          });
+          this.activilist = [...this.activilist, ...activityList];
+          activityList.forEach((activi) => {
+            if (activi["materielList"] && activi["materielList"].length) {
+              materiel = materiel + activi["materielList"].length;
+            }
+          });
+          elt["materiel"] = materiel;
+        }
 
-      this.activilist = [...this.activilist, ...elt["activitieList"]];
-      activityList.forEach((activi) => {
-        materiel = materiel + activi["materielList"].length;
+        console.log(this.activilist);
       });
-      elt["materiel"] = materiel;
-    });
-    console.log(this.activilist);
+    }
   }
 
   ngOnInit() {}

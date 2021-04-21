@@ -191,14 +191,12 @@ export class AddActivieModalPage implements OnInit {
     let fin = new Date(
       this.model2.year + "-" + this.model2.month + "-" + day2
     ).getTime();
-    console.log(new Date(Date.now()).getTime());
+
     let today = new Date(Date.now()).getTime();
     let start = debut - today;
     let remaining = fin - today;
     let res = this.getDuration(start);
     let res2 = this.getDuration(remaining);
-    console.log(res + 1);
-    console.log(res2 + 1);
 
     this.isSubmitted = true;
     if (!this.ionicForm.valid) {

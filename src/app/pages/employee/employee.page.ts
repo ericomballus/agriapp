@@ -30,8 +30,9 @@ export class EmployeePage implements OnInit {
   photoURL2: string;
   videoURL: string;
   imageUrl: string;
+  dataNaissance: string;
   userRole: number;
-  type_employe: String;
+  type_employe: string;
   disableField = false;
   tabRole = [];
   roles = [
@@ -93,6 +94,22 @@ export class EmployeePage implements OnInit {
           Validators.maxLength(20),
         ],
       ],
+      firstname: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(20),
+        ],
+      ],
+      lieudenaissance: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(20),
+        ],
+      ],
       password: [
         "",
         [
@@ -128,7 +145,9 @@ export class EmployeePage implements OnInit {
       onlyself: true,
     });
   }
-
+  birthday(e) {
+    this.dataNaissance = e.target.value;
+  }
   get errorControl() {
     return this.ionicForm.controls;
   }
@@ -154,7 +173,10 @@ export class EmployeePage implements OnInit {
         emp.photoUser,
         emp.cniUser,
         emp.password,
-        emp.salaire
+        emp.salaire,
+        emp.firstname,
+        emp.lieudenaissance,
+        this.type_employe
       );
       console.log(employe);
       if (this.userRole) {
@@ -162,7 +184,10 @@ export class EmployeePage implements OnInit {
       }
 
       if (this.type_employe) {
-        employe["typ_employe"] = this.type_employe;
+        // employe["typ_employe"] = this.type_employe;
+      }
+      if (this.dataNaissance) {
+        employe["dateNaissance"] = this.dataNaissance;
       }
       this.auth.inscription(employe.email, employe.password).then((res) => {
         console.log(res);
@@ -230,7 +255,8 @@ export class EmployeePage implements OnInit {
       );
     } else {
       console.log(user);
-      this.database
+      user["delete"] = true;
+      /* this.database
         .list("agriUser")
         .remove(user.key)
         .then((res) => {
@@ -238,7 +264,40 @@ export class EmployeePage implements OnInit {
         })
         .catch((err) => {
           console.log(err);
-        });
+        }); */
+      this.userService.updateUser(user).then((res) => {
+        this.getEmployees();
+        this.notif.presentMessage("l'employé a été retiré");
+      });
+    }
+  }
+  restoreEmploye(user) {
+    if (this.disableField) {
+      this.notif.presentError(
+        "vous n'avez pas les autorisations necéssaires pour cette action",
+        "danger"
+      );
+      const url = this.router.url;
+      this.tracking.postTrackingToFirebase(
+        "page achat",
+        `tentative suppresion ${user.name}`
+      );
+    } else {
+      console.log(user);
+      user["delete"] = false;
+      /* this.database
+        .list("agriUser")
+        .remove(user.key)
+        .then((res) => {
+          this.getEmployees();
+        })
+        .catch((err) => {
+          console.log(err);
+        }); */
+      this.userService.updateUser(user).then((res) => {
+        this.getEmployees();
+        this.notif.presentMessage("l'employé a été reintégré");
+      });
     }
   }
   updateEmploye(user) {

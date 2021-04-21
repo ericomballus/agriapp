@@ -7,6 +7,8 @@ import firebase from "firebase/app";
 import "firebase/storage";
 import { NotificationService } from "src/app/services/notification.service";
 import { Router } from "@angular/router";
+import { ModalController } from "@ionic/angular";
+import { DisplayImagePage } from "../display-image/display-image.page";
 
 @Component({
   selector: "app-update-employe",
@@ -15,6 +17,7 @@ import { Router } from "@angular/router";
 })
 export class UpdateEmployePage implements OnInit {
   employe: Employe;
+  dataNaissance: string;
   roles = [
     { name: "Admin", id: 0 },
     { name: "Manager", id: 1 },
@@ -26,7 +29,8 @@ export class UpdateEmployePage implements OnInit {
     private database: AngularFireDatabase,
     public auth: AuthentificationService,
     public notif: NotificationService,
-    public router: Router
+    public router: Router,
+    public modalController: ModalController
   ) {
     this.employe = this.userService.getEmploye();
     if (this.employe.tabRole) {
@@ -45,7 +49,10 @@ export class UpdateEmployePage implements OnInit {
       this.notif.presentMessage("mise a jour effectué!!");
     });
   }
-
+  birthday(e) {
+    this.dataNaissance = e.target.value;
+    this.employe["dateNaissance"] = this.dataNaissance;
+  }
   selectEvent(ev) {
     console.log(ev.detail.value);
     let id = ev.detail.value.id;
@@ -56,5 +63,19 @@ export class UpdateEmployePage implements OnInit {
     /* tab.forEach((materiel) => {
       this.besoinMateriel = this.besoinMateriel + "," + materiel.name;
     }); */
+  }
+
+  async zoomImage(url) {
+    this.userService.setImage(url);
+    const modal = await this.modalController.create({
+      component: DisplayImagePage,
+      cssClass: "my-custom-class",
+      backdropDismiss: false,
+      componentProps: {},
+    });
+    modal.onWillDismiss().then((data) => {
+      console.log(data);
+    });
+    return await modal.present();
   }
 }

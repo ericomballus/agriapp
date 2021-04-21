@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { ModalController } from "@ionic/angular";
 import { ActivitiesApiService } from "src/app/services/activities-api.service";
+import { AddActivieModalPage } from "../add-activie-modal/add-activie-modal.page";
+import { AjouteractivitePage } from "../ajouteractivite/ajouteractivite.page";
 import { DisplayOneMaterielListPage } from "../display-one-materiel-list/display-one-materiel-list.page";
 
 @Component({
@@ -9,7 +11,7 @@ import { DisplayOneMaterielListPage } from "../display-one-materiel-list/display
   styleUrls: ["./display-one-activity-list.page.scss"],
 })
 export class DisplayOneActivityListPage implements OnInit {
-  activity: any;
+  activity = [];
   constructor(
     public activityService: ActivitiesApiService,
     public modalController: ModalController
@@ -34,6 +36,30 @@ export class DisplayOneActivityListPage implements OnInit {
       componentProps: {
         activity: row,
       },
+    });
+    return await modal.present();
+  }
+
+  async addActivity() {
+    // this.activityService.setOneActivity(row);  AjouteractivitePage,
+
+    const modal = await this.modalController.create({
+      component: AddActivieModalPage,
+      // cssClass: "my-custom-class",
+      backdropDismiss: false,
+      componentProps: {},
+    });
+    modal.onWillDismiss().then((result) => {
+      console.log(result);
+      if (result.data["activitie"]) {
+        this.activity.push(result.data["activitie"]);
+        this.activityService.setOneActivity(this.activity);
+        setTimeout(() => {
+          this.modalController.dismiss({
+            somedata: true,
+          });
+        }, 1000);
+      }
     });
     return await modal.present();
   }

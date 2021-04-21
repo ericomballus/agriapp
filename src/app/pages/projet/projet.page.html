@@ -50,12 +50,20 @@
           <div class="ion-text-center" (click)="displayPeriode(row)">voir</div>
         </ion-col>
         <ion-col size="3" class="ion-align-self-center">
-          <div class="ion-text-center" (click)="displayPorjetTravaux(row)">
+          <div
+            class="ion-text-center"
+            (click)="displayPorjetTravaux(row)"
+            *ngIf="row.travauxlist"
+          >
             {{row.travauxlist.length}}
           </div>
         </ion-col>
         <ion-col size="3" class="ion-align-self-center">
-          <div class="ion-text-center" (click)="displayProjetActivity(row)">
+          <div
+            class="ion-text-center"
+            (click)="displayProjetActivity(row)"
+            *ngIf="row.travauxlist"
+          >
             {{row.nbractivite}}
           </div>
         </ion-col>

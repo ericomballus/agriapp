@@ -1,12 +1,15 @@
 <ion-header>
   <ion-toolbar color="medium">
     <ion-title></ion-title>
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" *ngIf="!add">
       <ion-back-button defaultHref="/add-projet"></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="saveProjet()">
+      <ion-button [disabled]="tabTravaux.length == 0" (click)="saveProjet()">
         <ion-icon slot="icon-only" name="save-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="dismiss()" *ngIf="add">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -24,78 +27,10 @@
       </ion-row>
     </div>
   </div>
-  <!--
-  <div>
-    <div>
-      <ion-row>
-        <ion-col>
-          <div class="ion-text-uppercase ion-text-center">
-            <h6>planifier l'éxcution</h6>
-          </div>
-        </ion-col>
-      </ion-row>
-    </div>
-  </div>
-  <div class="date">
-    <div class="input-group">.</div>
 
-    <div class="input-group">
-      <input
-        style="display: none"
-        class="form-control"
-        placeholder="yyyy-mm-dd"
-        name="dp"
-        ngbDatepicker
-        #d="ngbDatepicker"
-        [(ngModel)]="model"
-      />
-      <div class="input-group-append">
-        <ion-button
-          fill="clear"
-          color="primary"
-          size="small"
-          class="btn btn-outline-secondary calendar"
-          (click)="d.toggle()"
-          type="button"
-          >Debut <ion-icon name="calendar"></ion-icon
-        ></ion-button>
-      </div>
-    </div>
-    <div class="input-group">
-      <pre>{{model.day}}/{{model.month}}/{{model.year}}</pre>
-    </div>
-    <div class="input-group">
-      <pre>{{model2.day}}/{{model2.month}}/{{model2.year}}</pre>
-    </div>
-    <div class="input-group">
-      <input
-        style="display: none"
-        class="form-control"
-        placeholder="yyyy-mm-dd"
-        name="dp2"
-        ngbDatepicker
-        #d2="ngbDatepicker"
-        [(ngModel)]="model2"
-      />
-      <div class="input-group-append">
-        <ion-button
-          fill="clear"
-          color="warning"
-          size="small"
-          class="btn btn-outline-secondary calendar"
-          (click)="d2.toggle()"
-          type="button"
-          >Fin <ion-icon name="calendar"></ion-icon
-        ></ion-button>
-      </div>
-    </div>
-
-    <div class="input-group">.</div>
-  </div>
-  -->
   <ion-grid>
-    <ion-row>
-      <ion-col size-md="12" size-lg="12" size-xs="12" size-sm="12" size-xl="12">
+    <ion-row *ngIf="!add">
+      <ion-col size-md="12" size-lg="12" size-xs="6" size-sm="6" size-xl="12">
         <div class="cole">
           <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
             <div>
@@ -215,7 +150,7 @@
 
                         <ion-col size="2" class="ion-align-self-center">
                           <div class="ion-text-center ion-text-uppercase">
-                            éxécution
+                            éxécutant
                           </div>
                         </ion-col>
                         <ion-col size="2" class="ion-align-self-center">
@@ -223,14 +158,19 @@
                             date début
                           </div>
                         </ion-col>
-                        <ion-col size="4" class="ion-align-self-center">
+                        <ion-col size="2" class="ion-align-self-center">
                           <div class="ion-text-center ion-text-uppercase">
                             materiels
                           </div>
                         </ion-col>
                         <ion-col size="2" class="ion-align-self-center">
                           <div class="ion-text-center ion-text-uppercase">
-                            Budget
+                            Cout matériel
+                          </div>
+                        </ion-col>
+                        <ion-col size="2" class="ion-align-self-center">
+                          <div class="ion-text-center ion-text-uppercase">
+                            Main d'oeuvre
                           </div>
                         </ion-col>
                       </ion-row>
@@ -248,7 +188,10 @@
                         <div class="ion-text-center">{{row.name}}</div>
                       </ion-col>
                       <ion-col size="2" class="ion-align-self-center">
-                        <div class="ion-text-center">
+                        <div
+                          class="ion-text-center"
+                          (click)="addExecutant(row)"
+                        >
                           {{row.executant.length}}
                         </div>
                       </ion-col>
@@ -257,7 +200,7 @@
                           {{row.startAt | date:'medium'}}
                         </div>
                       </ion-col>
-                      <ion-col size="4" class="ion-align-self-center">
+                      <ion-col size="2" class="ion-align-self-center">
                         <div class="ion-text-center">
                           {{row.besoinMateriel}}
                         </div>
@@ -265,7 +208,221 @@
 
                       <ion-col size="2" class="ion-align-self-center">
                         <div class="ion-text-center ion-text-uppercase">
-                          Total dépense: {{row.coutMateriel}}
+                          {{row.coutMateriel ? row.coutMateriel : 0}} Fcfa
+                        </div>
+                      </ion-col>
+                      <ion-col size="2" class="ion-align-self-center">
+                        <div class="ion-text-center ion-text-uppercase">
+                          {{row.coutmaindoeuvre ? row.coutmaindoeuvre : 0}} Fcfa
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </div>
+            <ion-row>
+              <ion-col>
+                <div
+                  class="ion-text-center"
+                  *ngIf="activitiesList && activitiesList.length "
+                >
+                  <ion-button type="submit" color="danger" size="small"
+                    >Ajouter le travail au projet</ion-button
+                  >
+                </div>
+              </ion-col>
+            </ion-row>
+          </form>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="add">
+      <ion-col>
+        <div class="cole">
+          <form [formGroup]="ionicForm" (ngSubmit)="submitForm()" novalidate>
+            <div>
+              <div>
+                <ion-row>
+                  <ion-col>
+                    <div class="ion-text-uppercase ion-text-center">
+                      <h6 *ngIf="tabTravaux.length == 0">
+                        ajouter des travaux au projet
+                      </h6>
+                      <h6 *ngIf="tabTravaux.length" class="travauxAjoutes">
+                        travaux ajoutés au projet: {{tabTravaux.length}}
+                      </h6>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </div>
+            <div>
+              <div *ngIf="displayForm">
+                <ion-item lines="none">
+                  <ion-label position="floating">Nom du travail</ion-label>
+                  <ion-input
+                    placeholder="Entrer le nom du travail"
+                    formControlName="name"
+                    type="text"
+                  ></ion-input>
+                </ion-item>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.name.errors?.required"
+                >
+                  Name is required.
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.name.errors?.minlength"
+                >
+                  Name should be min 2 chars long.
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.name.errors?.maxLength"
+                >
+                  Name not should be max 20 chars long.
+                </span>
+              </div>
+
+              <div>
+                <ion-item lines="none">
+                  <ion-label position="floating">Description</ion-label>
+                  <ion-textarea
+                    placeholder="faite une description ici"
+                    formControlName="description"
+                    type="text"
+                  ></ion-textarea>
+                </ion-item>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.description.errors?.required"
+                >
+                  description is required.
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.description.errors?.minlength"
+                >
+                  Name should be min 5 chars long.
+                </span>
+                <span
+                  class="error ion-padding"
+                  *ngIf="isSubmitted && errorControl.description.errors?.maxLength"
+                >
+                  Name not should be max 1000 chars long.
+                </span>
+              </div>
+              <div>
+                <ion-item lines="none" class="itemcustum">
+                  <ion-button
+                    color="success"
+                    slot="start"
+                    (click)="pickActivitiName()"
+                  >
+                    Ajouter activités au travail
+                    <ion-icon slot="end" name="add-outline"></ion-icon>
+                  </ion-button>
+                </ion-item>
+              </div>
+            </div>
+
+            <div>
+              <div>
+                <ion-row>
+                  <ion-col>
+                    <div
+                      class="ion-text-uppercase ion-text-center"
+                      *ngIf="activitiesList"
+                    >
+                      <h6 (click)="pickActivitiName()">liste des activités</h6>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </div>
+
+            <div *ngIf="activitiesList && activitiesList.length">
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <div *ngIf="activitiesList && activitiesList.length ">
+                      <ion-row class="header-row">
+                        <ion-col size="2" class="ion-align-self-center">
+                          <div class="ion-text-center ion-text-uppercase">
+                            Nom
+                          </div>
+                        </ion-col>
+
+                        <ion-col size="2" class="ion-align-self-center">
+                          <div class="ion-text-center ion-text-uppercase">
+                            éxécutant
+                          </div>
+                        </ion-col>
+                        <ion-col size="2" class="ion-align-self-center">
+                          <div class="ion-text-center ion-text-uppercase">
+                            date début
+                          </div>
+                        </ion-col>
+                        <ion-col size="2" class="ion-align-self-center">
+                          <div class="ion-text-center ion-text-uppercase">
+                            materiels
+                          </div>
+                        </ion-col>
+                        <ion-col size="2" class="ion-align-self-center">
+                          <div class="ion-text-center ion-text-uppercase">
+                            Cout matériel
+                          </div>
+                        </ion-col>
+                        <ion-col size="2" class="ion-align-self-center">
+                          <div class="ion-text-center ion-text-uppercase">
+                            Main d'oeuvre
+                          </div>
+                        </ion-col>
+                      </ion-row>
+                    </div>
+                    <ion-row
+                      *ngFor="let row of activitiesList; let i= index"
+                      class="data-row data-update"
+                      [ngStyle]="{'background-color': i % 2 == 0 ? '#f1f1f1' : 'white' }"
+                    >
+                      <ion-col
+                        size="2"
+                        class="ion-align-self-center"
+                        [ngStyle]="{'height': '30px' }"
+                      >
+                        <div class="ion-text-center">{{row.name}}</div>
+                      </ion-col>
+                      <ion-col size="2" class="ion-align-self-center">
+                        <div
+                          class="ion-text-center"
+                          (click)="addExecutant(row)"
+                        >
+                          {{row.executant.length}}
+                        </div>
+                      </ion-col>
+                      <ion-col size="2" class="ion-align-self-center">
+                        <div class="ion-text-center">
+                          {{row.startAt | date:'medium'}}
+                        </div>
+                      </ion-col>
+                      <ion-col size="2" class="ion-align-self-center">
+                        <div class="ion-text-center">
+                          {{row.besoinMateriel}}
+                        </div>
+                      </ion-col>
+
+                      <ion-col size="2" class="ion-align-self-center">
+                        <div class="ion-text-center ion-text-uppercase">
+                          {{row.coutMateriel ? row.coutMateriel : 0}} Fcfa
+                        </div>
+                      </ion-col>
+                      <ion-col size="2" class="ion-align-self-center">
+                        <div class="ion-text-center ion-text-uppercase">
+                          {{row.coutmaindoeuvre ? row.coutmaindoeuvre : 0}} Fcfa
                         </div>
                       </ion-col>
                     </ion-row>

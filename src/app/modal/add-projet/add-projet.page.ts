@@ -84,15 +84,15 @@ export class AddProjetPage implements OnInit {
         [
           Validators.required,
           Validators.minLength(2),
-          Validators.maxLength(20),
+          Validators.maxLength(2000),
         ],
       ],
       description: [
         "",
         [
           Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(1000),
+          Validators.minLength(2),
+          Validators.maxLength(10000),
         ],
       ],
       /* executant: [
@@ -162,15 +162,22 @@ export class AddProjetPage implements OnInit {
     } else {
       console.log(this.ionicForm.value);
       let emp = this.ionicForm.value;
-      emp["created"] = Date.now();
-      emp["travauxList"] = this.travauxList;
-      emp["startAt"] = debut;
-      emp["endAt"] = fin;
-      emp["type_production"] = this.typeProduction;
-      emp["type_culture"] = this.typeCulture;
-      console.log(emp);
-      this.projetService.setProjet(emp);
-      this.router.navigateByUrl("add-travaux");
+      if (!this.typeCulture) {
+        this.notif.presentAlert("veillez choisir le type de culture");
+      } else if (!this.typeProduction) {
+        this.notif.presentAlert("veillez choisir le type de production");
+      } else {
+        emp["created"] = Date.now();
+        emp["travauxList"] = this.travauxList;
+        emp["startAt"] = debut;
+        emp["endAt"] = fin;
+        emp["type_production"] = this.typeProduction;
+        emp["type_culture"] = this.typeCulture;
+        console.log(emp);
+        this.projetService.setProjet(emp);
+        this.router.navigateByUrl("add-travaux");
+      }
+
       /* this.projetService
         .postPorjetToFirebase(emp)
         .then((res) => {

@@ -59,7 +59,7 @@
           class="ion-align-self-center"
         >
           <ion-item lines="full">
-            <ion-label position="floating">Name</ion-label>
+            <ion-label position="floating">Nom</ion-label>
             <ion-input formControlName="name" type="text"></ion-input>
           </ion-item>
           <span
@@ -82,33 +82,33 @@
           </span>
         </ion-col>
         <ion-col
-          class="ion-align-self-center"
           size-xs="12"
           size-md="3"
           size-lg="3"
           size-sm="12"
+          class="ion-align-self-center"
         >
           <ion-item lines="full">
-            <ion-label position="floating">Poste</ion-label>
-            <ion-input formControlName="poste" type="text"></ion-input>
+            <ion-label position="floating">Prénom</ion-label>
+            <ion-input formControlName="firstname" type="text"></ion-input>
           </ion-item>
           <span
             class="error ion-padding"
-            *ngIf="isSubmitted && errorControl.poste.errors?.required"
+            *ngIf="isSubmitted && errorControl.firstname.errors?.required"
           >
-            Name is required.
+            firstname is required.
           </span>
           <span
             class="error ion-padding"
-            *ngIf="isSubmitted && errorControl.poste.errors?.minlength"
+            *ngIf="isSubmitted && errorControl.firstname.errors?.minlength"
           >
-            Name should be min 2 chars long.
+            firstname should be min 2 chars long.
           </span>
           <span
             class="error ion-padding"
-            *ngIf="isSubmitted && errorControl.poste.errors?.maxLength"
+            *ngIf="isSubmitted && errorControl.firstname.errors?.maxLength"
           >
-            Name not should be max 20 chars long.
+            firstname not should be max 20 chars long.
           </span>
         </ion-col>
       </ion-row>
@@ -191,10 +191,86 @@
       </ion-row>
       <ion-row>
         <ion-col
+          size-xs="12"
+          size-md="6"
+          size-lg="6"
+          size-sm="12"
+          class="ion-align-self-center"
+        >
+          <ion-item lines="full">
+            <ion-label position="floating">Date de naissance</ion-label>
+            <ion-datetime
+              displayFormat="DDDD MMM D, YYYY"
+              (ionChange)="birthday($event)"
+            ></ion-datetime>
+          </ion-item>
+        </ion-col>
+        <ion-col
+          class="ion-align-self-right"
+          size-xs="12"
+          size-md="6"
+          size-lg="6"
+          size-sm="12"
+        >
+          <ion-item lines="full">
+            <ion-label position="floating">Poste</ion-label>
+            <ion-input formControlName="poste" type="text"></ion-input>
+          </ion-item>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.poste.errors?.required"
+          >
+            Name is required.
+          </span>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.poste.errors?.minlength"
+          >
+            Name should be min 2 chars long.
+          </span>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.poste.errors?.maxLength"
+          >
+            Name not should be max 20 chars long.
+          </span>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col
           class="ion-align-self-center"
           size-xs="12"
-          size-md="3"
-          size-lg="3"
+          size-md="6"
+          size-lg="6"
+          size-sm="12"
+        >
+          <ion-item lines="full">
+            <ion-label position="floating">Lieu de naissance</ion-label>
+            <ion-input
+              maxlength="10"
+              formControlName="lieudenaissance"
+              type="texte"
+              required
+            ></ion-input>
+          </ion-item>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.lieudenaissance.errors?.required"
+          >
+            Salaire is required.
+          </span>
+          <span
+            class="error ion-padding"
+            *ngIf="isSubmitted && errorControl.lieudenaissance.errors?.pattern"
+          >
+            Only numerical values allowed.
+          </span>
+        </ion-col>
+        <ion-col
+          class="ion-align-self-center"
+          size-xs="12"
+          size-md="6"
+          size-lg="6"
           size-sm="12"
         >
           <ion-item lines="full">
@@ -335,12 +411,29 @@
               <h2>{{user.name}}</h2>
               <p>Email:{{user.email}}, Telephone: {{user.mobile}}</p>
             </ion-label>
-            <ion-button fill="clear" slot="end" (click)="updateEmploye(user)"
+            <ion-button
+              *ngIf="!user.delete"
+              fill="clear"
+              slot="end"
+              (click)="updateEmploye(user)"
               >upadte
               <ion-icon slot="end" name="settings-outline"></ion-icon>
             </ion-button>
-            <ion-button fill="clear" slot="end" (click)="removeEmploye(user)"
+            <ion-button
+              *ngIf="!user.delete"
+              fill="clear"
+              slot="end"
+              (click)="removeEmploye(user)"
               >delete
+              <ion-icon slot="end" name="trash-bin-outline"></ion-icon>
+            </ion-button>
+            <ion-button
+              *ngIf="user.delete"
+              fill="clear"
+              slot="end"
+              (click)="restoreEmploye(user)"
+              color="danger"
+              >restore user
               <ion-icon slot="end" name="trash-bin-outline"></ion-icon>
             </ion-button>
           </ion-item>

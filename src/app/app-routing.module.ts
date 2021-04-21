@@ -192,6 +192,14 @@ const routes: Routes = [
     path: 'display-executant',
     loadChildren: () => import('./modal/display-executant/display-executant.module').then( m => m.DisplayExecutantPageModule)
   },
+  {
+    path: 'justificatif',
+    loadChildren: () => import('./pages/justificatif/justificatif.module').then( m => m.JustificatifPageModule)
+  },
+  {
+    path: 'ajouteractivite',
+    loadChildren: () => import('./modal/ajouteractivite/ajouteractivite.module').then( m => m.AjouteractivitePageModule)
+  },
 ];
 
 @NgModule({

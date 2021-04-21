@@ -23,6 +23,7 @@ export class TravauxBeforeSavePage implements OnInit {
   ) {
     this.projet = this.projetService.getProjet();
     console.log(this.projet);
+    // console.log(this.projetService.getOldProjet());
   }
 
   ngOnInit() {}
@@ -41,44 +42,83 @@ export class TravauxBeforeSavePage implements OnInit {
   }
   saveProjet() {
     this.notif.infiniteLoading();
-    this.projet["travauxlist"].forEach((travaux) => {
-      travaux["activitieList"].forEach((activitie) => {
-        activitie["projetName"] = this.projet["name"];
-        activitie["travauxName"] = travaux["name"];
-        this.activitiService
-          .postActivitieToFirebase(activitie)
+    if (this.projet.add) {
+      this.projet["TravauxListToAdd"].forEach((travaux) => {
+        travaux["activitieList"].forEach((activitie) => {
+          activitie["projetName"] = this.projet["name"];
+          activitie["travauxName"] = travaux["name"];
+          this.activitiService
+            .postActivitieToFirebase(activitie)
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        });
+        travaux["projetName"] = this.projet["name"];
+        this.travauxService
+          .postTravauxToFirebase(travaux)
           .then((res) => {
             console.log(res);
+            // this.notif.presentMessage("enregistré!!!");
           })
           .catch((err) => {
             console.log(err);
           });
       });
-      travaux["projetName"] = this.projet["name"];
-      this.travauxService
-        .postTravauxToFirebase(travaux)
-        .then((res) => {
-          console.log(res);
-          // this.notif.presentMessage("enregistré!!!");
-        })
-        .catch((err) => {
-          console.log(err);
+    } else {
+      this.projet["travauxlist"].forEach((travaux) => {
+        travaux["activitieList"].forEach((activitie) => {
+          activitie["projetName"] = this.projet["name"];
+          activitie["travauxName"] = travaux["name"];
+          this.activitiService
+            .postActivitieToFirebase(activitie)
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         });
-    });
-    this.notif.presentMessage("le projet a été enregistré!!!");
-    this.projetService
-      .postPorjetToFirebase(this.projet)
-      .then((res) => {
-        // console.log(res);
-        this.notif.dismmisLoading();
-        this.notif.presentMessage("enregistré!!!");
+        travaux["projetName"] = this.projet["name"];
+        this.travauxService
+          .postTravauxToFirebase(travaux)
+          .then((res) => {
+            console.log(res);
+            // this.notif.presentMessage("enregistré!!!");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+      this.notif.presentMessage("le projet a été enregistré!!!");
+    }
+
+    if (this.projet["add"]) {
+      this.projetService.updateProjet(this.projet).then((res) => {
+        this.notif.presentMessage("le projet a mis a jour!!!");
+
         this.modalCtrl.dismiss({
           dismissed: true,
           save: true,
         });
-      })
-      .catch((err) => {
-        console.log(err);
       });
+    } else {
+      this.projetService
+        .postPorjetToFirebase(this.projet)
+        .then((res) => {
+          // console.log(res);
+          this.notif.dismmisLoading();
+          this.notif.presentMessage("enregistré!!!");
+          this.modalCtrl.dismiss({
+            dismissed: true,
+            save: true,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }
 }
